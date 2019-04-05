@@ -19,7 +19,7 @@
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
-    filecolor=magenta,      
+    filecolor=magenta,
     urlcolor=cyan,
 }
 \urlstyle{same}
@@ -35,115 +35,195 @@
 \onehalfspacing
 
 \begin{figure}[!htb]
-	\centerline{\includegraphics[scale=0.8]{agh_logo.jpg}}
+    \centerline{\includegraphics[scale=0.8]{images/agh_logo.jpg}}
 \end{figure}
 
 \begin{center}
-	\Huge{Studio projektowe 1\\}
-		\Large{Benchmark solverów prover9 oraz SPASS\\}
+    \Huge{Studio projektowe 1\\}
+    \Large{Benchmark solverów prover9 oraz SPASS\\}
 
 
-	\vspace{5cm}
-	\Large{	Autorzy:\\
-		Mateusz Grzeliński\\
-		Przemysław Michałek\\}
+    \vspace{5cm}
+    \Large{	Autorzy:\\
+	Mateusz Grzeliński\\
+    Przemysław Michałek\\}
 
-	\newpage
+    \newpage
 
-	
+
 \end{center}
 
 \section{Cel}
 
 Celem projektu jest zbadanie wydajności automatyczych metod dowodzenia twierdzeń Prover9 oraz SPASS.
 
-		
+
 \section{Streszczenie}
 
 Badany prover zostaje uruchomiony kilka razy z wcześniej przygotowanym problemem SAT(Boolean satisfiability problem). Badany jest czas wykonywania oraz rezultat (czy SAT jest spełnialny)
 
 
 \subsection{Prover9}
-	Prover9 korzysta z biblioteki \href{https://www.cs.unm.edu/~mccune/prover9/manual/2009-11A/}{LADR} (załączona w źródłach, libladr.a, ladrladr.h). Kompiluje się ona do pliku wykonywalnego.
+Prover9 korzysta z biblioteki \href{https://www.cs.unm.edu/~mccune/prover9/manual/2009-11A/}{LADR} (załączona w źródłach, libladr.a, ladrladr.h). Kompiluje się ona do pliku wykonywalnego.
 Prover9 przyjmyje składnie LADR. Konwerter TPTP to LADR jest dostępny w bibliotece LADR
 
-%\newpage
+Przykład pliku w składni LADR:
+
+\begin{verbatim}
+assign(max_seconds, 30).
+
+assign(new_constants, 1).
+
+assign(max_weight,25).
+
+% This proves distributivity from a Boolean algebra basis.
+
+formulas(sos).
+
+  x v (y v z) = y v (x v z).
+  x ^ y = (x' v y')'.
+  x v x' = y v y'.
+  (x v y') ^ (x v y) = x.
+
+end_of_list.
+
+set(restrict_denials).
+
+formulas(goals).
+
+  x ^ (y v z) = (x ^ y) v (x ^ z) # label(distributivity_1).
+
+end_of_list.
+\end{verbatim}
 
 \subsection{SPASS}
-	\href{https://webspass.spass-prover.org/}{SPASS} nie korzysta z bibliotek, kompiluje się do pliku wykonywalnego.
+\href{https://webspass.spass-prover.org/}{SPASS} nie korzysta z bibliotek, kompiluje się do pliku wykonywalnego.
 Jest duża szansa że można skompilować go do biblioteki. Może korzystać z własnej składni lub ze składni TPTP.
-\newpage
+
+Przykład pliku w składni SPASS
+\begin{verbatim}
+
+begin_problem(Sokrates1).
+
+list_of_descriptions.
+name({*Sokrates*}).
+author({*Christoph Weidenbach*}).
+status(unsatisfiable).
+description({* Sokrates is mortal and since all humans are mortal, he is mortal too. *}).
+end_of_list.
+
+list_of_symbols.
+ functions[(sokrates,0)].
+ predicates[(Human,1),(Mortal,1)].
+end_of_list.
+
+list_of_formulae(axioms).
+
+formula(Human(sokrates),1).
+formula(forall([x],implies(Human(x),Mortal(x))),2).
+
+end_of_list.
+
+list_of_formulae(conjectures).
+
+formula(Mortal(sokrates),3).
+
+end_of_list.
+
+end_problem.
+\end{verbatim}
+
 \subsection{TPTP}
-	\noindent \href{http://www.tptp.org/TPTP/SyntaxBNF.html}{Link do składni BNF} \newline
-	\href{http://www.tptp.org/cgi-bin/SeeTPTPCategory=Problems}{Przykład pliku}
-
+\noindent Pełny opis składni BNF dostępny jest pod
+\href{http://www.tptp.org/TPTP/SyntaxBNF.html}{linkiem} \newline
 TPTP udostępnia wiele problemów do testowania: \href{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Problems}{link} \newline
-Te problemy są sklasyfikowane przez domeny (3 literowe skróty), przykładowo \newline
-LCL - Logic Calculi \newline
-COL - Combinatory Logic
+Te problemy są sklasyfikowane przez domeny (3 literowe skróty), przykładowo
+\begin{itemize}
+    \item LCL - Logic Calculi
+    \item COL - Combinatory Logic
+\end{itemize}
 
- Pełny opis skrótów dostępny jest \href{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&File=THFSynopsis}{tutaj}
- 
+\noindent
+Pełny opis domen dostępny jest \href{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&File=THFSynopsis}{tutaj}
+
+\noindent
+Przykład pliku w składni TPTP
+
+\begin{verbatim}
+% File     : LCL001-1 : TPTP v7.2.0. Released v1.0.0.
+cnf(condensed_detachment,axiom,
+    ( ~ is_a_theorem(or(not(X),Y))
+    | ~ is_a_theorem(X)
+    | is_a_theorem(Y) )).
+
+cnf(an_1,axiom,
+    ( is_a_theorem(or(not(or(not(Y),Z)),or(not(or(X,Y)),or(X,Z)))) )).
+
+cnf(an_2,axiom,
+    ( is_a_theorem(or(not(or(X,Y)),or(Y,X))) )).
+
+cnf(an_3,axiom,
+    ( is_a_theorem(or(not(X),or(Y,X))) )).
+
+cnf(an_4,axiom,
+    ( is_a_theorem(or(not(or(X,X)),X)) )).
+
+cnf(prove_an_CAMerideth,negated_conjecture,
+    ( ~ is_a_theorem(or(not(or(not(or(not(a),b)),or(c,or(e,falsehood)))),or(not(or(not(e),a)),or(c,or(falsehood,a))))) )).
+
+\end{verbatim}
+
 \section{Benchmark - strategia blackbox}
 Provery traktujemy jako czarne skrzynki, statystyki są ograniczone.\newline
 \begin{itemize}
-\item TPTP - składnia TPTP
-\item LADR - format wejścia Provera9
-\item Output - wyjście proverów, mogą być różne
-\item statictics - statystyki
+    \item TPTP - składnia TPTP
+    \item LADR - format wejścia Provera9
+    \item Output - wyjście proverów, mogą być różne
+    \item statictics - statystyki
 \end{itemize}
-\includegraphics[scale=0.4]{studio-projektowe1.png}
+\includegraphics[scale=0.4]{images/studio-projektowe1.png}
 \newpage
-
-\subsection{Algorytm}
-\begin{itemize}
-\item Wygeneruj formułę SAT
-\item Wykonaj kod w podprocesie
-\item Zmierz czas wykonania procesu
-\item Zbadaj output: dodatkowe statystyki, wynik
-\end{itemize}
-
 
 \section{Generator SAT}
 \subsection{Wejście}
 \begin{itemize}
-\item seed - opcjonalnie - umożliwia powtarzanie losowania
-\item typ generatora liczb losowych
-\item ilość formuł
-\item ilość zmiennych
+    \item seed - opcjonalnie - umożliwia powtarzanie losowania
+    \item typ generatora liczb losowych
+    \item ilość formuł
+    \item ilość zmiennych
 \end{itemize}
 
 
 \subsection{Wyjście}
 \begin{itemize}
-\item string w formacie TPTP (dokumenty do składni: http://www.tptp.org/)
+    \item string w formacie TPTP (dokumenty do składni: http://www.tptp.org/)
 \end{itemize}
 
 \subsection{Algorytm}
 \begin{itemize}
-\item Wypisz metadane jako komentarz (link do źródła, parametry wejściowe)
+    \item Wypisz metadane jako komentarz (link do źródła, parametry wejściowe)
 \end{itemize}
 
 \newpage
 \section{TO DO}
 \begin{itemize}
-\item czy statystyki czas wykonania, wynik wystarczą? - 
-		\begin{itemize}
-		\item zaleznosc pomiedzy dlugoscia wejscia a iloscia zmiennych
-		\item zajętość pamięci		
-		\end{itemize}
-		
-\item jakie parametry ma przyjmować generator SAT? Czy budujemy generator CNF, czy generator ogólny?
-\item  czy brać pod uwagę prametry takie jak
-k-SAT, Horn-SAT, NAE3SAT
-
-\item jaki ma być format wyjściowy generatora? 
+    \item czy statystyki czas wykonania, wynik wystarczą?
 	\begin{itemize}
-		\item propozycja: TPTP - SPASS ma natywne wsparcie dla tego formatu, a prover9 ma translator TPTP to LADR
+	    \item zaleznosc pomiedzy dlugoscia wejscia a iloscia zmiennych
+	    \item zajętość pamięci
 	\end{itemize}
 
-\item wypisywanie do terminala będzie zabierało czas obliczeń. Trzeba będzie zminimalizować wypisywanie
-\item opisać składnie obu proverów
+    \item jakie parametry ma przyjmować generator SAT? Czy budujemy generator CNF, czy generator ogólny?
+    \item  czy brać pod uwagę prametry takie jak
+	k-SAT, Horn-SAT, NAE3SAT
+
+    \item jaki ma być format wyjściowy generatora?
+	\begin{itemize}
+	    \item propozycja: TPTP - SPASS ma natywne wsparcie dla tego formatu, a prover9 ma translator TPTP to LADR
+	\end{itemize}
+
+    \item wypisywanie do terminala będzie zabierało czas obliczeń. Trzeba będzie zminimalizować wypisywanie
+    \item opisać składnie obu proverów
 
 \end{itemize}
 
