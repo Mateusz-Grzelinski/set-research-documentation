@@ -14,13 +14,15 @@
 \usepackage{setspace}
 \usepackage{multirow}
 \usepackage{lipsum}
+\usepackage{listings}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage[toc, nopostdot, nonumberlist]{glossaries}
 \usepackage{indentfirst}
-\usepackage{hyperref}
 \hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,
-    urlcolor=cyan,
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,
+  urlcolor=cyan,
 }
 \urlstyle{same}
 %\marginsize{left}{right}{top}{bottom}
@@ -29,47 +31,58 @@
 \setlength{\parskip}{1em}
 \renewcommand{\baselinestretch}{2.0}
 
+\lstset{basicstyle=\ttfamily,breaklines=true}
+\lstset{framextopmargin=50pt,frame=bottomline}
 
+\makeglossaries
+\loadglsentries{glossaries}
+\glsaddall
 
 \begin{document}
 \onehalfspacing
-
 \begin{figure}[!htb]
-    \centerline{\includegraphics[scale=0.8]{images/agh_logo.jpg}}
+  \centerline{\includegraphics[scale=0.8]{images/agh_logo.jpg}}
 \end{figure}
 
 \begin{center}
-    \Huge{Studio projektowe 1\\}
-    \Large{Benchmark solverów prover9 oraz SPASS\\}
+  \Huge{Studio projektowe 1\\}
+  \Large{Benchmark solverów prover9 oraz SPASS\\}
+  \vspace{5cm}
+  \Large{	Autorzy:\\
+    Mateusz Grzeliński\\
+  Przemysław Michałek\\}
 
-
-    \vspace{5cm}
-    \Large{	Autorzy:\\
-	Mateusz Grzeliński\\
-    Przemysław Michałek\\}
-
-    \newpage
-
-
+  \newpage
 \end{center}
 
-\section{Cel}
-
-Celem projektu jest zbadanie wydajności automatyczych metod dowodzenia twierdzeń Prover9 oraz SPASS.
-
+\tableofcontents
+\newpage
 
 \section{Streszczenie}
 
-Badany prover zostaje uruchomiony kilka razy z wcześniej przygotowanym problemem SAT(Boolean satisfiability problem). Badany jest czas wykonywania oraz rezultat (czy SAT jest spełnialny)
+Celem projektu jest zbadanie wydajności automatyczych metod dowodzenia twierdzeń Prover9 oraz SPASS. Na początku zostaje wygenerowna formuła \gls{SAT}, która zostaje rozwiązana przez badane provery. Badany jest czas wykonania, rezultat (czy SAT jest spełnialny), użycie pamięci RAM.
+Generowana formuła SAT jest modufikowana ze względu na długość formuły, ilość zmiennych.
 
+\section{Benchmark - strategia blackbox}
+
+W stategii blackbox traktujemy provery jako czarny skrzynki - nie ingerujemy w wykonywany program, badamy tylko input oraz output.
+
+\begin{figure}[!htb]
+  \includegraphics[scale=0.4]{images/studio-projektowe1.png}
+  \caption{Diagram komponentów systemu benchmarka}
+\end{figure}
+\newpage
 
 \subsection{Prover9}
-Prover9 korzysta z biblioteki \href{https://www.cs.unm.edu/~mccune/prover9/manual/2009-11A/}{LADR} (załączona w źródłach, libladr.a, ladrladr.h). Kompiluje się ona do pliku wykonywalnego.
-Prover9 przyjmyje składnie LADR. Konwerter TPTP to LADR jest dostępny w bibliotece LADR
 
-Przykład pliku w składni LADR:
+Prover9 jest to zautomatyzowane narzędzie udowadniające dla logiki pierwszego rzędu stworzone przez Williama McCune’a.
+\newline
+Prover9 dostępny jest jako plik wykonywalny, przyjmuje pliki w formacie \gls{LADR}.
 
-\begin{verbatim}
+Oficjalna strona internetowa \url{https://www.cs.unm.edu/~mccune/mace4/}
+
+
+\begin{lstlisting}[caption={Przykład pliku w składni LADR}]
 assign(max_seconds, 30).
 
 assign(new_constants, 1).
@@ -94,15 +107,18 @@ formulas(goals).
   x ^ (y v z) = (x ^ y) v (x ^ z) # label(distributivity_1).
 
 end_of_list.
-\end{verbatim}
+\end{lstlisting}
 
 \subsection{SPASS}
-\href{https://webspass.spass-prover.org/}{SPASS} nie korzysta z bibliotek, kompiluje się do pliku wykonywalnego.
-Jest duża szansa że można skompilować go do biblioteki. Może korzystać z własnej składni lub ze składni TPTP.
 
-Przykład pliku w składni SPASS
-\begin{verbatim}
+SPASS Theorem Prover jest narzędziem do automatycznego dowodzenia twierdzeń, należących do rachunku predykatów pierwszego rzędu.
+\newline
+SPASS nie korzysta z bibliotek, kompiluje się do pliku wykonywalnego.
+Akceptuje pliki w składni TPTP lub swojej własnej.
 
+Oficjana strona internetowa \url{https://webspass.spass-prover.org/}
+
+\begin{lstlisting}[caption={Przykład pliku w składni SPASS}]
 begin_problem(Sokrates1).
 
 list_of_descriptions.
@@ -131,25 +147,23 @@ formula(Mortal(sokrates),3).
 end_of_list.
 
 end_problem.
-\end{verbatim}
+\end{lstlisting}
 
 \subsection{TPTP}
-\noindent Pełny opis składni BNF dostępny jest pod
-\href{http://www.tptp.org/TPTP/SyntaxBNF.html}{linkiem} \newline
-TPTP udostępnia wiele problemów do testowania: \href{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Problems}{link} \newline
+
+TPTP - \textit{ ang. (Thousands of Problems for Theorem Provers)} - to biblioteka problemów wykorzystywanych do testowania systemów ATP. Jednocześnie jest to nazwa formatu, w którym zapisywane są te testy. TPTP udostępnia te problemy na oficjalnej stronie intenetowej.
 Te problemy są sklasyfikowane przez domeny (3 literowe skróty), przykładowo
-\begin{itemize}
-    \item LCL - Logic Calculi
-    \item COL - Combinatory Logic
-\end{itemize}
+LCL - Logic Calculi,
+COL - Combinatory Logic
 
 \noindent
-Pełny opis domen dostępny jest \href{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&File=THFSynopsis}{tutaj}
+Oficjalna strona internetowa \url{http://www.tptp.org}
+\newline
+Pełny spis domen \url{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&File=THFSynopsis}
+\newline
+BNF składni TPTP \url{http://www.tptp.org/TPTP/SyntaxBNF.html}
 
-\noindent
-Przykład pliku w składni TPTP
-
-\begin{verbatim}
+\begin{lstlisting}[caption={Przykład pliku w składni TPTP}]
 % File     : LCL001-1 : TPTP v7.2.0. Released v1.0.0.
 cnf(condensed_detachment,axiom,
     ( ~ is_a_theorem(or(not(X),Y))
@@ -171,87 +185,77 @@ cnf(an_4,axiom,
 cnf(prove_an_CAMerideth,negated_conjecture,
     ( ~ is_a_theorem(or(not(or(not(or(not(a),b)),or(c,or(e,falsehood)))),or(not(or(not(e),a)),or(c,or(falsehood,a))))) )).
 
-\end{verbatim}
+\end{lstlisting}
 
-\section{Benchmark - strategia blackbox}
-Provery traktujemy jako czarne skrzynki, statystyki są ograniczone.\newline
-\begin{itemize}
-    \item TPTP - składnia TPTP
-    \item LADR - format wejścia Provera9
-    \item Output - wyjście proverów, mogą być różne
-    \item statictics - statystyki
-\end{itemize}
-\includegraphics[scale=0.4]{images/studio-projektowe1.png}
-\newpage
 
-\section{Generator SAT}
+\subsection{TPTP to LADR}
+
+W bibliotece \gls{LADR}, która jest załączona wraz ze źródłami Provera9, dostępny jest translator składni TPTP do LADR. Jest to plik wykonywalny.
+
+\subsection{Parser}
+
+Zadaniem parsera jest wydobycie dodatkowych informacji statystycznych o przebiegu działana proverów, na podstawie ich wyjścia.
+
+TODO: dokładnie jakie dane zbiera parser
+
+\subsection{Generator SAT}
+
+Plik wykonywalny, który generuje formuły logiczne w formacie TPTP. Funkcjonuje jako osobny projekt, dlatego został opisany w sekcji \ref{LFG}
+
+\section{Generator formuł logicznych}\label{LFG}
+
+Generator formuł logicznych - \textit{ang. LFG - Logic formula generator} - losowy generator formuł SAT
+
 \subsection{Wejście}
-\begin{itemize}
-    \item seed - opcjonalnie - umożliwia powtarzanie losowania
-    \item typ generatora liczb losowych
-    \item ilość formuł
-    \item ilość zmiennych
-\end{itemize}
 
+\begin{itemize}
+  \item seed - opcjonalnie - umożliwia powtarzanie losowania
+  \item typ generatora liczb losowych
+  \item ilość formuł
+  \item ilość zmiennych
+\end{itemize}
 
 \subsection{Wyjście}
+
 \begin{itemize}
-    \item string w formacie TPTP (dokumenty do składni: http://www.tptp.org/)
+  \item string w formacie TPTP (dokumenty do składni: http://www.tptp.org/)
 \end{itemize}
 
 \subsection{Algorytm}
 \begin{itemize}
-    \item Wypisz metadane jako komentarz (link do źródła, parametry wejściowe)
+  \item Wypisz metadane jako komentarz (link do źródła, parametry wejściowe)
 \end{itemize}
 
 \newpage
 \section{TO DO}
 \begin{itemize}
-    \item czy statystyki czas wykonania, wynik wystarczą?
-	\begin{itemize}
-	    \item zaleznosc pomiedzy dlugoscia wejscia a iloscia zmiennych
-	    \item zajętość pamięci
-	\end{itemize}
+  \item czy statystyki czas wykonania, wynik wystarczą? -
+    \begin{itemize}
+      \item zaleznosc pomiedzy dlugoscia wejscia a iloscia zmiennych
+      \item zajętość pamięci
+    \end{itemize}
 
-    \item jakie parametry ma przyjmować generator SAT? Czy budujemy generator CNF, czy generator ogólny?
-    \item  czy brać pod uwagę prametry takie jak
-	k-SAT, Horn-SAT, NAE3SAT
+  \item jakie parametry ma przyjmować generator SAT? Czy budujemy generator CNF, czy generator ogólny?
+  \item  czy brać pod uwagę prametry takie jak
+    k-SAT, Horn-SAT, NAE3SAT
 
-    \item jaki ma być format wyjściowy generatora?
-	\begin{itemize}
-	    \item propozycja: TPTP - SPASS ma natywne wsparcie dla tego formatu, a prover9 ma translator TPTP to LADR
-	\end{itemize}
+  \item jaki ma być format wyjściowy generatora?
+    \begin{itemize}
+      \item propozycja: TPTP - SPASS ma natywne wsparcie dla tego formatu, a prover9 ma translator TPTP to LADR
+    \end{itemize}
 
-    \item wypisywanie do terminala będzie zabierało czas obliczeń. Trzeba będzie zminimalizować wypisywanie
-    \item opisać składnie obu proverów
+  \item wypisywanie do terminala będzie zabierało czas obliczeń. Trzeba będzie zminimalizować wypisywanie
+  \item opisać składnie obu proverów
 
 \end{itemize}
 
 \newpage
-\section{Słownik}
-\noindent
-\textbf{SAT} -  problem spełnialności – zagadnienie rachunku zdań, określające czy dla danej formuły logicznej istnieje takie podstawienie (wartościowanie) zmiennych zdaniowych, żeby formuła była prawdziwa \newline
-\noindent
-\textbf{Prover9} – jest to zautomatyzowane narzędzie udowadniające dla logiki pierwszego rzędu stworzone przez Williama McCune’a \newline
-\noindent
-\textbf{SPASS} - SPASS Theorem Prover jest narzędziem do automatycznego dowodzenia twierdzeń, należących do rachunku predykatów pierwszego rzędu. \newline
-\noindent
-\textbf{Logika LTL} – jedna z logik temporalnych. Jest oparta na liniowej strukturze czasu \newline
-\noindent
-\textbf{Logika temporalna} – logika umożliwiająca rozważanie zależności czasowych bez wprowadzania czasu explicite \newline
-\noindent
-\textbf{TPTP} (Thousands of Problems for Theorem Provers) - is a library of test problems for automated theorem proving (ATP) systems \newline
-\noindent
-\textbf{FOF} (First-Order Formula) reduction is a method of attempting to simplify a problem by reducing it to an equivalent set of independent subproblems. A trivial example is to reduce the conjecture A <-> B to the pair of problems A -> B and B -> A.  \newline
-
-
-
-
-
-
 
 \newpage
 \section{Wnioski}
 \lipsum[1]
+
+\printglossary
+
 
 \end{document}
