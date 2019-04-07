@@ -1,6 +1,7 @@
 
 \newglossaryentry{SAT} {
     name=SAT,
+    first={SAT (Boolean satisfiability problem)},
     description={ \textit{ang. Boolean satisfiability problem} - problem spełnialności – zagadnienie rachunku zdań, określające czy dla danej formuły logicznej istnieje takie podstawienie (wartościowanie) zmiennych zdaniowych, żeby formuła była prawdziwa}
 }
 
@@ -11,11 +12,12 @@
 
 \newglossaryentry{FOF} {
     name=FOF,
-    description={ \textit{ang. First-Order Formula} reduction is a method of attempting to simplify a problem by reducing it to an equivalent set of independent subproblems. A trivial example is to reduce the conjecture A <-> B to the pair of problems A -> B and B -> A.}
+    first={FOF (First-order Formula)},
+    description={\textit{ang. First-Order Formula} reduction is a method of attempting to simplify a problem by reducing it to an equivalent set of independent subproblems. A trivial example is to reduce the conjecture A <-> B to the pair of problems A -> B and B -> A.}
 }
 
-\newglossaryentry{Tem} {
-    name=Logika temporalna,
+\newglossaryentry{TemporalLogic} {
+    name={Logika temporalna},
     description={logika umożliwiająca rozważanie zależności czasowych bez wprowadzania czasu explicite}
 }
 
@@ -26,5 +28,49 @@
 
 \newglossaryentry{CNF} {
     name=CNF,
-    description={TODO}
+    first={CNF (conjunctive normal form)},
+    description={\textit{ang. conjunctive normal form} - koniunkcyjna postać normalna}
 }
+
+\newglossaryentry{ATP} {
+    name=ATP,
+    first={ATP (Automated Theorem Proving)},
+    description={\textit{ang. Automated Theorem Proving} ATP systems are enormously powerful computer programs, capable of solving immensely difficult problems, \url{http://www.tptp.org/OverviewOfATP.html}}
+}
+
+% source http://www.tptp.org/Seminars/TPTPWorldTutorial/
+\newglossaryentry{THF} {
+    name=THF,
+    first={THF (Typed Higher-order Logic)},
+    description={\textit{ang. Typed Higher-order Logic}}
+}
+
+\newglossaryentry{TFF} {
+    name=TFF,
+    first={TFF (Typed First-order Logic)},
+    description={\textit{ang. Typed First-order Logic}}
+}
+
+\newglossaryentry{PRP} {
+    name={PRP},
+    first={PRP (Propositional logic)},
+    description={\textit{ang. Propositional Logic}}
+}
+
+\newglossaryentry{TPI} {
+    name=TPI,
+    first={TPI (TPTP Process Instruction)},
+    description={\textit{ang. TPTP Process Instruction} - source \url{http://www.tptp.org/Seminars/TPI/Abstract.html}}
+}
+
+% as reference:
+
+% \setabbreviationstyle[acronym]{long-short}
+%
+% \newacronym{a1}{A1}{Apples 1}
+% \newacronym{a2}{A2}{Apples 2}
+%
+% \newglossaryentry{a}{name={A},description={Apples},alias={a1}}
+
+% First use: \gls{a1}, \gls{a2}, \gls{a}.
+% Next use: \gls{a1}, \gls{a2}, \gls{a}.

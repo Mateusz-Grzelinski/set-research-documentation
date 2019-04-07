@@ -13,10 +13,10 @@
 \usepackage{graphicx}
 \usepackage{setspace}
 \usepackage{multirow}
-\usepackage{lipsum}
+\usepackage{datetime}
 \usepackage{listings}
 \usepackage[colorlinks=true]{hyperref}
-\usepackage[toc, nopostdot, nonumberlist]{glossaries}
+\usepackage[automake, acronyms, toc, nopostdot, nonumberlist]{glossaries-extra}
 \usepackage{indentfirst}
 \hypersetup{
   colorlinks=true,
@@ -46,11 +46,13 @@
 
 \begin{center}
   \Huge{Studio projektowe 1\\}
-  \Large{Benchmark solverów prover9 oraz SPASS\\}
-  \vspace{5cm}
+  \Large{Benchmark solverów prover9 oraz SPASS\\ \large \textit \today \\}
+  \vspace{3cm}
   \Large{	Autorzy:\\
-    Mateusz Grzeliński\\
-  Przemysław Michałek\\}
+  Mateusz Grzeliński\\
+  Przemysław Michałek\\
+  }
+  \large{Wydział Elektrotechniki, Automatyki, Informatyki i Elektroniki}
 
   \newpage
 \end{center}
@@ -120,10 +122,11 @@ Oficjana strona internetowa \url{https://webspass.spass-prover.org/}
 
 \subsection{TPTP}
 
-TPTP - \textit{ ang. (Thousands of Problems for Theorem Provers)} - to biblioteka problemów wykorzystywanych do testowania systemów ATP. Jednocześnie jest to nazwa formatu, w którym zapisywane są te testy. TPTP udostępnia te problemy na oficjalnej stronie intenetowej.
-Te problemy są sklasyfikowane przez domeny (3 literowe skróty), przykładowo
-LCL - Logic Calculi,
-COL - Combinatory Logic
+TPTP - \textit{ang. (Thousands of Problems for Theorem Provers)} - to biblioteka problemów wykorzystywanych do testowania systemów \gls{ATP}. Jednocześnie jest to nazwa formatu, w którym zapisywane są te testy. TPTP udostępnia te problemy na oficjalnej stronie intenetowej. Razem z TPTP istnieje TSTP (\textit{ang. Thousands of Solutions from Theorem Provers}) - biblioteka rozwiązań problemów.
+Te problemy są sklasyfikowane przez domeny (3 literowe skróty), przykładowo LCL - Logic Calculi, COL - Combinatory Logic
+
+W formacie TPTP można zapisywać \gls{TPI}, \gls{THF}, \gls{TFF}, TCF (TODO: co to za format? Nie można go nigdzie znaleźć), \gls{FOF}, \gls{CNF}. Celem benchmarka jest badanie proverów logiku pierwszego rzędu, więc interesują nas \gls{CNF}, \gls{TFF}, TCF, \gls{FOF} (TFF/FOF with external clausifiers).
+
 
 \noindent
 Oficjalna strona internetowa \url{http://www.tptp.org}
@@ -163,6 +166,18 @@ Każdy prover podaje inne dane na wyjściu, dostępne statystyki podane są w ta
 
 Plik wykonywalny, który generuje formuły logiczne w formacie TPTP. Funkcjonuje jako osobny projekt, dlatego został opisany w sekcji \ref{LFG}
 
+Propozycja statystyk o formule SAT: (TODO)
+
+\begin{itemize}
+  \item Number of clauses
+  \item Number of atoms
+  \item Maximal clause size
+  \item Number of predicates
+  \item Number of functors
+  \item Number of variables
+  \item Maximal term depth
+\end{itemize}
+
 \section{Generator formuł logicznych}\label{LFG}
 
 Generator formuł logicznych - \textit{ang. LFG - Logic formula generator} - losowy generator formuł SAT
@@ -171,27 +186,47 @@ Generator formuł logicznych - \textit{ang. LFG - Logic formula generator} - los
 
 \begin{itemize}
   \item seed - opcjonalnie - umożliwia powtarzanie losowania
-  \item typ generatora liczb losowych
-  \item ilość formuł
-  \item ilość zmiennych
+  \item typ generatora liczb losowych - opcjonalne, domyślnie \textit{uniform\_int\_distribution} \url{https://en.cppreference.com/w/cpp/named_req/RandomNumberDistribution} (TODO check if needed)
+  \item ilość zmiennych - wymagane, integer
+  \item ilość formuł - wymagane, integer
+  \item generuj \gls{SAT} w formacie \gls{CNF}
+    \begin{itemize}
+      \item k-SAT z zadanym k
+      \item Horn-SAT (TODO is it importatnt?)
+      \item NAE3SAT (TOOD is it importatnt?)
+    \end{itemize}
+  \item generuj \gls{SAT} spełnialny/niespełnialny/random - TODO czy jesteśmy w stanie wygenerować formułę, która będzie wiadomo że jest spełnialna lub nie? Można użyć do badania czy formuły poprawne są rozwiązywane szybciej.
 \end{itemize}
 
 \subsection{Wyjście}
 
 \begin{itemize}
-  \item string w formacie TPTP (dokumenty do składni: http://www.tptp.org/)
+  \item string - SAT w formacie TPTP
 \end{itemize}
 
-\subsection{Algorytm}
+\subsection{Algorytm generowania \gls{CNF}}
+\begin{itemize}
+  \item Wypisz metadane jako komentarz (link do źródła, parametry wejściowe)
+  \item TODO
+\end{itemize}
+
+\subsection{Algorytm generowania \gls{FOF}}
 \begin{itemize}
   \item Wypisz metadane jako komentarz (link do źródła, parametry wejściowe)
   \item TODO
 \end{itemize}
 
 \section{Wnioski}
-\lipsum[1]
 
+Przykładowe wnioski
+
+\subsection{Ilośc zmiennych}
+
+\subsection{Stosunek ilości zmiennych do ilości formuł}
+
+\subsection{Formuła w postaci CNF}
+
+\printglossary[type=\acronymtype]
 \printglossary
-
 
 \end{document}
