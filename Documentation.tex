@@ -65,19 +65,35 @@ Generowana formuła SAT jest modufikowana ze względu na długość formuły, il
 
 \section{Benchmark - strategia blackbox}
 
-W stategii blackbox traktujemy provery jako czarny skrzynki - nie ingerujemy w wykonywany program, badamy tylko input oraz output.
+W stategii blackbox traktujemy provery jako czarny skrzynki - nie ingerujemy w wykonywany program, badamy tylko input oraz output. Dla każdego provera dostępne są:
+
+\begin{itemize}
+  \item czas wykonania
+  \item użycie pamięci RAM
+\end{itemize}
+
+Zbadane zostaną statystyki proverów ze względu na następujące właściwości formuły SAT:
+
+\begin{itemize}
+  \item ilość zmiennych
+  \item stosunek ilości formuł do ilości zmiennych
+  \item czy formuła jest w postaci \gls{CNF}
+\end{itemize}
+
 
 \begin{figure}[!htb]
   \includegraphics[scale=0.4]{images/studio-projektowe1.png}
   \caption{Diagram komponentów systemu benchmarka}
 \end{figure}
+
 \newpage
 
 \subsection{Prover9}
 
 Prover9 jest to zautomatyzowane narzędzie udowadniające dla logiki pierwszego rzędu stworzone przez Williama McCune’a.
-\newline
-Prover9 dostępny jest jako plik wykonywalny, przyjmuje pliki w formacie \gls{LADR}.
+
+Prover9 dostępny jest jako plik wykonywalny, przyjmuje pliki w formacie \gls{LADR}. Ilość opcji dostępnych z lini komend jest minimanlna, jedyną ważną opcją z punktu widzenia benchmarka jest
+\lstinline{-x - set(auto2).  (enhanced auto mode)}
 
 Oficjalna strona internetowa \url{https://www.cs.unm.edu/~mccune/mace4/}
 
@@ -112,11 +128,18 @@ end_of_list.
 \subsection{SPASS}
 
 SPASS Theorem Prover jest narzędziem do automatycznego dowodzenia twierdzeń, należących do rachunku predykatów pierwszego rzędu.
-\newline
-SPASS nie korzysta z bibliotek, kompiluje się do pliku wykonywalnego.
-Akceptuje pliki w składni TPTP lub swojej własnej.
 
+SPASS nie korzysta z żadnych bibliotek, dostępny jest jako plik wykonywalny. Akceptuje pliki w składni TPTP lub swojej własnej. SPASS udostępnia wiele opcji z poziomu lini komend. Z punktu widzenia benchmarka istotnymi są:
+
+\begin{itemize}
+  \item TODO
+\end{itemize}
+
+\noindent
+Wszystkie opcje linii komend \url{https://webspass.spass-prover.org/help/options.html}
+\noindent \newline
 Oficjana strona internetowa \url{https://webspass.spass-prover.org/}
+
 
 \begin{lstlisting}[caption={Przykład pliku w składni SPASS}]
 begin_problem(Sokrates1).
@@ -195,8 +218,23 @@ W bibliotece \gls{LADR}, która jest załączona wraz ze źródłami Provera9, d
 \subsection{Parser}
 
 Zadaniem parsera jest wydobycie dodatkowych informacji statystycznych o przebiegu działana proverów, na podstawie ich wyjścia.
+\newline
+Każdy prover podaje inne dane na wyjściu, dostępne statystyki podane są w tabeli poniżej.
 
-TODO: dokładnie jakie dane zbiera parser
+\begin{table}[ht]
+  \centering
+  \caption{Dostępne statystyki dla różnych proverów}
+  \begin{tabular}{ |c|c|c| }
+    \hline
+    Prover & SPASS & Prover9 \\
+    \hline
+    SAT spełnialny & dostępny & dostępny \\
+    \hline
+    TODO & & \\
+    \hline
+  \end{tabular}
+\end{table}
+
 
 \subsection{Generator SAT}
 
@@ -224,6 +262,7 @@ Generator formuł logicznych - \textit{ang. LFG - Logic formula generator} - los
 \subsection{Algorytm}
 \begin{itemize}
   \item Wypisz metadane jako komentarz (link do źródła, parametry wejściowe)
+  \item TODO
 \end{itemize}
 
 \newpage
