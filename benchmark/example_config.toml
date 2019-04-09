@@ -1,0 +1,91 @@
+
+[general]
+# execute every benchmark multiple times TODO: is it neccessary?
+iterations=2
+# generete output to
+output_dir="benchmark-output"
+# override outpu_dir or create unique output dir
+override_output=false
+# first look for executables in paths defined in this file as PATH
+override_system_PATH=true
+
+log_file="benchmark.log"
+
+# input from custom TPTP files
+# comment whole [[input]] to disable
+[[input]]
+	[input.TPTP]
+# where to find TPTP files
+	path=""
+
+	[[input.TPTP.files]]
+# wildcards supported ?
+	path="lib/TPTP/*/CNF*.p"
+# optional comment will be written to output file
+	comment="cnf tests"
+
+	[[input.TPTP.files]]
+	path="lib/TPTP"
+	comment=""
+
+# input from Logic Formula Generator https://github.com/Mateusz-Grzelinski/lfg
+# comment whole [[input]] to disable
+[[input]]
+	[input.LFG]
+# look for executable in PATH
+	executable="lfg"
+# append to path env variable, comment or leave empty to disable
+	PATH=["lib/lfg/bin"]
+
+[[benchmark]]
+	name="prover9 test"
+
+# name available in PATH
+	executable="prover9"
+
+# append to path env variable, comment or leave empty to disable
+	PATH=["lib/prover9"]
+
+# metadata appended to each file, comment to disable
+	version_options="--version"
+	comment=""
+
+# options always appended to executable, comment or leave empty to disable
+	options=["--quiet"]
+
+	[benchmark.input]
+# give file to stdin
+	stdin=true
+# if not stdin, then give filename after option
+	after_option=""
+
+	[benchmark.output]
+# program print everything to stdout
+	stdout=true
+# program prints output with command line option
+	output_option="-o"
+# program print everything to stderr
+	stderr=true
+# program specifies
+	err_option="-e"
+
+# specify command line options to test
+#	[[benchmark.test]]
+#	name="Matrix of tests"
+# nested [] in options means 'pick one of listed'. Remember arrays can hold only
+# one type. Ex. the following will produce tests:
+#	options=[
+#		["--verbose --smile"], [["--cores "], [1, 2]], ["--memory 10", "--memory 100"]
+#	]
+# benchmark.executable benchmark.options "--verbose --smile --cores 1 --memory 10"
+# benchmark.executable benchmark.options "--verbose --smile --cores 2 --memory 10"
+# benchmark.executable benchmark.options "--verbose --smile --cores 1 --memory 100"
+# benchmark.executable benchmark.options "--verbose --smile --cores 2 --memory 100"
+
+	[[benchmark.test]]
+	name="Prover9 without options"
+	options=[]
+
+	[[benchmark.test]]
+	name="Prover9 with -Auto2"
+	options=["-Auto2"]
