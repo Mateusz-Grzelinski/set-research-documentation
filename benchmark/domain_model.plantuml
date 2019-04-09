@@ -1,0 +1,45 @@
+@startuml
+
+title Benchmark object diagram
+
+skinparam padding 8
+
+object Main
+object Benchmark
+object Logger {
+    verbosity: int
+}
+object Config
+object TPTPStream
+object TestSuite
+object LFG{
+    TODO
+}
+object TPTPFiles {
+    paths:string[]
+}
+object Statistics
+object SATStatistics
+object SPASSParser
+object Prover9Parser
+
+Main "1" -- "1" Benchmark : runs >
+Main "1" -- "1" Logger : uses >
+Benchmark "1" -- "0..*" Statistics: produces >
+Config "1" -- "0..*" Benchmark : uses >
+Config "1" -- "0..*" TestSuite : uses >
+
+LFG "1" -- "0..*" TPTPStream : produces >
+TPTPFiles "1" -- "0..*" TPTPStream : produces >
+
+Config "1" -- "0..*" LFG : uses <
+Config "1" -- "0..*" TPTPFiles : uses <
+TPTPStream "1" -- "0..*" SATStatistics : produces >
+
+TestSuite "1" -- "0..1" Prover9Parser : uses >
+TestSuite "1" -- "0..1" SPASSParser : uses >
+
+Statistics "*" -- "1" TestSuite
+Statistics "1" -- "0..1" SATStatistics : is part of <
+@enduml
+
