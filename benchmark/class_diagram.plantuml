@@ -2,21 +2,26 @@
 @startuml
 
 package "Benchmark blackbox" {
-  TestInput <|.. LFG : implements
-  TestInput <|.. TPTPFiles : implements
-  TestCase --o TestSuite
-  Benchmark o-- Config
-  Config o-- TestSuite
-  Config o-- TestInput
+  TestInput <|-- LFG : implements
+  TestInput <|-- TPTPFiles : implements
+  TestCase --* TestSuite
+  TPTPStream --o TestCase
+  TestSuite o-- TestInput
   TestSuite *-- Parser
-  Parser -- Statistics
-  Statistics o-- SATStatistics
-  TPTPStream -- SATStatistics
-  Prover9Parser ..|> Parser : implements
-  SPASSParser ..|> Parser : implements
-  TestInput *-- TPTPStream
+  TestSuite --* Benchmark
+  Parser <|-- Prover9Parser : extends
+  Parser <|-- SPASSParser : extends
+  TPTPStream o-- SATStatistics
+  SATType -- SATStatistics
+  Parser - ParserToExecutable
+
+  Statistics -- Benchmark
+  SATStatistics -- TestStatistics
+  TestStatistics -- Statistics
+  HardwareStatistics -- Statistics
 
   Main *-- Config
+  Main *-- Logger
   Main *-- Benchmark
 
   Enum SATType {
@@ -33,104 +38,129 @@ package "Benchmark blackbox" {
 }
 
 class Main {
-- Config config
-- Benchmark benchmark
+- log : Logger
+- config : Config
+- benchmark : Benchmark
 + void main()
 }
 
+class Logger {
+- verbosity: int
+- log_file: string
+}
+
 abstract class TestInput <<interface>> {
-+ TPTPStream getTestCase()
++ getTestCase() : TPTPStream
 }
 
 class TPTPFiles {
-- string[] paths
+- paths : string[]
 + TPTPFiles(string[] paths)
-+ TPTPStream getTestCase()
++ getTestCase() : TPTPStream
 }
 
 class LFG {
+- seed : int
 TODO
-+ TPTPStream getTestCase()
++ getTestCase() : TPTPStream
 }
 
 class TPTPStream <<extends stream>>{
-- SATStatistics stats
-+ getStream()
-+ SATStatistics getSATStatistics()
+- stats : SATStatistics
++ getSATStatistics() : SATStatistics
 }
 
 
 class Statistics <<serializable>> {
-- int memory_usage
-- int cpu_time
-- int execution_time
-- SATStatistics sat
+- program_name : string
+- program_version : string
+- date
+- hardware : HardwareStatistics
+- tests : TestStatistics[]
+}
+
+class HardwareStatistics <<serializable>> {
+- operating_system
+- system_version
+- cpu
+- memory
+- disk?
+}
+
+class TestStatistics <<serializable>> {
+- name : string
+- options : string[]
+- input : string
+- memory_usage : int
+- cpu_time : int
+- execution_time : int
+- sat : SATStatistics
 }
 
 class SATStatistics <<serializable>> {
-- int number_of_clauses
-- int number_of_atoms
-- int maximal_clause_size
-- int number_of_predicates
-- int number_of_functors
-- int number_of_variables
-- int maximal_term_depth
-- SATType SAT_type
-
+- name : string
+- SAT_type : SATType
+- number_of_clauses : int
+- number_of_atoms : int
+- maximal_clause_size : int
+- number_of_predicates : int
+- number_of_functors : int
+- number_of_variables : int
+- maximal_term_depth : int
 }
 
-abstract class Parser <<interface>> {
-+ Statistics parseOutput(stream output)
-+ Parser findParser(string executable, ParserToExecutable translation_table)
+abstract class Parser  {
++ {abstract} parseOutput(stream output) : TODO
++ matchParser(string executable, ParserToExecutable translation_table) : Parser
 }
 
 class Prover9Parser {
-+ Statistics parseOutput(stream output)
++ parseOutput(stream output) : TODO
 }
 
 class SPASSParser {
-+ Statistics parseOutput(stream output)
++ parseOutput(stream output) : TODO
 }
 
 class TestCase {
-+ string name
-+ string[] options
+- input_stream : TPTPStream
+- input_after_option : string
+- output_path : string
+- name : string
+- options : string[]
 
-+ Statistics run(string executable, string aditional_opotions, stream input,
-  Parser parser)
++ TestCase()
++ run(executable : string, aditional_options : string , parser : Parser) : Statistics[]
 }
 
 class TestSuite {
-- string executable
-- string PATH
-- bool stdin
-- string in_option
-- string options
-- Parser parser
-- TestCase[] test_cases
-+ TestSuite(string PATH, TestCase[] test_cases)
-+ Statistics[] run();
+- executable : string
+- PATH : string
+- options : string
+- parser : Parser
+- test_cases : TestCase[]
+- test_inputs : TestInput[]
+
++ TestSuite(PATH: string, test_cases: TestCase[] )
++ run() : Statistics[]
 }
 
 class Config {
-- string config_file_path
-- TestInput[] test_inputs
-- TestSuite test_suite
-- int iterations?
-- string log_file
-- string outpu_dir
-- bool override_output
+- config_file_path : string
+- configs : dict
+- verifyConfig() : void
 
-- verifyConfig()
-+ Config(string config_file_path)
-+ void readConfigFile()
-
++ Config(config_file_path: string)
++ readConfigFile() : void
 }
 
 class Benchmark {
-- Config config
-+ Benchmark(Config config)
-+ Statistics[] run()
+- test_suite :  TestSuite[]
+- output_dir : string
+- override_output : bool
+- stats :  Statistics[]
++ Benchmark(test_suite: TestSuite)
++ run() : void
 }
 
 @enduml
