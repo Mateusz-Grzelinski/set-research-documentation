@@ -15,8 +15,9 @@
 \usepackage{multirow}
 \usepackage{datetime}
 \usepackage{listings}
+\usepackage{color}
 \usepackage[colorlinks=true]{hyperref}
-\usepackage[automake, acronyms, toc, nopostdot, nonumberlist]{glossaries-extra}
+\usepackage[automake, acronyms, toc, nopostdot, nonumberlist]{glossaries}
 \usepackage{indentfirst}
 \hypersetup{
   colorlinks=true,
@@ -31,6 +32,7 @@
 \setlength{\parskip}{1em}
 \renewcommand{\baselinestretch}{2.0}
 
+\input{listings/language_definitons.tex}
 \lstset{basicstyle=\small\ttfamily,breaklines=true}
 \lstset{framextopmargin=50pt,frame=bottomline}
 
@@ -100,7 +102,7 @@ Prover9 dostępny jest jako plik wykonywalny, przyjmuje pliki w formacie \gls{LA
 Oficjalna strona internetowa \url{https://www.cs.unm.edu/~mccune/mace4/}
 
 
-\lstinputlisting[caption={Przykład pliku wejściowego w składni LADR}]{listings/prover9_example.in}
+\lstinputlisting[language=ladr,caption={Przykład pliku wejściowego w składni LADR}]{listings/prover9_example.in}
 \lstinputlisting[caption={Przykład wyjścia Provera9}, basicstyle=\footnotesize\ttfamily]{listings/prover9_example.out}
 \subsection{SPASS}
 
@@ -117,7 +119,7 @@ Wszystkie opcje linii komend \url{https://webspass.spass-prover.org/help/options
 \noindent \newline
 Oficjana strona internetowa \url{https://webspass.spass-prover.org/}
 
-\lstinputlisting[caption={Przykład pliku wejściowego w składni SPASS}]{listings/spass_example.in}
+\lstinputlisting[language=spass,caption={Przykład pliku wejściowego w składni SPASS}]{listings/spass_example.in}
 \lstinputlisting[caption={Przykład wyjścia SPASS}, basicstyle=\footnotesize\ttfamily]{listings/spass_example.out}
 
 \subsection{TPTP}
@@ -135,7 +137,7 @@ Pełny spis domen \url{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&Fi
 \newline
 BNF składni TPTP \url{http://www.tptp.org/TPTP/SyntaxBNF.html}
 
-\lstinputlisting[caption={Przykład pliku w składni TPTP}]{listings/tptp_example.p}
+\lstinputlisting[language=tptp, caption={Przykład pliku w składni TPTP}]{listings/tptp_example.p}
 
 \subsection{TPTP to LADR}
 
