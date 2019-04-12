@@ -1,0 +1,20 @@
+@startuml
+floating note: inside Main.main()
+start
+:create objects
+log:Logger
+config:Config;
+
+if (config.verifyConfig()) then (ok)
+  :create TestSuites based on config;
+  :benchmark = Benchmark(test_suites);
+  :Benchmark.statistics.hardware_statistics = HardwareStatistics.getHardwareStatistics();
+  :this.benchmark.run();
+  :this.benchmark.statistics.serialize(this.output_dir);
+else (exception)
+  stop;
+endif;
+
+stop
+
+@enduml

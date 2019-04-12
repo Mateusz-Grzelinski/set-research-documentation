@@ -1,0 +1,20 @@
+@startuml
+floating note: inside TestSuite.run() : TestSuiteStatistics
+start
+
+:this.parser = testSuite.matchParser(this.executable);
+note: might me null
+
+repeat
+:input = next TestInput;
+repeat
+:test_case = next TestCase;
+:ret = test_case.run(this.executable, this.additional_options, this.parser, input);
+:this.test_statistics.append(ret);
+repeat while (more TestCasess?)
+repeat while (more TestInputs?)
+
+stop
+note: return this.test_statistics
+
+@enduml

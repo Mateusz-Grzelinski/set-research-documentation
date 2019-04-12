@@ -1,0 +1,15 @@
+@startuml
+floating note: inside run() : void
+
+start
+
+:this.statistics.hardware = HardwareStatistics.getHardwareStatistics();
+
+repeat
+:result = TestSuite.run();
+:this.statistic.suites.append(result);
+repeat while (more TestSuites?)
+
+stop
+
+@enduml

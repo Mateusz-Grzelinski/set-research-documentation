@@ -1,0 +1,31 @@
+@startuml
+floating note: inside TestCase.run(executable : string, aditional_options : string, parser : Parser, file_path: string) : TestStatistics[]
+start
+
+' TODO: handle output properly
+
+:test_case_statistics = [];
+:matrix_options = generateMatrixOptions(this.options);
+repeat
+:stats = NULL;
+if (this.input_as_stdin) then (yes)
+  :input = open(file_path);
+  :<b>output = this.executable aditional_options matrix_options this.input_after_option file_path</b>;
+  note: run in subproces
+  :stats = TestStatistics();
+else (no)
+  :<b>output = this.executable aditional_options matrix_options this.input_after_option file_path</b>;
+  note: run in subproces
+  :stats = TestStatistics();
+endif
+
+if (parser != NULL) then (yes)
+  :stats.output = parser.parse(ouput);
+endif
+:test_case_statistics.append(stats);
+repeat while (more matrix_options?)
+
+stop
+note: return test_case_statistics
+
+@enduml
