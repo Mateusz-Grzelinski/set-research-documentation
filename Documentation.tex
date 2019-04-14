@@ -14,8 +14,8 @@
 \usepackage{setspace}
 \usepackage{multirow}
 \usepackage{datetime}
-\usepackage{listings}
-\usepackage{color}
+\usepackage[outputdir=build]{minted}
+\usepackage{xcolor}
 \usepackage[colorlinks=true]{hyperref}
 \usepackage[automake, acronyms, toc, nopostdot, nonumberlist]{glossaries}
 \usepackage{indentfirst}
@@ -32,9 +32,33 @@
 \setlength{\parskip}{1em}
 \renewcommand{\baselinestretch}{2.0}
 
-\input{listings/language_definitons.tex}
-\lstset{basicstyle=\small\ttfamily,breaklines=true}
-\lstset{framextopmargin=50pt,frame=bottomline}
+% listings with page breaking
+\newenvironment{longlisting}{\captionsetup{type=listing}}{}
+
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+\setminted{
+  fontfamily=txtt,
+  fontsize=\footnotesize,
+  samepage=false,
+  style=xcode,
+  breaklines,
+  bgcolor=bg
+}
+
+% custom lexers for toml, ladr and spass
+\newminted[tomlcode]{lexers/toml.py:TomlLexer -x}{}
+\newmintinline[tomlcodeinline]{lexers/toml.py:TomlLexer -x}{}
+\newmintedfile[tomlfile]{lexers/toml.py:TomlLexer -x}{}
+
+% custom lexers for ladr, ladr and spass
+\newminted[ladrcode]{lexers/ladr.py:LadrLexer -x}{}
+\newmintinline[ladrcodeinline]{lexers/ladr.py:LadrLexer -x}{}
+\newmintedfile[ladrfile]{lexers/ladr.py:LadrLexer -x}{}
+
+% custom lexers for spass, ladr and spass
+\newminted[spasscode]{lexers/spass.py:SpassLexer -x}{}
+\newmintinline[spasscodeinline]{lexers/Spass.py:SpassLexer -x}{}
+\newmintedfile[spassfile]{lexers/spass.py:SpassLexer -x}{}
 
 \makeglossaries
 \loadglsentries{glossaries}
@@ -51,8 +75,8 @@
   \Large{Benchmark solverów prover9 oraz SPASS\\ \large \textit \today \\}
   \vspace{3cm}
   \Large{	Autorzy:\\
-  Mateusz Grzeliński\\
-  Przemysław Michałek\\
+    Mateusz Grzeliński\\
+    Przemysław Michałek\\
   }
   \large{Wydział Elektrotechniki, Automatyki, Informatyki i Elektroniki}
 
@@ -84,26 +108,31 @@ Zbadane zostaną statystyki proverów ze względu na następujące właściwośc
   \item czy formuła jest w postaci \gls{CNF}
 \end{itemize}
 
-
-\begin{figure}[!htb]
-  \includegraphics[scale=0.4]{images/studio-projektowe1.png}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{benchmark/components.png}
   \caption{Diagram komponentów systemu benchmarka}
 \end{figure}
-
-\newpage
 
 \subsection{Prover9}
 
 Prover9 jest to zautomatyzowane narzędzie udowadniające dla logiki pierwszego rzędu stworzone przez Williama McCune’a.
 
 Prover9 dostępny jest jako plik wykonywalny, przyjmuje pliki w formacie \gls{LADR}. Ilość opcji dostępnych z lini komend jest minimanlna, jedyną ważną opcją z punktu widzenia benchmarka jest
-\lstinline{-x - set(auto2).  (enhanced auto mode)}
+\mintinline{text}{-x - set(auto2).  (enhanced auto mode)}
 
 Oficjalna strona internetowa \url{https://www.cs.unm.edu/~mccune/mace4/}
 
+\begin{longlisting} 
+  \caption{Przykład pliku wejściowego w składni LADR}
+  \ladrfile{listings/prover9_example.in}
+\end{longlisting}
 
-\lstinputlisting[language=ladr,caption={Przykład pliku wejściowego w składni LADR}]{listings/prover9_example.in}
-\lstinputlisting[caption={Przykład wyjścia Provera9}, basicstyle=\footnotesize\ttfamily]{listings/prover9_example.out}
+\begin{longlisting}
+  \caption{Przykład wyjścia Provera9}
+  \inputminted{text}{listings/prover9_example.out}
+\end{longlisting}
+
 \subsection{SPASS}
 
 SPASS Theorem Prover jest narzędziem do automatycznego dowodzenia twierdzeń, należących do rachunku predykatów pierwszego rzędu.
@@ -119,8 +148,15 @@ Wszystkie opcje linii komend \url{https://webspass.spass-prover.org/help/options
 \noindent \newline
 Oficjana strona internetowa \url{https://webspass.spass-prover.org/}
 
-\lstinputlisting[language=spass,caption={Przykład pliku wejściowego w składni SPASS}]{listings/spass_example.in}
-\lstinputlisting[caption={Przykład wyjścia SPASS}, basicstyle=\footnotesize\ttfamily]{listings/spass_example.out}
+\begin{longlisting}
+  \caption{Przykład pliku wejściowego w składni SPASS}
+  \spassfile{listings/spass_example.in}
+\end{longlisting}
+
+\begin{longlisting}
+  \caption{Przykład wyjścia SPASS}
+  \inputminted{text}{listings/spass_example.out}
+\end{longlisting}
 
 \subsection{TPTP}
 
@@ -137,7 +173,7 @@ Pełny spis domen \url{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&Fi
 \newline
 BNF składni TPTP \url{http://www.tptp.org/TPTP/SyntaxBNF.html}
 
-\lstinputlisting[language=tptp, caption={Przykład pliku w składni TPTP}]{listings/tptp_example.p}
+% lstinputlisting[language=tptp, caption={Przykład pliku w składni TPTP}]{listings/tptp_example.p}
 
 \subsection{TPTP to LADR}
 
@@ -165,6 +201,119 @@ Statystyki zostaną podane w formacie json.
   \end{tabular}
 \end{table}
 
+\subsection{Użycie i konfiguracja}
+
+Problem benchmarku sprowadza się do uruchomienia pliku wykonywalnego z różnymi opcjami w podprocesie oraz zebrania statystyk. Ze względu na mnogośc opcji, większość opcji zawarta jest w pliku konfiguracyjnym \ref{configFile} w formacie \textit{toml}.
+\subsubsection{Wspierane funkconalności}
+
+\begin{itemize}
+  \item definiowanie listy testów dla różnych plików wykonywalnych
+  \item ścieżka do pliku wykonywalnego może być podana w pliku konfiguracyjnym, lub może być zawarta w zmiennyj środowiskowej \mintinline{text}{PATH} (ścieżka w pliku ma pierwszeństwo)
+  \item wygodne generowanie macierzy opcji linii komend do testowania pliku wykonywalnego, patrz sekcja \ref{optionsMartix}
+  \item definiowanie listy źródeł do testów. Wspierane są 2 rodzaje źródeł: lista plików na lokalnym dysku lub/oraz generator SAT (patrz sekcja \ref{LFG})
+  \item pozycja nazwy pliku źródłowego może być ustawiona w następujący sposób
+    \begin{itemize}
+      \item podaj plik na standardowe wejście
+      \item podaj plik jako ostatni argument
+      \item podaj plik jako argument po opcji, np. \mintinline{text}{-o file.p}
+    \end{itemize}
+  \item TODO: wyniki zapisywane są jako pliki \textit{json} do katalogu wyściowego zdefiniowanego w pliku konfiguracyjnym.
+\end{itemize}
+
+\subsubsection{Ograniczenia}
+
+\begin{itemize}
+  \item podanie kilku plików wejściowych naraz dla jednej testownej komendy, np. \mintinline{text}{-o file1.p -o file2.p}
+  \item definiowanie konkretnych źródeł dla konkretnych testów, np. chcę, aby file1.p był podany dla test1, test2, test3, natomiast file2.p był podany tylko dla test2
+  \item pliki wejściowe są ograniczone do składni TPTP
+\end{itemize}
+
+% lstinputlisting[language=toml,label=configFile,caption={Przykład pliku konfiguracyjnego benchmarka}]{benchmark/example_config.toml}
+\begin{longlisting}
+  \caption{Przykład pliku konfiguracyjnego benchmarka}
+  \label{configFile}
+  \tomlfile{benchmark/example_config.toml}
+\end{longlisting}
+
+\subsubsection{Macierz opcji} \label{optionsMartix}
+
+Opcja \tomlcodeinline{options} w \tomlcodeinline{[[testSuite.testCase]]} odowiada za generowanie macierzy opcji to testów. \tomlcodeinline{options} to zagnieżdżone listy, gdzie każda z każdej listy wybierany jest jeden element.
+
+\begin{longlisting}
+  \begin{tomlcode}
+# ...
+[[testSuite]]
+executable="ls"
+options=["-1"]
+# ...
+
+[[testSuite.testCase]]
+options=[""]
+# generated test cases:
+# ls -1
+
+[[testSuite.testCase]]
+# the same as: options=[[], ["-a"], ["-l"]]
+options=["", "-a", "-l"]
+# generated test cases:
+# ls -1
+# ls -1 -a
+# ls -1 -l
+
+[[testSuite.testCase]]
+# note: toml can have one type in list, so create single element list with "-a"
+options=[
+  ["-a"],
+  ["-l", "-F"],
+  ["", "-v", "-t"]
+]
+# generated test cases:
+# ls -1 -a -l
+# ls -1 -a -F
+# ls -1 -a -l -v
+# ls -1 -a -F -v
+# ls -1 -a -l -t
+# ls -1 -a -F -t
+
+[[testSuite.testCase]]
+options=[
+  ["-a"],
+  [["-l"], ["-F", "-t"]]
+]
+# generated test cases:
+# ls -1 -a -l -F
+# ls -1 -a -l -t
+#
+# [["-l"], ["-F", "-t"]] was merged to ["-l -F", "-l -t"]
+  \end{tomlcode}
+\end{longlisting}
+
+\subsection{Diagramy}
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{benchmark/class_diagram.png}
+  \caption{Diagram klas}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{benchmark/activity_diagrams/main_run.png}
+  \caption{Diagram aktywności}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{benchmark/activity_diagrams/benchmark_run.png}
+  \caption{Diagram aktywnośći}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{benchmark/activity_diagrams/test_suite_run.png}
+  \caption{Diagram aktywnośći}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{benchmark/activity_diagrams/test_case_run.png}
+  \caption{Diagram aktywnośći}
+\end{figure}
 
 \subsection{Generator SAT}
 
@@ -182,7 +331,7 @@ Propozycja statystyk o formule SAT: (TODO)
   \item Maximal term depth
 \end{itemize}
 
-\section{Generator formuł logicznych}\label{LFG}
+\section{Generator formuł logicznych} \label{LFG}
 
 Generator formuł logicznych - \textit{ang. LFG - Logic formula generator} - losowy generator formuł SAT
 
@@ -208,13 +357,13 @@ Generator formuł logicznych - \textit{ang. LFG - Logic formula generator} - los
   \item string - SAT w formacie TPTP
 \end{itemize}
 
-\subsection{Algorytm generowania \gls{CNF}}
+\subsection{Algorytm generowania CNF}
 \begin{itemize}
   \item Wypisz metadane jako komentarz (link do źródła, parametry wejściowe)
   \item TODO
 \end{itemize}
 
-\subsection{Algorytm generowania \gls{FOF}}
+\subsection{Algorytm generowania FOF}
 \begin{itemize}
   \item Wypisz metadane jako komentarz (link do źródła, parametry wejściowe)
   \item TODO
