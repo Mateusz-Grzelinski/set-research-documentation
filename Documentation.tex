@@ -88,29 +88,42 @@
 
 \section{Streszczenie}
 
-Celem projektu jest zbadanie wydajności automatyczych metod dowodzenia twierdzeń Prover9 oraz SPASS. Na początku zostaje wygenerowna formuła \gls{SAT}, która zostaje rozwiązana przez badane provery. Badany jest czas wykonania, rezultat (czy SAT jest spełnialny), użycie pamięci RAM.
-Generowana formuła SAT jest modufikowana ze względu na długość formuły, ilość zmiennych.
+Celem projektu jest zbadanie wydajności automatyczych metod dowodzenia twierdzeń Prover9 oraz SPASS. Na początku zostaje wygenerowna formuła \gls{SAT}, która zostaje rozwiązana przez badane provery. Badany jest czas wykonania, rezultat (czy \gls{SAT} jest spełnialny), użycie pamięci RAM.
+Generowana formuła \gls{SAT} jest modyfikowana ze względu na między innymi długość formuły, ilość zmiennych.
 
-\section{Benchmark - strategia blackbox}
+Provery traktowane są jako czarne skrzynki (blackbox), ich parametry są modyfikowane z poziomu linii komend.
 
-W stategii blackbox traktujemy provery jako czarny skrzynki - nie ingerujemy w wykonywany program, badamy tylko input oraz output. Dla każdego provera dostępne są:
+\section{Benchmark}
+
+Problem benchmarku w strategii blackbox sprowadza sie do wykonania podprogramu z odpowiednimi opcjami z poziomu linii komend.
+Wejście oraz testy benchmarka ustawiane są poprzez plik konfiguracyjny, sekcja \ref{benchmarkUsage}.  Wejściem testu jest zbiór formuł \gls{SAT} zapisanych na dysku w formacie TPTP w postaci pliku tesktowego. Test polega na podaniu pliku TPTP do provera. W razie potrzeby nastąpi automatyczna konwersja do odpowiedniej składni za pomocą dostępnych translatorów.
+Dla każdego provera dostępne są statystyki:
 
 \begin{itemize}
   \item czas wykonania
   \item użycie pamięci RAM
+  \item spełnialność formuły
 \end{itemize}
 
+\noindent
+Więcej statystyk może zostać zebrany przez parser, który bada wyjście provera (sekcja \ref{parser}).
+\newline
 Zbadane zostaną statystyki proverów ze względu na następujące właściwości formuły SAT:
 
 \begin{itemize}
-  \item ilość zmiennych
-  \item stosunek ilości formuł do ilości zmiennych
-  \item czy formuła jest w postaci \gls{CNF}
+  \item SAT type (CNF, FOF)
+  \item number of clauses
+  \item number of atoms
+  \item maximal clause size
+  \item number of predicates
+  \item number of functors
+  \item number of variables
+  \item maximal term depth
 \end{itemize}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{benchmark/components.png}
+  \includegraphics[scale=0.5]{benchmark/components.png}
   \caption{Diagram komponentów systemu benchmarka}
 \end{figure}
 
@@ -118,12 +131,12 @@ Zbadane zostaną statystyki proverów ze względu na następujące właściwośc
 
 Prover9 jest to zautomatyzowane narzędzie udowadniające dla logiki pierwszego rzędu stworzone przez Williama McCune’a.
 
-Prover9 dostępny jest jako plik wykonywalny, przyjmuje pliki w formacie \gls{LADR}. Ilość opcji dostępnych z lini komend jest minimanlna, jedyną ważną opcją z punktu widzenia benchmarka jest
-\mintinline{text}{-x - set(auto2).  (enhanced auto mode)}
+Prover9 dostępny jest jako plik wykonywalny, przyjmuje pliki w formacie \gls{LADR}. Dla uniwersalności zostanie zastosowany konwerter TPTP do LADR dostępny wraz z Proverem9 jako osobny plik wykonywalny. Ilość opcji dostępnych z lini komend jest minimanlna, jedyną ważną opcją z punktu widzenia benchmarka jest \mintinline{text}{-x - set(auto2).  (enhanced auto mode)}
 
+\noindent
 Oficjalna strona internetowa \url{https://www.cs.unm.edu/~mccune/mace4/}
 
-\begin{longlisting} 
+\begin{longlisting}
   \caption{Przykład pliku wejściowego w składni LADR}
   \ladrfile{listings/prover9_example.in}
 \end{longlisting}
@@ -133,11 +146,15 @@ Oficjalna strona internetowa \url{https://www.cs.unm.edu/~mccune/mace4/}
   \inputminted{text}{listings/prover9_example.out}
 \end{longlisting}
 
+\subsubsection{TPTP to LADR}
+
+W bibliotece \gls{LADR}, która jest załączona wraz ze źródłami Provera9, dostępny jest translator składni TPTP do LADR. Jest to plik wykonywalny. Na standardowe wejście przyjmuje TPTP, na standardowy wyjście podaje LADR.
+
 \subsection{SPASS}
 
 SPASS Theorem Prover jest narzędziem do automatycznego dowodzenia twierdzeń, należących do rachunku predykatów pierwszego rzędu.
 
-SPASS nie korzysta z żadnych bibliotek, dostępny jest jako plik wykonywalny. Akceptuje pliki w składni TPTP lub swojej własnej. SPASS udostępnia wiele opcji z poziomu lini komend. Z punktu widzenia benchmarka istotnymi są:
+SPASS nie korzysta z zewnętrznych bibliotek, dostępny jest jako plik wykonywalny. Akceptuje pliki w składni TPTP lub swojej własnej. SPASS udostępnia wiele opcji z poziomu lini komend. Z punktu widzenia benchmarka istotnymi są:
 
 \begin{itemize}
   \item TODO
@@ -173,13 +190,7 @@ Pełny spis domen \url{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&Fi
 \newline
 BNF składni TPTP \url{http://www.tptp.org/TPTP/SyntaxBNF.html}
 
-% lstinputlisting[language=tptp, caption={Przykład pliku w składni TPTP}]{listings/tptp_example.p}
-
-\subsection{TPTP to LADR}
-
-W bibliotece \gls{LADR}, która jest załączona wraz ze źródłami Provera9, dostępny jest translator składni TPTP do LADR. Jest to plik wykonywalny.
-
-\subsection{Parser}
+\subsection{Parser} \label{parser}
 
 Zadaniem parsera jest wydobycie dodatkowych informacji statystycznych o przebiegu działana proverów, na podstawie ich wyjścia.
 \newline
@@ -201,34 +212,46 @@ Statystyki zostaną podane w formacie json.
   \end{tabular}
 \end{table}
 
-\subsection{Użycie i konfiguracja}
+\subsection{Użycie i konfiguracja} \label{benchmarkUsage}
 
-Problem benchmarku sprowadza się do uruchomienia pliku wykonywalnego z różnymi opcjami w podprocesie oraz zebrania statystyk. Ze względu na mnogośc opcji, większość opcji zawarta jest w pliku konfiguracyjnym \ref{configFile} w formacie \textit{toml}.
+Ze względu na mnogośc opcji, większość opcji zawarta jest w pliku konfiguracyjnym \ref{configFile} w formacie \textit{toml}.
+
+Najpierw definiowana jest lista wejść (\tomlcodeinline{testInput}). Wejście to zbiór plików, które można jednoznacznie zidentyfikować za pomocą nazwy (\tomlcodeinline{name}).
+Następnie definiowana jest lista zestawów testowych (\tomlcodeinline{testSuite}). Zestaw testowy definiuje parametry wspólne dla kilku przypadków testowych (\tomlcodeinline{testCase}) np. ścieżka do pliku wykonywalnego. Każdy zestaw testowy posiada listę przypadków testowych. Każdy przypadek testowy definiuje w jakim formacie oczekuje wejście. Jeśli formaty są różne, konflikt jest rozwiązywany przy pomocy dostępnych translatorów. Opcje do testowania są definiowane jako lista. Ta lista jest interpretowana jako macierz opcji, patrz \ref{optionsMartix}. plik wejściowy poże zosać podany przez standardowe wejście, przez opcję lini komend lub jako ostatni argument w komendzie.
+
+Komenda testowa składana jest w następujący sposób (zobacz przykady w \ref{optionsMartix})
+
+\begin{minted}{bash}
+testSuite.executable testSuite.options testSui.testCase.options
+\end{minted}
+
 \subsubsection{Wspierane funkconalności}
 
 \begin{itemize}
-  \item definiowanie listy testów dla różnych plików wykonywalnych
   \item ścieżka do pliku wykonywalnego może być podana w pliku konfiguracyjnym, lub może być zawarta w zmiennyj środowiskowej \mintinline{text}{PATH} (ścieżka w pliku ma pierwszeństwo)
-  \item wygodne generowanie macierzy opcji linii komend do testowania pliku wykonywalnego, patrz sekcja \ref{optionsMartix}
-  \item definiowanie listy źródeł do testów. Wspierane są 2 rodzaje źródeł: lista plików na lokalnym dysku lub/oraz generator SAT (patrz sekcja \ref{LFG})
+  \item generowanie macierzy opcji linii komend do testowania pliku wykonywalnego, patrz sekcja \ref{optionsMartix}
+  \item definiowanie listy źródeł do testów. Źródłem do testów mogą być tylko pliki tesktowe
+  \item definiowanie które wejścia mają byś przetestowane w przypadku testowym
+    \begin{itemize}
+      \item testuj tylko wymienione - opcja \tomlcodeinline{include_only},
+      \item testuj wszystkich oprócz - opcja \tomlcodeinline{exclude},
+      \item testuj wszystkie zdefiniowane wejścia - nie podając żadnej z opcji
+    \end{itemize}
   \item pozycja nazwy pliku źródłowego może być ustawiona w następujący sposób
     \begin{itemize}
-      \item podaj plik na standardowe wejście
-      \item podaj plik jako ostatni argument
-      \item podaj plik jako argument po opcji, np. \mintinline{text}{-o file.p}
+      \item podaj plik na standardowe wejście \tomlcodeinline{input_as_stdin}
+      \item podaj plik jako ostatni argument \tomlcodeinline{input_as_last_argument}
+      \item podaj plik jako argument po opcji \tomlcodeinline{input_after_option}
     \end{itemize}
-  \item TODO: wyniki zapisywane są jako pliki \textit{json} do katalogu wyściowego zdefiniowanego w pliku konfiguracyjnym.
+  \item TODO: wyniki zapisywane są jako plik \textit{json} do katalogu wyściowego zdefiniowanego w pliku konfiguracyjnym.
 \end{itemize}
 
 \subsubsection{Ograniczenia}
 
 \begin{itemize}
-  \item podanie kilku plików wejściowych naraz dla jednej testownej komendy, np. \mintinline{text}{-o file1.p -o file2.p}
-  \item definiowanie konkretnych źródeł dla konkretnych testów, np. chcę, aby file1.p był podany dla test1, test2, test3, natomiast file2.p był podany tylko dla test2
-  \item pliki wejściowe są ograniczone do składni TPTP
+  \item podanie kilku plików wejściowych naraz dla jednej testownej komendy nie jest możliwe, np. \mintinline{text}{-o file1.p -o file2.p}
 \end{itemize}
 
-% lstinputlisting[language=toml,label=configFile,caption={Przykład pliku konfiguracyjnego benchmarka}]{benchmark/example_config.toml}
 \begin{longlisting}
   \caption{Przykład pliku konfiguracyjnego benchmarka}
   \label{configFile}
@@ -240,7 +263,7 @@ Problem benchmarku sprowadza się do uruchomienia pliku wykonywalnego z różnym
 Opcja \tomlcodeinline{options} w \tomlcodeinline{[[testSuite.testCase]]} odowiada za generowanie macierzy opcji to testów. \tomlcodeinline{options} to zagnieżdżone listy, gdzie każda z każdej listy wybierany jest jeden element.
 
 \begin{longlisting}
-  \begin{tomlcode}
+\begin{tomlcode}
 # ...
 [[testSuite]]
 executable="ls"
@@ -285,51 +308,40 @@ options=[
 # ls -1 -a -l -t
 #
 # [["-l"], ["-F", "-t"]] was merged to ["-l -F", "-l -t"]
-  \end{tomlcode}
+\end{tomlcode}
 \end{longlisting}
 
 \subsection{Diagramy}
 
 \begin{figure}[H]
-  \includegraphics[width=\textwidth]{benchmark/class_diagram.png}
+  \centering
+  \includegraphics[width=0.9\textwidth]{benchmark/class_diagram.png}
   \caption{Diagram klas}
 \end{figure}
 
 \begin{figure}[H]
+  \centering
   \includegraphics[width=\textwidth]{benchmark/activity_diagrams/main_run.png}
   \caption{Diagram aktywności}
 \end{figure}
 
 \begin{figure}[H]
+  \centering
   \includegraphics[width=\textwidth]{benchmark/activity_diagrams/benchmark_run.png}
   \caption{Diagram aktywnośći}
 \end{figure}
 
 \begin{figure}[H]
+  \centering
   \includegraphics[width=\textwidth]{benchmark/activity_diagrams/test_suite_run.png}
   \caption{Diagram aktywnośći}
 \end{figure}
 
 \begin{figure}[H]
+  \centering
   \includegraphics[width=\textwidth]{benchmark/activity_diagrams/test_case_run.png}
   \caption{Diagram aktywnośći}
 \end{figure}
-
-\subsection{Generator SAT}
-
-Plik wykonywalny, który generuje formuły logiczne w formacie TPTP. Funkcjonuje jako osobny projekt, dlatego został opisany w sekcji \ref{LFG}
-
-Propozycja statystyk o formule SAT: (TODO)
-
-\begin{itemize}
-  \item Number of clauses
-  \item Number of atoms
-  \item Maximal clause size
-  \item Number of predicates
-  \item Number of functors
-  \item Number of variables
-  \item Maximal term depth
-\end{itemize}
 
 \section{Generator formuł logicznych} \label{LFG}
 

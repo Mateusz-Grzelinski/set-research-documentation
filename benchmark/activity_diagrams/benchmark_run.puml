@@ -1,5 +1,5 @@
 @startuml
-floating note: inside run() : void
+floating note: inside Benchmark.run() : void
 
 start
 

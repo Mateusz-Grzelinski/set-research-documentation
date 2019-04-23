@@ -2,22 +2,34 @@
 floating note: inside TestCase.run(executable : string, aditional_options : string, parser : Parser, file_path: string) : TestStatistics[]
 start
 
-' TODO: handle output properly
-
 :test_case_statistics = [];
 :matrix_options = generateMatrixOptions(this.options);
 repeat
-:stats = NULL;
+:stats = TestStatistics();
 if (this.input_as_stdin) then (yes)
   :input = open(file_path);
-  :<b>output = this.executable aditional_options matrix_options this.input_after_option file_path</b>;
+  :stats.start_gathering();
+  :output = <b>""this.executable""
+  <b>""aditional_options""
+  <b>""matrix_options"";
   note: run in subproces
-  :stats = TestStatistics();
+elseif (this.input_as_last_argument) then (yes)
+  :stats.start_gathering();
+  :output = <b>""this.executable""
+  <b>""aditional_options""
+  <b>""matrix_options""
+  <b>""file_path"";
+  note: run in subproces
 else (no)
-  :<b>output = this.executable aditional_options matrix_options this.input_after_option file_path</b>;
+  :stats.start_gathering();
+  :output = <b>""this.executable""
+  <b>""aditional_options""
+  <b>""matrix_options""
+  <b>""this.input_after_option""
+  <b>""file_path"";
   note: run in subproces
-  :stats = TestStatistics();
 endif
+:stats.end_gathering();
 
 if (parser != NULL) then (yes)
   :stats.output = parser.parse(ouput);

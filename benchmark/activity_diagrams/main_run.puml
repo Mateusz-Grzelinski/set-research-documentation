@@ -1,12 +1,15 @@
 @startuml
 floating note: inside Main.main()
 start
-:create objects
-log:Logger
-config:Config;
+:log = Logger()
+config = Config('config.toml');
+
+:create translators based on config;
+note: calling proper constructors
 
 if (config.verifyConfig()) then (ok)
   :create TestSuites based on config;
+note: calling constructors
   :benchmark = Benchmark(test_suites);
   :Benchmark.statistics.hardware_statistics = HardwareStatistics.getHardwareStatistics();
   :this.benchmark.run();

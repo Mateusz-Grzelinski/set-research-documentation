@@ -1,7 +1,7 @@
 @startuml
 
 package "Benchmark blackbox" {
-  [Generator SAT] as Generator
+  [Set of files] as Files
   frame "Prover9 library" {
     [TPTP to LADR] as TPTP_to_LADR
     [Prover9]
@@ -10,11 +10,11 @@ package "Benchmark blackbox" {
   [Parser]
 }
 
-Generator - TPTP_to_LADR : TPTP
-TPTP_to_LADR - Prover9 : LADR
-Generator - SPASS : TPTP
-Prover9 - Parser : output
-SPASS - Parser : output
-Parser - Stats
-Prover9 -[hidden]- SPASS
+Files -- TPTP_to_LADR : TPTP
+Files -- SPASS : TPTP
+TPTP_to_LADR -- Prover9 : LADR
+Prover9 -- Parser : output
+SPASS -- Parser : output
+Parser -- Stats
+/' Prover9 -[hidden]- SPASS '/
 @enduml

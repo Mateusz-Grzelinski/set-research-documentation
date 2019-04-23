@@ -1,16 +1,14 @@
-
 @startuml
 
 package "Benchmark blackbox" {
-TestInput <|-- LFG : implements
-TestInput <|-- TPTPFiles : implements
 TestCase --* TestSuite
 TestSuite o-- TestInput
+TestInput *-- Translator
 TestSuite *-- Parser
 TestSuite --o Benchmark
 Parser <|-- Prover9Parser : implements
 Parser <|-- SPASSParser : implements
-SATType -- SATStatistics
+SATType - SATStatistics
 TestSuite - ParserToExecutable
 
 Statistics --* Benchmark
@@ -18,7 +16,7 @@ HardwareStatistics --o Benchmark
 SATStatistics -- TestCaseStatistics
 SATStatistics -o TestSuite
 TestCaseStatistics -- Statistics
-HardwareStatistics - Statistics 
+HardwareStatistics - Statistics
 
 Config *-- Main
 Logger *-- Main
@@ -71,25 +69,20 @@ class Logger {
   - log_file: string
 }
 
-abstract class TestInput <<interface>> {
-+ getTestCase() : string
-+ getInputStatistics() : SATStatistics
+class TestInput {
+  - format : string
+  - {static} translators : Translator[]
+  + getTestCase(translators: Translator[]) : string
+  + getInputStatistics() : SATStatistics
+  + translate(from: string, to: string) : string
+  + as(format: string) : string
 }
 
-class TPTPFiles {
-  - paths : string[]
-  + TPTPFiles(string[] paths)
-  + getTestCase() : string
-  + getSATStatistics() : SATStatistics
+abstract class Translator {
+  - from : string
+  - to : string
+  + {static} translate(path: string): string
 }
-
-class LFG {
-  - seed : int
-  TODO
-  + getTestCase() : string
-  + getSATStatistics() : SATStatistics
-}
-
 
 class Statistics <<serializable>> {
   - date
@@ -187,7 +180,6 @@ class Config {
   - config_file_path : string
   - configs : dict
   - verifyConfig() : void
-
   + Config(config_file_path: string)
   + readConfigFile() : void
 }
