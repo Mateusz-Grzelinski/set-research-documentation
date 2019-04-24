@@ -3,8 +3,6 @@ floating note: inside Benchmark.run() : void
 
 start
 
-:this.statistics.hardware = HardwareStatistics.getHardwareStatistics();
-
 repeat
 :result = TestSuite.run();
 :this.statistic.suites.append(result);

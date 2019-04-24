@@ -20,7 +20,7 @@ elseif (this.input_as_last_argument) then (yes)
   <b>""matrix_options""
   <b>""file_path"";
   note: run in subproces
-else (no)
+elseif (this.input_after_option) then (exists)
   :stats.start_gathering();
   :output = <b>""this.executable""
   <b>""aditional_options""
@@ -28,6 +28,8 @@ else (no)
   <b>""this.input_after_option""
   <b>""file_path"";
   note: run in subproces
+else (is empty)
+  stop
 endif
 :stats.end_gathering();
 

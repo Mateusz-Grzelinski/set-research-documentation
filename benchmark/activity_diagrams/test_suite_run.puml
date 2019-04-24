@@ -3,7 +3,7 @@ floating note: inside TestSuite.run() : TestSuiteStatistics
 start
 
 :this.parser = testSuite.matchParser(this.executable);
-note: might me null
+note: might be null
 
 repeat
 :input = next TestInput;
