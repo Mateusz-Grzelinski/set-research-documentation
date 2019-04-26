@@ -110,16 +110,21 @@ Więcej statystyk może zostać zebrany przez parser, który bada wyjście prove
 \newline
 Zbadane zostaną statystyki proverów ze względu na następujące właściwości formuły SAT:
 
+% more here:http://www.tptp.org/TPTP/TR/TPTPTR.shtml#ProblemGenerators
 \begin{itemize}
   \item SAT type (CNF, FOF)
   \item number of clauses
+    Clause is disjunction of a number of variables (negations may be present)
   \item number of atoms
   \item maximal clause size
   \item number of predicates
   \item number of functors
   \item number of variables
+    variables assume values either 1 (true) or 0 (false)
   \item maximal term depth
 \end{itemize}
+
+For example, in expresion \mintinline{text}{(A v ¬B v C) ^ (B v D v E) ^ (D v F)} there are 3 clauses, 6 variables
 
 \begin{figure}[H]
   \centering
@@ -149,6 +154,8 @@ Oficjalna strona internetowa \url{https://www.cs.unm.edu/~mccune/mace4/}
 \subsubsection{TPTP to LADR}
 
 W bibliotece \gls{LADR}, która jest załączona wraz ze źródłami Provera9, dostępny jest translator składni TPTP do LADR. Jest to plik wykonywalny. Na standardowe wejście przyjmuje TPTP, na standardowy wyjście podaje LADR.
+
+Alternatywą do konwertera dostarczanego razem z prover9 jest program \mintinline{text}{tptp2X} dostarczanego przez TPTP.
 
 \subsection{SPASS}
 
@@ -180,7 +187,80 @@ Oficjana strona internetowa \url{https://webspass.spass-prover.org/}
 TPTP - \textit{ang. (Thousands of Problems for Theorem Provers)} - to biblioteka problemów wykorzystywanych do testowania systemów \gls{ATP}. Jednocześnie jest to nazwa formatu, w którym zapisywane są te testy. TPTP udostępnia te problemy na oficjalnej stronie intenetowej. Razem z TPTP istnieje TSTP (\textit{ang. Thousands of Solutions from Theorem Provers}) - biblioteka rozwiązań problemów.
 Te problemy są sklasyfikowane przez domeny (3 literowe skróty), przykładowo LCL - Logic Calculi, COL - Combinatory Logic
 
-W formacie TPTP można zapisywać \gls{TPI}, \gls{THF}, \gls{TFF}, TCF (TODO: co to za format? Nie można go nigdzie znaleźć), \gls{FOF}, \gls{CNF}. Celem benchmarka jest badanie proverów logiku pierwszego rzędu, więc interesują nas \gls{CNF}, \gls{TFF}, TCF, \gls{FOF} (TFF/FOF with external clausifiers).
+W formacie TPTP można zapisywać \gls{TPI}, \gls{THF}, \gls{TFF}, \gls{FOF}, \gls{CNF}. Celem benchmarka jest badanie proverów logiku pierwszego rzędu, więc interesują nas \gls{CNF}, \gls{TFF}, \gls{FOF} (TFF/FOF with external clausifiers).
+
+% from technical manual http://www.tptp.org/TPTP/TR/TPTPTR.shtml
+\subsubsection{Wybrane elementy składni TPTP}
+
+\begin{itemize}
+  \item The syntax for atoms is that of Prolog: variables start with upper case letters, atoms and terms are written in prefix notation, uninterpreted predicates and functors either start with lower case and contain alphanumerics and underscore, or are in 'single quotes'.
+
+  \item Each logical formula is wrapped in an annotated formula structure of the form  \newline \mintinline{text}{language(name,role,formula,source,[useful_info])}
+
+    \begin{itemize}
+      \item role gives the user semantics of the formula, one of
+        \mintinline{text}{axiom},
+        \mintinline{text}{hypothesis},
+        \mintinline{text}{definition},
+        \mintinline{text}{assumption},
+        \mintinline{text}{lemma},
+        \mintinline{text}{theorem},
+        \mintinline{text}{corollary},
+        \mintinline{text}{conjecture},
+        \mintinline{text}{negated_conjecture},
+        \mintinline{text}{plain},
+        \mintinline{text}{type},
+        and \mintinline{text}{unknown}.  Axiom-like formulae are those with the roles
+        \mintinline{text}{axiom},
+        \mintinline{text}{hypothesis},
+        \mintinline{text}{definition},
+        \mintinline{text}{assumption},
+        \mintinline{text}{lemma},
+        \mintinline{text}{theorem},
+        and \mintinline{text}{corollary}. They are accepted, without proof, as a basis for proving conjectures in THF, TFF, and FOF problems. In CNF problems the axiom-like formulae are accepted as part of the set whose satisfiability has to be established. \mintinline{text}{conjecture} occur in only THF, TFF, and FOF problems, and are to all be proven from the axiom(-like) formulae. A problem is solved only when all conjectures are proven. TPTP problems never contain more than one conjecture. \mintinline{text}{negated_conjectures} are formed from negation of a \mintinline{text}{conjecture}, typically in FOF to CNF conversion.
+      \item The \mintinline{text}{useful_info} field of an annotated formula is optional, and if it is not used then the \mintinline{text}{source} field becomes optional. The \mintinline{text}{source} field is used to record where the annotated formula came from, and is most commonly a file record or an inference record.
+    \end{itemize}
+
+  \item The language also supports interpreted predicates and functors. These come in two varieties: defined predicates and functors, whose interpretation is specified by the TPTP language, and system predicates and functors, whose interpretation is ATP system specific. The defined predicates recognized so far are \mintinline{text}{$true} and \mintinline{text}{$false} \mintinline{text}{=} and \mintinline{text}{!=} \mintinline{text}{$distinct} (only \gls{TFF} language) and  arithmetic predicates (only \gls{TFF} and \gls{THF}).
+    Interpreted predicates and functors are syntactically distinct from uninterpreted ones - they are \mintinline{text}{=} and \mintinline{text}{!=}, or start with a \$, a '', or a digit. Non-variable symbols can be given a type globally, in the formula with role type. The defined types are \mintinline{text}{$o} - the Boolean type, \mintinline{text}{$i} - the type of individuals, \mintinline{text}{$real} - the type of reals, \mintinline{text}{$rat} - the type of rational, and \mintinline{text}{$int} - the type of integers. New types are introduced in formulae with the type role, based on \mintinline{text}{$tType} - the type of all types.
+
+  \item The universal quantifier is \mintinline{text}{!}, the existential quantifier is \mintinline{text}{?}, and the lambda binder is \mintinline{text}{^}. Quantified formulae are written in the form \mintinline{text}{Quantifier [Variables] :  Formula}
+
+  \item The binary connectives are infix \mintinline{text}{|} for disjunction, infix \mintinline{text}{&} for conjunction, infix \mintinline{text}{<=>} for equivalence, infix \mintinline{text}{=>} for implication, infix \mintinline{text}{<=} for reverse implication, infix \mintinline{text}{<~>} for non-equivalence (XOR), infix \mintinline{text}{~|} for negated disjunction (NOR), infix	\mintinline{text}{~&} for negated conjunction (NAND), infix \mintinline{text}{@} for application. The only unary connective is prefix \mintinline{text}{~} for negation
+
+  \item  Arithmetic system are used in only the THF and TFF languages. This includes: 
+    \mintinline{text}{$real} (real number)
+    \mintinline{text}{$rat} (rational)
+    \mintinline{text}{$to_int} (cast to int)
+    \mintinline{text}{$to_rat}
+    \mintinline{text}{$to_real}
+    \mintinline{text}{$is_int}
+    \mintinline{text}{$is_rat}
+    \mintinline{text}{$is_real},
+    unary operators:
+    \mintinline{text}{$floor}
+    \mintinline{text}{$round}
+    \mintinline{text}{$ceiling}
+    \mintinline{text}{$truncate},
+    comparison of 2 numbers:
+    \mintinline{text}{=}
+    \mintinline{text}{$less}
+    \mintinline{text}{$lesseq}
+    \mintinline{text}{$greater}
+    \mintinline{text}{$greatereq}
+    \mintinline{text}{$uminus}
+    \mintinline{text}{$sum}
+    \mintinline{text}{$difference}
+    \mintinline{text}{$product}
+    \mintinline{text}{$quotient}
+    \mintinline{text}{$quotient_e} (e for Euclidean quotient)
+    \mintinline{text}{$quotient_t} (t for truncate)
+    \mintinline{text}{$quotient_f} (f for floor)
+    \mintinline{text}{$distinct}
+    \mintinline{text}{$remainder_e}
+    \mintinline{text}{$remainder_t}
+    \mintinline{text}{$remainder_f}
+\end{itemize}
 
 
 \noindent
@@ -189,6 +269,20 @@ Oficjalna strona internetowa \url{http://www.tptp.org}
 Pełny spis domen \url{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&File=THFSynopsis}
 \newline
 BNF składni TPTP \url{http://www.tptp.org/TPTP/SyntaxBNF.html}
+\newline
+Tutorial składni TPTP znajduje się pod linkiem \url{http://www.tptp.org/TPTP/TR/TPTPTR.shtml} Aby poznać jak zapisywana jest formuła, polecam przeczytać \textit{The Formulae Section}
+
+\subsubsection{Narzędzia dodatkowe TPTP}
+
+TPTP4X (napisane w c), TPTP2X (napisane w prologu) for reformatting, transforming, and generating TPTP problem files. Nie są używane w tym projekcie ale warto o nich wspomnieć, dostarczają wiele funkcjonalności.
+Przykładowe możliwości:
+
+\begin{itemize}
+  \item konwertowanie \gls{FOF} do \gls{CNF}
+  \item konwertowanie TPTP do składni prover9, dimacs, otter, dfg i więcej
+  \item optymalizacja \gls{FOF}, \gls{CNF} za pomocą różnych algorytmów
+  \item zmień porządek formuły \gls{CNF}
+\end{itemize}
 
 \subsection{Parser} \label{parser}
 
@@ -263,52 +357,52 @@ testSuite.executable testSuite.options testSui.testCase.options
 Opcja \tomlcodeinline{options} w \tomlcodeinline{[[testSuite.testCase]]} odowiada za generowanie macierzy opcji to testów. \tomlcodeinline{options} to zagnieżdżone listy, gdzie każda z każdej listy wybierany jest jeden element.
 
 \begin{longlisting}
-\begin{tomlcode}
-# ...
-[[testSuite]]
-executable="ls"
-options=["-1"]
-# ...
+  \begin{tomlcode}
+    # ...
+    [[testSuite]]
+    executable="ls"
+    options=["-1"]
+    # ...
 
-[[testSuite.testCase]]
-options=[""]
-# generated test cases:
-# ls -1
+    [[testSuite.testCase]]
+    options=[""]
+    # generated test cases:
+    # ls -1
 
-[[testSuite.testCase]]
-# the same as: options=[[], ["-a"], ["-l"]]
-options=["", "-a", "-l"]
-# generated test cases:
-# ls -1
-# ls -1 -a
-# ls -1 -l
+    [[testSuite.testCase]]
+    # the same as: options=[[], ["-a"], ["-l"]]
+    options=["", "-a", "-l"]
+    # generated test cases:
+    # ls -1
+    # ls -1 -a
+    # ls -1 -l
 
-[[testSuite.testCase]]
-# note: toml can have one type in list, so create single element list with "-a"
-options=[
-  ["-a"],
-  ["-l", "-F"],
-  ["", "-v", "-t"]
-]
-# generated test cases:
-# ls -1 -a -l
-# ls -1 -a -F
-# ls -1 -a -l -v
-# ls -1 -a -F -v
-# ls -1 -a -l -t
-# ls -1 -a -F -t
+    [[testSuite.testCase]]
+    # note: toml can have one type in list, so create single element list with "-a"
+    options=[
+    ["-a"],
+    ["-l", "-F"],
+    ["", "-v", "-t"]
+    ]
+    # generated test cases:
+    # ls -1 -a -l
+    # ls -1 -a -F
+    # ls -1 -a -l -v
+    # ls -1 -a -F -v
+    # ls -1 -a -l -t
+    # ls -1 -a -F -t
 
-[[testSuite.testCase]]
-options=[
-  ["-a"],
-  [["-l"], ["-F", "-t"]]
-]
-# generated test cases:
-# ls -1 -a -l -F
-# ls -1 -a -l -t
-#
-# [["-l"], ["-F", "-t"]] was merged to ["-l -F", "-l -t"]
-\end{tomlcode}
+    [[testSuite.testCase]]
+    options=[
+    ["-a"],
+    [["-l"], ["-F", "-t"]]
+    ]
+    # generated test cases:
+    # ls -1 -a -l -F
+    # ls -1 -a -l -t
+    #
+    # [["-l"], ["-F", "-t"]] was merged to ["-l -F", "-l -t"]
+  \end{tomlcode}
 \end{longlisting}
 
 \subsection{Diagramy}
