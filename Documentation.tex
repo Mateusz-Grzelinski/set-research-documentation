@@ -355,17 +355,17 @@ testSuite.executable testSuite.options testSui.testCase.options
   \caption{Przykładowe komendy testowe}
   \begin{tomlcode}
 # ...
-[[testSuite]]
+[[testSuites]]
 executable="ls"
 options=["-1"]
 # ...
 
-[[testSuite.testCase]]
+[[testSuites.testCases]]
 options=[""]
 # test cases:
 # ls -1
 
-[[testSuite.testCase]]
+[[testSuites.testCases]]
 options=["", "-r -l"]
 # test cases:
 # ls -1
