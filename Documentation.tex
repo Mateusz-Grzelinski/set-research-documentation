@@ -407,41 +407,65 @@ options=["", "-r -l"]
 
 \section{Generator formuł logicznych} \label{LFG}
 
-Generator formuł logicznych - \textit{ang. LFG - Logic formula generator} - losowy generator formuł SAT
+Generator formuł logicznych - \textit{ang. LFG - Logic formula generator} - losowy generator formuł SAT.
 
-\subsection{Wejście}
+\subsection{Generator CNF}
 
-\begin{itemize}
-  \item seed - opcjonalnie - umożliwia powtarzanie losowania
-  \item typ generatora liczb losowych - opcjonalne, domyślnie \textit{uniform\_int\_distribution} \url{https://en.cppreference.com/w/cpp/named_req/RandomNumberDistribution} (TODO check if needed)
-  \item ilość zmiennych - wymagane, integer
-  \item ilość formuł - wymagane, integer
-  \item generuj \gls{SAT} w formacie \gls{CNF}
-    \begin{itemize}
-      \item k-SAT z zadanym k
-      \item Horn-SAT (TODO what is this exaclty?)
-      \item NAE3SAT (TODO what is this exaclty?)
-    \end{itemize}
-  \item generuj \gls{SAT} spełnialny/niespełnialny/random - TODO czy jesteśmy w stanie wygenerować formułę, która będzie wiadomo że jest spełnialna lub nie? Można użyć do badania czy formuły poprawne są rozwiązywane szybciej.
-\end{itemize}
+Przedstawiony generator może generować formuły w formacie dimacs (docelowo będzie to TPTP)
 
-\subsection{Wyjście}
+Generator ma spełnić 2 cele: ma wygenerować formułę CNF z okreżloną ilością klauzul oraz określoną ilością zmiennych.
+
+\subsubsection{Generator zmiennych}
+
+Generator zmiennych ma za zadanie podanie dokładnie $n$ zmiennych, w tym $m$ różnych.
+
+Parametry sterujące:
 
 \begin{itemize}
-  \item string - SAT w formacie TPTP
+  \item nazwa zmiennej
+  \item ilość różnych zmiennych
+  \item ilość zmiennych do wygenerowania, ilość różnych zmiennych jest mniejsza lub równa ilości zmiennych
+  \item prawdopodobieństwo zanegowania zmiennej
 \end{itemize}
 
-\subsection{Algorytm generowania CNF}
+Ograniczenia:
+\begin{enumerate}
+  \item prawdopodobieństwo zanegowania jest z zakresu $[0,1]$
+  \item ilość zmiennych jest większa lub równa niż ilość różnych zmiennych $n>=m$
+\end{enumerate}
+
+\subsubsection{Generator klauzul}
+
+Bazując na zmiennych podanych przez generator zmiennych, generuje dokładnie $k$ klauzul. Generator klauzul używa generatora zmiennych. Generator zmiennych musi zostać całkowicie wyczerpany.
+
+Parametry sterujące:
+
 \begin{itemize}
-  \item Wypisz metadane jako komentarz (link do źródła, parametry wejściowe)
-  \item TODO
+  \item generator zmiennych
+  \item ilość klauzuj do wygenerowania
+  \item maksymalny rozmiar klauzuli
 \end{itemize}
 
-\subsection{Algorytm generowania FOF}
-\begin{itemize}
-  \item Wypisz metadane jako komentarz (link do źródła, parametry wejściowe)
-  \item TODO
-\end{itemize}
+Ograniczenia:
+\begin{enumerate}
+  \item na klauzulę przypada co najmniej jedna zmienna
+  \item ilość zmiennych wymaganych przez generator klauzul musi być większa niż ilość zmiennych dostaczanych przez generator zmiennych (cały generator zmiennych musi zostać skonsumowany)
+\end{enumerate}
+
+
+\subsubsection{Algorytm generowania CNF}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{lfg/clause_generator.png}
+  \caption{Algorytm generowania pojedyńczej klauzuli}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{lfg/variable_generator.png}
+  \caption{Algorytm generowania losowej zmiennej}
+\end{figure}
 
 \section{Wnioski}
 
