@@ -311,9 +311,7 @@ Statystyki zostaną podane w formacie json.
 Ze względu na mnogośc opcji, większość opcji zawarta jest w pliku konfiguracyjnym \ref{configFile} w formacie \textit{toml}.
 
 Najpierw definiowana jest lista wejść (\tomlcodeinline{testInput}). Wejście to zbiór plików, które można jednoznacznie zidentyfikować za pomocą nazwy (\tomlcodeinline{name}).
-Następnie definiowana jest lista zestawów testowych (\tomlcodeinline{testSuite}). Zestaw testowy definiuje parametry wspólne dla kilku przypadków testowych (\tomlcodeinline{testCase}) np. ścieżka do pliku wykonywalnego. Każdy zestaw testowy posiada listę przypadków testowych. Każdy przypadek testowy definiuje w jakim formacie oczekuje wejście. Jeśli formaty są różne, konflikt jest rozwiązywany przy pomocy dostępnych translatorów. Opcje do testowania są definiowane jako lista. Ta lista jest interpretowana jako macierz opcji, patrz \ref{optionsMartix}. plik wejściowy poże zosać podany przez standardowe wejście, przez opcję lini komend lub jako ostatni argument w komendzie.
-
-Komenda testowa składana jest w następujący sposób (zobacz przykady w \ref{optionsMartix})
+Następnie definiowana jest lista zestawów testowych (\tomlcodeinline{testSuite}). Zestaw testowy definiuje parametry wspólne dla kilku przypadków testowych (\tomlcodeinline{testCase}) np. ścieżka do pliku wykonywalnego. Każdy zestaw testowy posiada listę przypadków testowych. Każdy przypadek testowy definiuje w jakim formacie oczekuje wejście. Jeśli formaty są różne, konflikt jest rozwiązywany przy pomocy dostępnych translatorów. Opcje do testowania są definiowane jako lista. Plik wejściowy poże zosać podany przez standardowe wejście, przez opcję lini komend lub jako ostatni argument w komendzie.
 
 \begin{minted}{bash}
 testSuite.executable testSuite.options testSui.testCase.options
@@ -323,7 +321,7 @@ testSuite.executable testSuite.options testSui.testCase.options
 
 \begin{itemize}
   \item ścieżka do pliku wykonywalnego może być podana w pliku konfiguracyjnym, lub może być zawarta w zmiennyj środowiskowej \mintinline{text}{PATH} (ścieżka w pliku ma pierwszeństwo)
-  \item generowanie macierzy opcji linii komend do testowania pliku wykonywalnego, patrz sekcja \ref{optionsMartix}
+  \item definiowanie opcji linii komend do testowania pliku wykonywalnego
   \item definiowanie listy źródeł do testów. Źródłem do testów mogą być tylko pliki tesktowe
   \item definiowanie które wejścia mają byś przetestowane w przypadku testowym
     \begin{itemize}
@@ -352,56 +350,26 @@ testSuite.executable testSuite.options testSui.testCase.options
   \tomlfile{benchmark/example_config.toml}
 \end{longlisting}
 
-\subsubsection{Macierz opcji} \label{optionsMartix}
-
-Opcja \tomlcodeinline{options} w \tomlcodeinline{[[testSuite.testCase]]} odowiada za generowanie macierzy opcji to testów. \tomlcodeinline{options} to zagnieżdżone listy, gdzie każda z każdej listy wybierany jest jeden element.
 
 \begin{longlisting}
+  \caption{Przykładowe komendy testowe}
   \begin{tomlcode}
-    # ...
-    [[testSuite]]
-    executable="ls"
-    options=["-1"]
-    # ...
+# ...
+[[testSuite]]
+executable="ls"
+options=["-1"]
+# ...
 
-    [[testSuite.testCase]]
-    options=[""]
-    # generated test cases:
-    # ls -1
+[[testSuite.testCase]]
+options=[""]
+# test cases:
+# ls -1
 
-    [[testSuite.testCase]]
-    # the same as: options=[[], ["-a"], ["-l"]]
-    options=["", "-a", "-l"]
-    # generated test cases:
-    # ls -1
-    # ls -1 -a
-    # ls -1 -l
-
-    [[testSuite.testCase]]
-    # note: toml can have one type in list, so create single element list with "-a"
-    options=[
-    ["-a"],
-    ["-l", "-F"],
-    ["", "-v", "-t"]
-    ]
-    # generated test cases:
-    # ls -1 -a -l
-    # ls -1 -a -F
-    # ls -1 -a -l -v
-    # ls -1 -a -F -v
-    # ls -1 -a -l -t
-    # ls -1 -a -F -t
-
-    [[testSuite.testCase]]
-    options=[
-    ["-a"],
-    [["-l"], ["-F", "-t"]]
-    ]
-    # generated test cases:
-    # ls -1 -a -l -F
-    # ls -1 -a -l -t
-    #
-    # [["-l"], ["-F", "-t"]] was merged to ["-l -F", "-l -t"]
+[[testSuite.testCase]]
+options=["", "-r -l"]
+# test cases:
+# ls -1
+# ls -1 -r -l
   \end{tomlcode}
 \end{longlisting}
 
