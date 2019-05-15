@@ -311,7 +311,7 @@ Statystyki zostaną podane w formacie json.
 Ze względu na mnogośc opcji, większość opcji zawarta jest w pliku konfiguracyjnym \ref{configFile} w formacie \textit{toml}.
 
 Najpierw definiowana jest lista wejść (\tomlcodeinline{testInput}). Wejście to zbiór plików, które można jednoznacznie zidentyfikować za pomocą nazwy (\tomlcodeinline{name}).
-Następnie definiowana jest lista zestawów testowych (\tomlcodeinline{testSuite}). Zestaw testowy definiuje parametry wspólne dla kilku przypadków testowych (\tomlcodeinline{testCase}) np. ścieżka do pliku wykonywalnego. Każdy zestaw testowy posiada listę przypadków testowych. Każdy przypadek testowy definiuje w jakim formacie oczekuje wejście. Jeśli formaty są różne, konflikt jest rozwiązywany przy pomocy dostępnych translatorów. Opcje do testowania są definiowane jako lista. Plik wejściowy poże zosać podany przez standardowe wejście, przez opcję lini komend lub jako ostatni argument w komendzie.
+Następnie definiowana jest lista zestawów testowych (\tomlcodeinline{testSuite}). Zestaw testowy definiuje parametry wspólne dla kilku przypadków testowych (\tomlcodeinline{testCase}) np. ścieżka do pliku wykonywalnego. Każdy zestaw testowy posiada listę przypadków testowych. Każdy przypadek testowy definiuje w jakim formacie oczekuje wejście. Jeśli formaty są różne, konflikt jest rozwiązywany przy pomocy dostępnych translatorów. Opcje do testowania są definiowane jako lista. Plik wejściowy może zosać podany przez standardowe wejście, przez opcję lini komend lub jako ostatni argument w komendzie.
 
 \begin{minted}{bash}
 testSuite.executable testSuite.options testSui.testCase.options
@@ -331,7 +331,7 @@ testSuite.executable testSuite.options testSui.testCase.options
     \end{itemize}
   \item pozycja nazwy pliku źródłowego może być ustawiona w następujący sposób
     \begin{itemize}
-      \item podaj plik na standardowe wejście \tomlcodeinline{input_as_stdin}
+      \item domyślnie plik podawany jest na standardowe wejście
       \item podaj plik jako ostatni argument \tomlcodeinline{input_as_last_argument}
       \item podaj plik jako argument po opcji \tomlcodeinline{input_after_option}
     \end{itemize}
@@ -413,7 +413,21 @@ Generator formuł logicznych - \textit{ang. LFG - Logic formula generator} - los
 
 Przedstawiony generator może generować formuły w formacie dimacs (docelowo będzie to TPTP)
 
-Generator ma spełnić 2 cele: ma wygenerować formułę CNF z okreżloną ilością klauzul oraz określoną ilością zmiennych.
+Generator CNF ma spełnić 2 cele: ma wygenerować formułę CNF z określoną ilością klauzul oraz określoną ilością zmiennych.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{lfg/components.png}
+  \caption{Komponenty generatora CNF}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{lfg/cnf_class_diagram.png}
+  \caption{Diagram klas generatora CNF}
+\end{figure}
+
 
 \subsubsection{Generator zmiennych}
 
@@ -423,8 +437,8 @@ Parametry sterujące:
 
 \begin{itemize}
   \item nazwa zmiennej
-  \item ilość różnych zmiennych
-  \item ilość zmiennych do wygenerowania, ilość różnych zmiennych jest mniejsza lub równa ilości zmiennych
+  \item $m$ - ilość różnych zmiennych
+  \item $n$ - ilość zmiennych do wygenerowania, ilość różnych zmiennych jest mniejsza lub równa ilości zmiennych
   \item prawdopodobieństwo zanegowania zmiennej
 \end{itemize}
 
