@@ -6,14 +6,7 @@ start
 :matrix_options = generateMatrixOptions(this.options);
 repeat
 :stats = TestStatistics();
-if (this.input_as_stdin) then (yes)
-  :input = open(file_path);
-  :stats.start_gathering();
-  :output = <b>""this.executable""
-  <b>""aditional_options""
-  <b>""matrix_options"";
-  note: run in subproces
-elseif (this.input_as_last_argument) then (yes)
+if (this.input_as_last_argument) then (yes)
   :stats.start_gathering();
   :output = <b>""this.executable""
   <b>""aditional_options""
@@ -29,7 +22,12 @@ elseif (this.input_after_option) then (exists)
   <b>""file_path"";
   note: run in subproces
 else (is empty)
-  stop
+  :input = open(file_path);
+  :stats.start_gathering();
+  :output = <b>""this.executable""
+  <b>""aditional_options""
+  <b>""matrix_options"";
+  note: run in subproces
 endif
 :stats.end_gathering();
 

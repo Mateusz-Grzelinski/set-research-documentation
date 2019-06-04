@@ -17,7 +17,7 @@
 \usepackage[outputdir=build]{minted}
 \usepackage{xcolor}
 \usepackage[colorlinks=true]{hyperref}
-\usepackage[automake, acronyms, toc, nopostdot, nonumberlist]{glossaries}
+\usepackage[automake, acronyms, toc, nopostdot, nonumberlist, nomain]{glossaries}
 \usepackage{indentfirst}
 \hypersetup{
   colorlinks=true,
@@ -60,8 +60,8 @@
 \newmintinline[spasscodeinline]{lexers/Spass.py:SpassLexer -x}{}
 \newmintedfile[spassfile]{lexers/spass.py:SpassLexer -x}{}
 
-\makeglossaries
 \loadglsentries{glossaries}
+\makeglossaries
 \glsaddall
 
 \begin{document}
@@ -113,18 +113,35 @@ Zbadane zostaną statystyki proverów ze względu na następujące właściwośc
 % more here:http://www.tptp.org/TPTP/TR/TPTPTR.shtml#ProblemGenerators
 \begin{itemize}
   \item SAT type (CNF, FOF)
-  \item number of clauses
-    Clause is disjunction of a number of variables (negations may be present)
-  \item number of atoms
+  \item number of clauses (CNF) - w składni TPTP jest to liczba użytych słów \mintinline{text}{cnf}
+  \item number of atoms - ilość literałów połączonych operatorem \textit{lub}
   \item maximal clause size
-  \item number of predicates
+  \item number of predicates - predykat ustanawia n-argumentową relację między argumentami
   \item number of functors
-  \item number of variables
-    variables assume values either 1 (true) or 0 (false)
+  \item number of variables - ilość atomów, które zaczynają się dużą literą. Jeśli zmienna \textit{X} wystąpi w dwóch różnych klauzulach, traktowana jest jako 2 różne zmienne
   \item maximal term depth
 \end{itemize}
 
-For example, in expresion \mintinline{text}{(A v ¬B v C) ^ (B v D v E) ^ (D v F)} there are 3 clauses, 6 variables
+Example in tptp syntax:
+
+\begin{minted}{text}
+% total in this example: 2 clauses, 6 atoms, 4 predicates, 1 functor, 2 variables
+
+% clause: 4 atoms, 4 predicates, 0 functors, 1 variable
+cnf(predicates_examples, axiom,
+  ( 'p 1' % arity 0
+  | p2
+  | 'p 3'(X) % arity 1, variable X
+  | p4(y) % arity 1, fact y
+  )).
+
+% clause: 2 atoms, 1 predicate, 1 functor, 1 variable
+cnf(clause2, negated_conjecture,
+    ( p4(X)
+    | p4(f(X)) % f(X) is a functor
+    )).
+
+\end{minted}
 
 \begin{figure}[H]
   \centering
@@ -491,7 +508,6 @@ Przykładowe wnioski
 
 \subsection{Formuła w postaci CNF}
 
-\printglossary[type=\acronymtype]
 \printglossary
 
 \end{document}

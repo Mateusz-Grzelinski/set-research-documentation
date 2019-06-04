@@ -13,7 +13,17 @@
 \newglossaryentry{FOF} {
     name=FOF,
     first={FOF (First-order Formula)},
-    description={\textit{ang. First-Order Formula} reduction is a method of attempting to simplify a problem by reducing it to an equivalent set of independent subproblems. A trivial example is to reduce the conjecture A <-> B to the pair of problems A -> B and B -> A.}
+    description={\textit{ang. First-Order Formula} rachunek kwantyfikatorów, rachunek predykatów pierwszego rzędu. System rachunku predykatów pierwszego rzędu składa się z:
+\begin{itemize}
+    \item zmiennych nazwowych (litery, za które wolno podstawić nazwy dowolnych przedmiotów)
+    \item stałych nazwowych (nazwy własne przedmiotów)
+    \item liter predykatowych (predykaty)
+    \item symboli funkcyjnych (funktory nazwotwórcze od argumentów nazwowych)
+    \item stałych logicznych (spójniki prawdziwościowe rachunku zdań i kwantyfikatory)
+    \item znaków pomocniczych (nawiasy)
+    \item symbolu równości
+\end{itemize}
+    }
 }
 
 \newglossaryentry{TemporalLogic} {
@@ -23,13 +33,13 @@
 
 \newglossaryentry{Prover} {
     name=Prover,
-    description={TODO}
+    description={inaczej SAT solver, program, który ma za zadanie rozwiązać problem SAT}
 }
 
 \newglossaryentry{CNF} {
     name=CNF,
     first={CNF (conjunctive normal form)},
-    description={\textit{ang. conjunctive normal form} - koniunkcyjna postać normalna}
+    description={\textit{ang. conjunctive normal form} - koniunkcyjna postać normalna. Podzbiór FOF}
 }
 
 \newglossaryentry{ATP} {
@@ -61,6 +71,65 @@
     name=TPI,
     first={TPI (TPTP Process Instruction)},
     description={\textit{ang. TPTP Process Instruction} - source \url{http://www.tptp.org/Seminars/TPI/Abstract.html}}
+}
+
+\newglossaryentry{Literal} {
+    name=Literał,
+    description={Jest to atom, lub jego zaprzeczenie}
+}
+
+\newglossaryentry{Atom} {
+    name=Atom,
+    description={formuła, która nie ma żadnych właściwych podformuł. Rodzaje formuł atomowych zależą od rodzaju używanej logiki.
+    Formuły, które nie są atomowe nazywamy złożonymi. }
+}
+
+\newglossaryentry{LogicFormula} {
+    name={Formuła logiczna},
+    description={określenie dozwolonego wyrażenia w wielu systemach logicznych, m.in. w rachunku kwantyfikatorów oraz w rachunku zdań}
+}
+
+\newglossaryentry{ZmiennaZdaniowa} {
+    name=Zmienna zdaniowa,
+    description={bezargumentowy symbol w rachunku zdań. Zmiennym zdaniowym, w procesie zwanym wartościowaniem, przyporządkowywane są wartości prawda lub fałsz.}
+}
+
+\newglossaryentry{Klauzula} {
+    name=Klauzula,
+    description={\textit{ang. clause} – zbiór formuł logicznych. Klauzulę nazywamy prawdziwą wtedy i tylko wtedy, gdy alternatywa jej formuł logicznych jest prawdziwa. Klauzula pusta jest zawsze fałszywa. }
+}
+
+\newglossaryentry{Klauzula Horna} {
+    name=Klauzula Horna,
+    description={klauzula, w której co najwyżej jeden element jest niezanegowany. Przykładem takich klauzul jest ${p,\neg r,\neg q}$ }
+}
+
+\newglossaryentry{k-SAT} {
+    name=k-SAT,
+    description={jedna klauzula ma dokładnie k literałów, tym rozróżnia się jeszcze:
+\begin{itemize}
+    \item 1-SAT - jedna klauzula ma dokładnie 1 literały, np. $x \land y\land c$ - rozwiązanie w czasie liniowym
+    \item 2-SAT - jedna klauzula ma dokładnie 2 literały, np. $(\neg a\lor b)\land (\neg c\lor a)\land (b\lor d)$ - rozwiązanie w P
+    \item 3-SAT - jedna klauzula ma dokładnie 3 literały, np. $(\neg a\lor b\lor f)\land (\neg c\lor a\lor \neg b)\land (b\lor d\lor h)$ - rozwiązanie w NP 
+    \begin{itemize}
+    \item Not-all-equal 3-satisfiability (NAE3SAT) - tak jak 3-SAT, ale dodatkowo gwarantujemy, że co najmniej jeden literał w każdej klauzuli jest prawdziwy, i co najmniej jeden jest fałszywy (umożliwia to optymalizację)
+    \item 1-in-3-SAT (również zwany one-in-three 3-SAT, exactly-1 3-SAT) - problemem tutaj jest tutaj, czy istnieje takie przypisanie, że dokładnie jeden literał ma wartość TRUE
+    \end{itemize}
+\end{itemize}
+    }
+}
+
+\newglossaryentry{Term} {
+    name=Term,
+    description={wyrażenie składające się ze zmiennych oraz symboli
+    funkcyjnych o dowolnej argumentowości (w tym o argumentowości 0, czyli
+    stałych) z pewnego ustalonego zbioru. Termem może być: zmienna, atom albo
+    złożenie termów}
+}
+
+\newglossaryentry{Predykat} {
+    name=Predykat,
+    description={ustala n-argumentową relację między jego argumentami. n może być 0. n jest nazywane argumentowością predykatu}
 }
 
 % as reference:

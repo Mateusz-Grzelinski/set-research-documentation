@@ -21,7 +21,7 @@ path="."
 # wildcards supported
 files=["**/*.p"]
 # currently only TPTP
-format="TPTP"
+format="TPP"
 
 [[testSuites]]
 name="ls dummy test"
