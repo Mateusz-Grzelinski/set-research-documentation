@@ -151,37 +151,39 @@ class SPASSParser {
 }
 
 class TestCase {
-  - input_as_stdin : bool
-  - input_after_option : string
-  - output_path : string
   - name : string
   - options : string[]
+  - format : string
+  - input_as_last_argument : bool
+  - input_after_option : string
+  - include_ony : string[]
+  - exclude : string[]
 
-  + {static} generateMatrixOptions(string[] options) : string[]
-  + TestCase()
-  + run(executable : string, aditional_options : string, parser : Parser, file_path: string) : TestCaseStatistics[]
+  + run(executable : string, PATH: string, aditional_options : string, parser : Parser, test_input: TestInput) : TestCaseStatistics[]
 }
 
 class TestSuite {
+  - name : string
   - executable : string
-  - options : string
+  - PATH : string
+  - version : string
+  - options : string[]
   - parser : Parser
   - test_cases : TestCase[]
-  - test_statistics : TestCaseStatistics[]
   - test_inputs : TestInput[]
-  - input_statistics : SATStatistics[]
 
   - matchParser(string executable) : Parser
-  + TestSuite(PATH: string, test_cases: TestCase[] )
   + run() : TestSuiteStatistics
 }
 
 class Config {
   - config_file_path : string
-  - configs : dict
-  - verifyConfig() : void
-  + Config(config_file_path: string)
-  + readConfigFile() : void
+  - test_suites : TestSuite []
+  - test_inputs : TestInput []
+  - test_cases : TestCase []
+  - translators : Translator []
+
+  - load_config() : void
 }
 
 class Benchmark {
@@ -189,7 +191,6 @@ class Benchmark {
   - override_output : bool
   - statistics :  Statistics[]
   - hardware_statistics :  HardwareStatistics
-  + Benchmark(test_suite: TestSuite[])
   + run() : void
 }
 

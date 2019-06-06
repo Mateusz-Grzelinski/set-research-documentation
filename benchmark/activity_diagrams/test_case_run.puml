@@ -1,41 +1,43 @@
 @startuml
-floating note: inside TestCase.run(executable : string, aditional_options : string, parser : Parser, file_path: string) : TestStatistics[]
+floating note: inside TestCase.run(executable : string, aditional_options : string, PATH: string, parser : Parser, test_input: TestInput) : TestStatistics[]
 start
 
 :test_case_statistics = [];
-:matrix_options = generateMatrixOptions(this.options);
 repeat
-:stats = TestStatistics();
+:file_path = next(test_input.files);
 if (this.input_as_last_argument) then (yes)
-  :stats.start_gathering();
-  :output = <b>""this.executable""
+  :command = <b>""this.executable""
   <b>""aditional_options""
-  <b>""matrix_options""
+  <b>""this.options""
   <b>""file_path"";
-  note: run in subproces
+:proces = spawn_process(command);
 elseif (this.input_after_option) then (exists)
-  :stats.start_gathering();
-  :output = <b>""this.executable""
+  :command = <b>""this.executable""
   <b>""aditional_options""
-  <b>""matrix_options""
+  <b>""this.options""
   <b>""this.input_after_option""
   <b>""file_path"";
-  note: run in subproces
+:proces = spawn_process(command);
 else (is empty)
   :input = open(file_path);
-  :stats.start_gathering();
-  :output = <b>""this.executable""
+  note: pass file as stdin
+  :command = <b>""this.executable""
   <b>""aditional_options""
-  <b>""matrix_options"";
-  note: run in subproces
+  <b>""this.options"";
+:proces = spawn_process(command, input);
 endif
-:stats.end_gathering();
+
+
+repeat
+:monitor process;
+repeat while (process is running and not timeout)
 
 if (parser != NULL) then (yes)
-  :stats.output = parser.parse(ouput);
+  :stats.ouput = parser.parse(ouput);
 endif
-:test_case_statistics.append(stats);
-repeat while (more matrix_options?)
+
+:test_case_statistics.append(get stats from process);
+repeat while (more files in test_input?)
 
 stop
 note: return test_case_statistics

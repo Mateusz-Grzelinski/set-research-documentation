@@ -9,8 +9,12 @@ repeat
 :input = next TestInput;
 repeat
 :test_case = next TestCase;
-:ret = test_case.run(this.executable, this.additional_options, this.parser, input);
-:this.test_statistics.append(ret);
+if (test_case.exclude is not null and test_input.name in test_case.exclude) then
+  if (test_case.include_ony is not null and test_input.name in test_case.include_ony) then
+    :ret = test_case.run(this.executable, this.additional_options, this.parser, input);
+    :this.test_statistics.append(ret);
+  endif
+endif
 repeat while (more TestCasess?)
 repeat while (more TestInputs?)
 
