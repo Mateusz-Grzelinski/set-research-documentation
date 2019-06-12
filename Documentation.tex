@@ -86,12 +86,76 @@
 \tableofcontents
 \newpage
 
-\section{Streszczenie}
+\section{Wprowadzenie}
 
-Celem projektu jest zbadanie wydajności automatyczych metod dowodzenia twierdzeń Prover9 oraz SPASS. Na początku zostaje wygenerowna formuła \gls{SAT}, która zostaje rozwiązana przez badane provery. Badany jest czas wykonania, rezultat (czy \gls{SAT} jest spełnialny), użycie pamięci RAM.
-Generowana formuła \gls{SAT} jest modyfikowana ze względu na między innymi długość formuły, ilość zmiennych.
+Celem projektu jest zbadanie wydajności automatyczych metod dowodzenia twierdzeń Prover9 oraz SPASS w kontekście formuł żywotnościowych i bezpieczeństwa, przedstawionych jako problem \gls{SAT}, a dokładniej \gls{FOF}. Na początku zostaje wygenerowna formuła \gls{SAT}, która zostaje rozwiązana przez badane provery. Badany jest czas wykonania, rezultat (czy \gls{SAT} jest spełnialny), użycie pamięci RAM.  Generowana formuła \gls{SAT} jest modyfikowana ze względu na między innymi długość formuły, ilość zmiennych.
 
 Provery traktowane są jako czarne skrzynki (blackbox), ich parametry są modyfikowane z poziomu linii komend.
+
+\subsection{Żywotność i bezpieczeństwo formuł}
+
+\textbf{Żywotność} systemu określa zbiór cech, który musi posiadać system, aby działał bez błędu. Reguła żywotna nie może zotać naruszona w żadnym wypadku. Formalnie w \gls{LTL} 
+
+\textbf{Bezpieczeństwo} systemu to cecha, która zapewnia, że ''nic złego nigdy się nie stanie''. Reguła bezpieczeństwa może zostać naruszona w czasie działania systemu, choć system nie będzie bezpieczny, gdzie niebezpieczeństwem może być na przykład narażone życie człowieka, nieautoryzowany dostęp do zasobów itp.
+
+Żywotność oraz bezpieczeństwo mogą zostać wyrażone w postaci formuły logicznej pierwszego rzędu (czy zawsze?), czyli problemu SAT. Mając problem SAT, możemy użyć metod automatycznego wnioskowania aby sprawdzić, czy formuła jest spełnialna - czy istnieje co najmniej jedna sytuacja, kiedy żywotność i bezpieczeństwo są zapewnione.
+
+\subsubsection{Przykład: bramka logiczna \textit{and}}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{images/AND.png}
+  \caption{Bramka logiczna \textit{and}}
+\end{figure}
+
+Można jej przypisać formułę żywotnościową w postaci 4 klauzul logiki pierwszego rzędu. Bramka nie posiada formuł bezpieczeństwa. Zdefiniuje $p = 1$ jako stan wysoki na jednym wejściu, $q = 1$ jako stan wysoki na drugim wejściu.
+
+\begin{enumerate}
+  \item $p \land q \Rightarrow 1$
+  \item $\lnot p \land q \Rightarrow 0$
+  \item $p \land \lnot q \Rightarrow 0$
+  \item $\lnot p \land \lnot q \Rightarrow 0$.
+\end{enumerate}
+
+\noindent
+Spełnialność powyższych założeń można już sprawdzić proverach, które działają w logice pierwszego rzędu.
+
+Jeśli jest potrzeba (\gls{prover} tego wymaga), można przekonwertować do postaci \gls{CNF}:
+
+\begin{enumerate}
+  \item $p \land q \lor 0 \Leftrightarrow (p \lor 0) \land (q \lor 0)$
+  \item $\lnot p \land q \lor 1 \Leftrightarrow (\lnot p \lor 1) \land (q \lor 1) $
+  \item $p \land \lnot q \lor 1 \Leftrightarrow (p \lor 1) \land (\lnot q \lor 1)$
+  \item $\lnot p \land \lnot q \lor 1 \Leftrightarrow (\lnot p \lor 1) \land (\lnot q \lor 1)$
+\end{enumerate}
+
+\noindent
+Fomuła \gls{CNF} to koniunkcja powyższych formuł: $
+(p \lor 0) \land (q \lor 0) \land
+(\lnot p \lor 1) \land (q \lor 1) \land
+(p \lor 1) \land (\lnot q \lor 1) \land
+(\lnot p \lor 1) \land (\lnot q \lor 1)
+$
+
+\subsubsection{Przykład: Winda}
+
+$p$ - jest prąd
+$l$ - lina jest w
+
+Żywotnościowe:
+\begin{itemize}
+  \item jeśli lina zerwana to zatrzymaj się
+  \item jeśli nie ma prądu to zatrzymaj się
+\end{itemize}
+
+Bezpieczeństwa:
+\begin{itemize}
+  \item jeśli nie ma prądu to uruchom lampkę awaryjną
+  \item jeśli panel techniczny otwarty to przejdź na sterowanie ręczne
+  \item jeśli drzwi poruszają się i drzwi natrafiły na opór (np. noga w drzwiach) to otwórz drzwi
+  \item jeśli drzwi otwarte lub drzwi poruszają się to zatrzymaj się
+\end{itemize}
+
 
 \section{Benchmark}
 
@@ -245,7 +309,7 @@ W formacie TPTP można zapisywać \gls{TPI}, \gls{THF}, \gls{TFF}, \gls{FOF}, \
 
   \item The binary connectives are infix \mintinline{text}{|} for disjunction, infix \mintinline{text}{&} for conjunction, infix \mintinline{text}{<=>} for equivalence, infix \mintinline{text}{=>} for implication, infix \mintinline{text}{<=} for reverse implication, infix \mintinline{text}{<~>} for non-equivalence (XOR), infix \mintinline{text}{~|} for negated disjunction (NOR), infix	\mintinline{text}{~&} for negated conjunction (NAND), infix \mintinline{text}{@} for application. The only unary connective is prefix \mintinline{text}{~} for negation
 
-  \item  Arithmetic system are used in only the THF and TFF languages. This includes: 
+  \item  Arithmetic system are used in only the THF and TFF languages. This includes:
     \mintinline{text}{$real} (real number)
     \mintinline{text}{$rat} (rational)
     \mintinline{text}{$to_int} (cast to int)
