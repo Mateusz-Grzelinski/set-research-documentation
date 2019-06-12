@@ -395,7 +395,7 @@ Najpierw definiowana jest lista wejść (\tomlcodeinline{testInput}). Wejście t
 Następnie definiowana jest lista zestawów testowych (\tomlcodeinline{testSuite}). Zestaw testowy definiuje parametry wspólne dla kilku przypadków testowych (\tomlcodeinline{testCase}) np. ścieżka do pliku wykonywalnego. Każdy zestaw testowy posiada listę przypadków testowych. Każdy przypadek testowy definiuje w jakim formacie oczekuje wejście. Jeśli formaty są różne, konflikt jest rozwiązywany przy pomocy dostępnych translatorów. Opcje do testowania są definiowane jako lista. Plik wejściowy może zosać podany przez standardowe wejście, przez opcję lini komend lub jako ostatni argument w komendzie.
 
 \begin{minted}{bash}
-testSuite.executable testSuite.options testSui.testCase.options
+testSuite.executable testSuite.options testSuite.testCase.options [input_after_option file_path] [file_path]
 \end{minted}
 
 \subsubsection{Wspierane funkconalności}

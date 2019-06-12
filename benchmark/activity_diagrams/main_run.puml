@@ -1,22 +1,14 @@
 @startuml
 floating note: inside Main.main()
 start
-:log = Logger()
-config = Config('config.toml');
 
-:create translators based on config;
-note: calling proper constructors
-
-if (config.verifyConfig()) then (ok)
-  :create TestSuites based on config;
-note: calling constructors
-  :benchmark = Benchmark(test_suites);
-  :Benchmark.statistics.hardware_statistics = HardwareStatistics.getHardwareStatistics();
-  :this.benchmark.run();
-  :this.benchmark.statistics.serialize(this.output_dir);
-else (exception)
-  stop;
-endif;
+:config = Config();
+:config.load_config();
+note: raises exception on config errors
+:benchmark = Benchmark(config.test_suites);
+note: translators are class variables, they are not passed\ntest cases and test inputs are owned my test suite
+:benchmark.run();
+:benchmark.statistics.serialize();
 
 stop
 
