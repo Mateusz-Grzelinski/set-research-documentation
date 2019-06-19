@@ -94,13 +94,35 @@ Provery traktowane są jako czarne skrzynki (blackbox), ich parametry są modyfi
 
 \subsection{Żywotność i bezpieczeństwo formuł}
 
-\textbf{Żywotność} systemu określa zbiór cech, który musi posiadać system, aby działał bez błędu. Reguła żywotna nie może zotać naruszona w żadnym wypadku. Formalnie w \gls{LTL} TODO
+\textbf{Żywotność} systemu to cecha, która zapewnia, że coś dobrego na pewno w końcu się wydarzy. Formuła żywotnościowa gwarantuje, że istnieje co najmniej jedno wydarzenie, dla którego formuła będzie spełniona.
 
-\textbf{Bezpieczeństwo} systemu to cecha, która zapewnia, że ''nic złego nigdy się nie stanie''. Reguła bezpieczeństwa może zostać naruszona w czasie działania systemu, choć system nie będzie bezpieczny, gdzie niebezpieczeństwem może być na przykład narażone życie człowieka, nieautoryzowany dostęp do zasobów itp. Formalnie TODO
+\textbf{Bezpieczeństwo} systemu to cecha, która zapewnia, że nic złego nigdy się nie stanie. Formuła bezpieczeństwa gwarantuje, że dla każdego wydarzenia, formuła bezpieczeństwa nigdy nie zostanie pogwałcona.
 
-Żywotność oraz bezpieczeństwo mogą zostać wyrażone w postaci formuły logicznej pierwszego rzędu (czy zawsze?), czyli problemu SAT. Mając problem SAT, możemy użyć metod automatycznego wnioskowania aby sprawdzić, czy formuła jest spełnialna - czy istnieje co najmniej jedna sytuacja, kiedy żywotność i bezpieczeństwo są zapewnione.
+Żywotność oraz bezpieczeństwo mogą zostać wyrażone na przykład w postaci formuły logicznej pierwszego rzędu, czyli problemu SAT.
 
-\subsubsection{Przykład: bramka logiczna \textit{and}}
+\subsubsection{Przykład: zdawanie egzaminu}
+
+\noindent
+Problem: zalicz egzamin, aby zdać kurs
+
+\noindent
+Warunek bezpieczeństwa: jeżeli podejmujesz się egzaminu, zalicz go
+
+\noindent
+Warunek żywotnościowy: kiedyś musisz podejść do egzaminu
+
+\subsubsection{Przykład: światła na skrzyżowaniu}
+
+\noindent
+Problem: samochody chcą przejechać przez skrzyżowanie
+
+\noindent
+Warunek bezpieczeństwa: tylko jedno światło powinno być zielone
+
+\noindent
+Warunek żywotnościowy: każde światło powinno kiedyć zmienić się na zielone
+
+\subsubsection{Przykład: bramka logiczna \textit{and} TODO: check}
 
 \begin{figure}[H]
   \centering
@@ -108,7 +130,7 @@ Provery traktowane są jako czarne skrzynki (blackbox), ich parametry są modyfi
   \caption{Bramka logiczna \textit{and}}
 \end{figure}
 
-Można jej przypisać formułę żywotnościową w postaci 4 klauzul logiki pierwszego rzędu. Bramka nie posiada formuł bezpieczeństwa. Zdefiniuje $p = 1$ jako stan wysoki na jednym wejściu, $q = 1$ jako stan wysoki na drugim wejściu.
+Można jej przypisać formułę żywotnościową w postaci 4 klauzul logiki pierwszego rzędu. Bramka nie posiada formuł bezpieczeństwa.
 
 \begin{enumerate}
   \item $p \land q \Rightarrow 1$
@@ -123,10 +145,10 @@ Spełnialność powyższych założeń można już sprawdzić proverach, które 
 Jeśli jest potrzeba (\gls{prover} tego wymaga), można przekonwertować do postaci \gls{CNF}:
 
 \begin{enumerate}
-  \item $p \land q \lor 0 \Leftrightarrow (p \lor 0) \land (q \lor 0)$
-  \item $\lnot p \land q \lor 1 \Leftrightarrow (\lnot p \lor 1) \land (q \lor 1) $
-  \item $p \land \lnot q \lor 1 \Leftrightarrow (p \lor 1) \land (\lnot q \lor 1)$
-  \item $\lnot p \land \lnot q \lor 1 \Leftrightarrow (\lnot p \lor 1) \land (\lnot q \lor 1)$
+  \item $p \land q \Rightarrow 1 \Leftrightarrow p \land q \lor 0 \Leftrightarrow (p \lor 0) \land (q \lor 0)$
+  \item $\lnot p \land q \Rightarrow 0 \Leftrightarrow \lnot p \land q \lor 1 \Leftrightarrow (\lnot p \lor 1) \land (q \lor 1) $
+  \item $p \land \lnot q \Rightarrow 0 \Leftrightarrow p \land \lnot q \lor 1 \Leftrightarrow (p \lor 1) \land (\lnot q \lor 1)$
+  \item $\lnot p \land \lnot q \Rightarrow 0 \Leftrightarrow \lnot p \land \lnot q \lor 1 \Leftrightarrow (\lnot p \lor 1) \land (\lnot q \lor 1)$
 \end{enumerate}
 
 \noindent
@@ -136,26 +158,6 @@ Fomuła \gls{CNF} to koniunkcja powyższych formuł: $
 (p \lor 1) \land (\lnot q \lor 1) \land
 (\lnot p \lor 1) \land (\lnot q \lor 1)
 $
-
-\subsubsection{Przykład: Winda}
-
-$p$ - jest prąd
-$l$ - lina jest w
-
-Żywotnościowe:
-\begin{itemize}
-  \item jeśli lina zerwana to zatrzymaj się
-  \item jeśli nie ma prądu to zatrzymaj się
-\end{itemize}
-
-Bezpieczeństwa:
-\begin{itemize}
-  \item jeśli nie ma prądu to uruchom lampkę awaryjną
-  \item jeśli panel techniczny otwarty to przejdź na sterowanie ręczne
-  \item jeśli drzwi poruszają się i drzwi natrafiły na opór (np. noga w drzwiach) to otwórz drzwi
-  \item jeśli drzwi otwarte lub drzwi poruszają się to zatrzymaj się
-\end{itemize}
-
 
 \section{Benchmark}
 
@@ -488,32 +490,47 @@ options=["", "-r -l"]
 
 \section{Generator formuł logicznych} \label{LFG}
 
-Generator formuł logicznych - \textit{ang. LFG - Logic formula generator} - losowy generator formuł SAT.
-
-\subsection{Generator CNF}
-
-Przedstawiony generator może generować formuły w formacie dimacs (docelowo będzie to TPTP)
-
-Generator CNF ma spełnić 2 cele: ma wygenerować formułę CNF z określoną ilością klauzul oraz określoną ilością zmiennych.
+Losowy generator formuł SAT. Generator może generować formuły \gls{CNF} oraz \gls{k-SAT}. Generator może generować formuły w formacie DIMACS oraz TPTP.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.5]{lfg/components.png}
+  \includegraphics[scale=0.7]{logic-formula-generator/components.png}
   \caption{Komponenty generatora CNF}
 \end{figure}
 
-
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.7]{lfg/cnf_class_diagram.png}
+  \includegraphics[scale=0.7]{logic-formula-generator/cnf_class_diagram.png}
   \caption{Diagram klas generatora CNF}
 \end{figure}
 
+\noindent
+Założenia ogólne:
+\begin{itemize}
+  \item na jedną formułę, składa się $w$ niezależnych kauzul ($w$ z przedziału $[1, \infty]$). Wygenerowanie jednej grupy klauzul polega na ponownym uruchomieniu generatora z innymi parametrami. Przy czym:
+    \begin{itemize}
+      \item grupa klauzul nie współdzieli zbioru zmiennych
+      \item grupa może posiadać całkowicie inne parametry sterujące
+    \end{itemize}
+  \item po wygenerowaniu, grupa klazul może być wymieszana z inną grupą klauzul. Mieszanie polega na:
+    \begin{itemize}
+      \item utworzeniu nowych klauzul bazując na zmiennych występujących w obu grupach - wprowadza to nowe zależności między istniejącymi już zmiennymi
+    \end{itemize}
+\end{itemize}
 
-\subsubsection{Generator zmiennych}
+\noindent
+Szczegóły implementacyjne:
+\begin{itemize}
+  \item logika generatora (backend) używa ogranieczeń sztywnych. Na przykład, generator zmiennych musi wygenerować \textbf{dokładnie} $n$ zmiennych, generator klauzul musi wygenerować \textbf{dokładnie} $m$ klauzul itp.
+  \item ograniecznia miękkie, tzn. wygeneruj formułę z \textbf{około} $n$ zmiennych i \textbf{około} $m$ klauzul, uzyskiwane są przez wygenerowanie dokładnych warości na frontendzie i uruchomienie generatora z dokładnymi wartościami
+  \item generatory są obiektami tylko do odczytu
+\end{itemize}
+
+\subsection{Generator zmiennych (\textit{VariableGenerator})}
 
 Generator zmiennych ma za zadanie podanie dokładnie $n$ zmiennych, w tym $m$ różnych.
 
+\noindent
 Parametry sterujące:
 
 \begin{itemize}
@@ -523,54 +540,55 @@ Parametry sterujące:
   \item prawdopodobieństwo zanegowania zmiennej
 \end{itemize}
 
+\noindent
 Ograniczenia:
 \begin{enumerate}
   \item prawdopodobieństwo zanegowania jest z zakresu $[0,1]$
   \item ilość zmiennych jest większa lub równa niż ilość różnych zmiennych $n>=m$
 \end{enumerate}
 
-\subsubsection{Generator klauzul}
+\subsection{Generator klauzul (\textit{ClauseGenerator})} \label{ClauseGenerator}
 
-Bazując na zmiennych podanych przez generator zmiennych, generuje dokładnie $k$ klauzul. Generator klauzul używa generatora zmiennych. Generator zmiennych musi zostać całkowicie wyczerpany.
+Bazując na zmiennych podanych przez generator zmiennych, generuje dokładnie $k$ klauzul. Generator zmiennych musi zostać całkowicie wyczerpany. Klauzule które pochodzą z jednego generatora, nazywane są grupą klauzul.
 
+\noindent
 Parametry sterujące:
-
 \begin{itemize}
   \item generator zmiennych
   \item ilość klauzuj do wygenerowania
   \item maksymalny rozmiar klauzuli
 \end{itemize}
 
+\noindent
 Ograniczenia:
 \begin{enumerate}
   \item na klauzulę przypada co najmniej jedna zmienna
   \item ilość zmiennych wymaganych przez generator klauzul musi być większa niż ilość zmiennych dostaczanych przez generator zmiennych (cały generator zmiennych musi zostać skonsumowany)
+  \item każdy literał w pojedyńczej kaluzuli jest różny - nie może wystąpić: $(p1 \lor p1) \land (p1 \lor p2)$
+  \item każda klauzula jest różna - nie może wystąpić: $(p1 \lor p2) \land (p1 \lor p2)$
 \end{enumerate}
 
+\subsection{Formuła (\textit{Formula})}
 
-\subsubsection{Algorytm generowania CNF}
+Formuła powstaje w wyniku kilkukrotnego uruchomiania generatora klauzul \ref{ClauseGenerator}. Zbiera ona wszystkie grupy klauzul i umożliwia mieszanie ich.
+
+\subsection{Algorytm generowania CNF}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{lfg/clause_generator.png}
+  \includegraphics[width=\textwidth]{logic-formula-generator/clause_generator.png}
   \caption{Algorytm generowania pojedyńczej klauzuli}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{lfg/variable_generator.png}
+  \includegraphics[width=\textwidth]{logic-formula-generator/variable_generator.png}
   \caption{Algorytm generowania losowej zmiennej}
 \end{figure}
 
 \section{Wnioski}
 
 Przykładowe wnioski
-
-\subsection{Ilośc zmiennych}
-
-\subsection{Stosunek ilości zmiennych do ilości formuł}
-
-\subsection{Formuła w postaci CNF}
 
 \printglossary
 

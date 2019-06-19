@@ -1,0 +1,12 @@
+@startuml
+
+package "Logic formula generator" {
+/' [CNF Clauses] as clauses '/
+[VariableGenerator] -> [ClauseGenerator]: Variable[]
+ClauseGenerator -> [Formula] : Clause[]
+}
+
+Formula -> tptp
+Formula --> dimacs
+
+@enduml
