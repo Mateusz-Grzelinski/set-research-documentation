@@ -669,7 +669,7 @@ Pierwszy zestaw to formuły CNF różnej długości, różnej ilości zmiennych:
 
 Drugi zestaw skupia się na k-SAT:
 \begin{itemize}
-  \item liczba klauzul to 100, 200, 500, 1000, 2500, 5000, 10000
+  \item liczba klauzul to 100, 200, 500, 1000, 2500, 5000
   \item klauzule są postaci:
     \begin{itemize}
       \item 1,5,10,20-SAT -- kada z nich stanowi 25\% wszystkich klauzul (po równo)
@@ -692,11 +692,11 @@ Trzeci zestaw stworzony jest z mieszania niezależnych grup klauzul (grupy nie w
   \item mieszanie:
     \begin{itemize}
       \item bez mieszania (grupa kontrolna)
-      \item weź grupy o numerach (1, 2) i stwórz jeszcze 10 klazul, ilość zmiennych jest losowa. Powtórz to samo dla grup $(n,n+1)$, dla $n=\{2,3,4\}$ - jedna grupa jest powiązana tylko z jedną grupą
+      \item weź grupy o numerach (1, 2) i stwórz jeszcze 10 klazul, ilość zmiennych jest losowa. Powtórz to samo dla grup $(n,n+1)$ - jedna grupa jest powiązana tylko z jedną grupą
       \item inne kombinacje, co chcemy z tego wywnioskować?
     \end{itemize}
-  \item liczba klauzul, która powstaje w wyniku zmieszania powinna mieć stałą wielkośc. TODO: czy liczba zmiennych też?
-  \item klazule w grupach posiadają losowe długości
+  \item w wyniku zmieszania powstaje od 2 do 25 nowych klauzul. Do stworzenia klauzul użytych jest od 20 do 50 literałów
+  \item klazule w posiadają losowe długości
   \item ilość różnych zmiennych to 75\% wszystkich zmiennych
   \item połowa zmiennych jest zanegowana
 \end{itemize}
