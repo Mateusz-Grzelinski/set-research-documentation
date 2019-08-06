@@ -646,15 +646,23 @@ Formuła powstaje w wyniku kilkukrotnego uruchomiania generatora klauzul \ref{Cl
 
 \section{Zestaw testowy}
 \noindent
-\textbf{Problem:} Jak ilość zmiennych wpływa na czas wykonania?
+\textbf{Problem:} Jak ilość atomów wpływa na czas wykonania?
 
-Pierwszy zestaw to formuły CNF różnej długości, różnej ilości zmiennych:
+Zestaw to formuły CNF różnej długości
 \begin{itemize}
   \item liczba klauzul to 100, 200, 500, 1000, 2500, 5000
-  \item stosunek zmiennych do klauzul wynosi 2, 3, 4, 5, 10 (2 oznacza, że jeśli liczba klauzul to 100, wtedy liczba zmiennych to 200)
-  \item ilość różnych zmiennych to 75\% wszystkich zmiennych (jeśli liczba zmiennych to 200, to 150 jest różnych)
-  \item maksymalna długośc kaluzuli to ilość wszystkich zmiennych / ilość klauzul. Zapewnia to rozkład normalny (TODO check) długości klauzul
-  \item połowa zmiennych jest zanegowana
+  \item stosunek atomów do klauzul wynosi 2, 3, 4, 5, 10 (2 oznacza, że jeśli liczba klauzul to 100, wtedy liczba atomów to 200)
+  \item maksymalna długość klauzuli to ilość wszystkich zmiennych / ilość klauzul
+\end{itemize}
+
+\noindent
+\textbf{Problem:} Jak stosunek atomów bezpieczeństwa do atomów żywotnościowych wpływa na czas wykonania?
+
+Zestaw to formuły CNF różnej długości
+\begin{itemize}
+  \item liczba klauzul to 100, 200, 500, 1000, 2500, 5000
+  \item stosunek atomów bezpieczeństwa do atomów żywotnościowych wynosi 2, 3, 4, 5, 10
+  \item maksymalna długość klauzuli to ilość wszystkich zmiennych / ilość klauzul
 \end{itemize}
 
 \noindent
@@ -667,9 +675,9 @@ Pierwszy zestaw to formuły CNF różnej długości, różnej ilości zmiennych:
   \item im większa obecność klazul z dużym k, tym większy czas wykonywania
 \end{enumerate}
 
-Drugi zestaw skupia się na k-SAT:
+Zestaw skupia się na k-SAT:
 \begin{itemize}
-  \item liczba klauzul to 100, 200, 500, 1000, 2500, 5000
+  \item liczba klauzul to 500, 1000, 2000, 3000, 4000, 5000
   \item klauzule są postaci:
     \begin{itemize}
       \item 1,5,10,20-SAT -- kada z nich stanowi 25\% wszystkich klauzul (po równo)
@@ -678,29 +686,24 @@ Drugi zestaw skupia się na k-SAT:
       \item 1,5,10,20-SAT -- 20-SAT to 1\% (minimum 1), 1,5,10-SAT po równo
       \item 5,10,20-SAT -- po równo
     \end{itemize}
-  \item ilość różnych zmiennych to 75\% wszystkich zmiennych
-  \item połowa zmiennych jest zanegowana
 \end{itemize}
 
-\noindent
-\textbf{Problem:} Jak zmiesznie klauzul i zmiennych wpływa na czas wykonania?
+% \noindent
+% \textbf{Problem:} Jak zmiesznie klauzul i zmiennych wpływa na czas wykonania? TODO nie wiemy co badać
 
-Trzeci zestaw stworzony jest z mieszania niezależnych grup klauzul (grupy nie współdzielą zmiennych).  Mieszanie polega na dodaniu klauzul, które operują na wspólnym zbiorze zmiennych z obu grup.
-\begin{itemize}
-  \item grupa posiada 50 zmiennych
-  \item liczba grup to 5, 10, 15
-  \item mieszanie:
-    \begin{itemize}
-      \item bez mieszania (grupa kontrolna)
-      \item weź grupy o numerach (1, 2) i stwórz jeszcze 10 klazul, ilość zmiennych jest losowa. Powtórz to samo dla grup $(n,n+1)$ - jedna grupa jest powiązana tylko z jedną grupą
-      \item inne kombinacje, co chcemy z tego wywnioskować?
-    \end{itemize}
-  \item w wyniku zmieszania powstaje od 2 do 25 nowych klauzul. Do stworzenia klauzul użytych jest od 20 do 50 literałów
-  \item klazule w posiadają losowe długości
-  \item ilość różnych zmiennych to 75\% wszystkich zmiennych
-  \item połowa zmiennych jest zanegowana
-\end{itemize}
-
+% Zestaw stworzony jest z mieszania niezależnych grup klauzul (grupy nie współdzielą zmiennych).  Mieszanie polega na dodaniu klauzul, które operują na wspólnym zbiorze zmiennych z obu grup.
+% \begin{itemize}
+%   \item grupa posiada 50 zmiennych
+%   \item liczba grup to 5, 10, 15, 20
+%   \item mieszanie:
+%     \begin{itemize}
+%       \item bez mieszania (grupa kontrolna)
+%       \item weź grupy o numerach (1, 2) i stwórz jeszcze 10 klazul, ilość zmiennych jest losowa. Powtórz to samo dla grup $(n,n+1)$ - jedna grupa jest powiązana tylko z jedną grupą
+%       \item inne kombinacje, co chcemy z tego wywnioskować?
+%     \end{itemize}
+%   \item w wyniku zmieszania powstaje od 2 do 25 nowych klauzul. Do stworzenia klauzul użytych jest od 20 do 50 literałów
+% \end{itemize}
+%
 \section{Wnioski}
 
 Przykładowe wnioski
