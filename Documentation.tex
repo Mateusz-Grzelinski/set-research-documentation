@@ -644,7 +644,139 @@ Formuła powstaje w wyniku kilkukrotnego uruchomiania generatora klauzul \ref{Cl
 
 \newpage
 
+\section{Rachunek zdań - nazewnictwo w kontekście DIMACS}
+
+\textbf{Literał}
+to zmienna lub jej zanegowanie
+
+\textbf{Zmienna}
+to ciąg znaków alfanumerycznych
+
+\textbf{Klauzula}
+to zbiór literałów połączonych logicznym znakiem \textit{i} $\land$
+
+\begin{minted}{text}
+c DIMACS CNF formula example 1
+c
+p cnf 3 2
+1 -3 0
+2 3 -1 0
+
+c powyższa formuła składa się z:
+c 2 klauzuli
+c 3 zmiennych: [1,2,3]
+c 5 literałów
+\end{minted}
+
+\section{Logika pierwszego rzędu - nazewnictwo w kontekście TPTP}
+
+\textbf{Term}
+to zmienna, stała lub wynik działania funktorów na zmiennych i stałych
+
+\textbf{Atom}
+to wyrażenie logiczne, które nie może zostać rozbite na składowe
+
+% \textbf{Equolity atom}
+
+\textbf{Literał}
+to atom lub jego zaprzeczenie
+
+\textbf{Zmienna}
+to atom, który zaczyna się z dużej litery. Zmienna ma zasięg klauzulu. Tzn. jeśli zmienna $A$ pojawi się w jednej klazuli kilkukrotnie jest to dalej jedna zmienna.
+
+\textbf{Zmienna singletonowa}
+to zmienna użyta tylko raz w klauzuli
+
+\textbf{Unit clause}
+to klauzula, która posiada tylko jeden atom
+
+\textbf{Horn clause}
+to klaulula, która posiada co najmniej jeden pozytywny literał
+
+\textbf{RR clause} - ??
+
+\textbf{Predykat}
+jest to operator logiczny, który zwraca prawdę lub fałsz. Predykat operuje na określonej liczbie termów. Liczba ta jest stała i nazywana argumentowością predykatu (\textit{arity}).
+
+\textbf{Funktor}
+oprator logiczny, który zwraca term. Funktor posiada określoną argumentowość.
+
+\textbf{Constant functor}
+to funktor o argumentowości 0
+
+\textbf{Klauzula}
+jest to zbiór termów połączonych dysjunkcją ($\lor$)
+
+% \textbf{Kwantyfikator} not in scope
+
+\begin{minted}{text}
+% TPTP CNF formula example 1
+cnf(simple_clause_1, axiom,
+    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
+
+% powyższa formuła składa się z:
+% 1 klauzuli: w tym 0 jednostkowa, 1 Horn
+% 4 literały: [p(f,f), ~p(a,b), p(X, V), pp(X)]
+% 4 atomy: [p(f,f), p(a,b), p(X, V), pp(X)]
+% 2 predykatów: [p, pp] o argumentowości 1: [pp] i 2: [p]
+% 3 funktorów: [f, a, b] o argumentowości 0 - funktory stałe
+% 2 zmiennych: [X, V] w tym 1 zmienna singletonowo
+\end{minted}
+
+\begin{minted}{text}
+% TPTP CNF formula example 2
+cnf(simple_clause_1, axiom,
+    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
+
+cnf(simple_clause_2, axiom,
+    ( pp(f) | pp(X) )).
+
+cnf(simple_clause_3, axiom,
+    ( ppp )).
+
+% powyższa formuła składa się z:
+% 3 klauzuli, w tym 1 klauzula jednostkowa, 3 Horn
+% 4 literały: [p(f,f), ~p(a,b), p(X, V), pp(X)]
+% 4 atomy: [p(f,f), p(a,b), p(X, V), pp(X)]
+% 3 predykatów: [p, pp, ppp] o argumentowości 0: [ppp], 1: [pp] i 2: [p]
+% 3 funktorów: [f, a, b] o argumentowości 0 - funktory stałe
+% 3 zmiennych: [X, V] w tym 2 zmienne singletonowe
+\end{minted}
+
+\begin{minted}{text}
+% TPTP CNF formula example 3
+cnf(simple_clause_1, axiom,
+    ( p(f,f) | ~p(f,f) )).
+
+% powyższa formuła składa się z:
+% 1 klauzuli, w tym 0 jednowtkowa, 1 Horn
+% 2 literały: [p(f,f), ~p(f,f)]
+% 1 atomy: [p(f,f)]
+% 1 predykatu: [p] o argumentowości 2
+% 1 funktorów: [f] o argumentowości 0 - funktor stały
+% 0 zmiennych
+\end{minted}
+
+\begin{minted}{text}
+% TPTP CNF formula example 4
+cnf(simple_clause_1, axiom,
+    ( p(f,f) | ~p(f,f) )).
+
+cnf(simple_clause_2, axiom,
+    ( ~p(f,f) )).
+
+% powyższa formuła składa się z:
+% 2 klauzuli, w tym 1 jednostkowa, 1 Horn
+% 2 literały: [p(f,f), ~p(f,f)]
+% 1 atomy: [p(f,f)]
+% 1 predykatu: [p] o argumentowości 2
+% 1 funktorów: [f] o argumentowości 0 - funktor stały
+% 0 zmiennych
+\end{minted}
+
 \section{Zestaw testowy}
+
+
 \noindent
 \textbf{Problem:} Jak ilość atomów wpływa na czas wykonania?
 
@@ -677,7 +809,7 @@ Zestaw to formuły CNF różnej długości
 
 Zestaw skupia się na k-SAT:
 \begin{itemize}
-  \item liczba klauzul to 500, 1000, 2000, 3000, 4000, 5000
+  \item liczba klauzul to 100, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000
   \item klauzule są postaci:
     \begin{itemize}
       \item 1,5,10,20-SAT -- kada z nich stanowi 25\% wszystkich klauzul (po równo)
