@@ -11,6 +11,7 @@
 \usepackage{plain}
 \usepackage{caption}
 \usepackage{graphicx}
+\usepackage[space]{grffile}
 \usepackage{setspace}
 \usepackage{multirow}
 \usepackage{datetime}
@@ -92,7 +93,7 @@ Celem projektu jest zbadanie wydajności automatyczych metod dowodzenia twierdze
 
 Provery traktowane są jako czarne skrzynki (blackbox), ich parametry są modyfikowane z poziomu linii komend.
 
-\subsection{Żywotność i bezpieczeństwo formuł}
+\subsection{Żywotność i bezpieczeństwo formuł}
 
 \textbf{Żywotność} systemu to cecha, która zapewnia, że coś dobrego na pewno w końcu się wydarzy. Formuła żywotnościowa gwarantuje, że istnieje co najmniej jedno wydarzenie, dla którego formuła będzie spełniona.
 
@@ -162,7 +163,7 @@ cnf(combined_1,axiom,
 Problem: zalicz egzamin, aby zdać kurs
 
 \noindent
-Warunek bezpieczeństwa: jeżeli podejmujesz się egzaminu, zalicz go
+Warunek bezpieczeństwa: jeżeli podejmujesz się egzaminu, zalicz go
 
 \noindent
 Warunek żywotnościowy: kiedyś musisz podejść do egzaminu
@@ -240,7 +241,7 @@ Zbadane zostaną statystyki proverów ze względu na następujące właściwośc
   \item maximal clause size
   \item number of predicates - predykat ustanawia n-argumentową relację między argumentami
   \item number of functors
-  \item number of variables - ilość atomów, które zaczynają się dużą literą. Jeśli zmienna \textit{X} wystąpi w dwóch różnych klauzulach, traktowana jest jako 2 różne zmienne
+  \item number of variables - ilość atomów, które zaczynają się dużą literą. Jeśli zmienna \textit{X} wystąpi w dwóch różnych klauzulach, traktowana jest jako 2 różne zmienne
   \item maximal term depth
 \end{itemize}
 
@@ -326,7 +327,7 @@ Oficjana strona internetowa \url{https://webspass.spass-prover.org/}
 TPTP - \textit{ang. (Thousands of Problems for Theorem Provers)} - to biblioteka problemów wykorzystywanych do testowania systemów \gls{ATP}. Jednocześnie jest to nazwa formatu, w którym zapisywane są te testy. TPTP udostępnia te problemy na oficjalnej stronie intenetowej. Razem z TPTP istnieje TSTP (\textit{ang. Thousands of Solutions from Theorem Provers}) - biblioteka rozwiązań problemów.
 Te problemy są sklasyfikowane przez domeny (3 literowe skróty), przykładowo LCL - Logic Calculi, COL - Combinatory Logic
 
-W formacie TPTP można zapisywać \gls{TPI}, \gls{THF}, \gls{TFF}, \gls{FOF}, \gls{CNF}. Celem benchmarka jest badanie proverów logiku pierwszego rzędu, więc interesują nas \gls{CNF}, \gls{TFF}, \gls{FOF} (TFF/FOF with external clausifiers).
+W formacie TPTP można zapisywać \gls{TPI}, \gls{THF}, \gls{TFF}, \gls{FOF}, \gls{CNF}. Celem benchmarka jest badanie proverów logiku pierwszego rzędu, więc interesują nas \gls{CNF}, \gls{TFF}, \gls{FOF} (TFF/FOF with external clausifiers).
 
 % from technical manual http://www.tptp.org/TPTP/TR/TPTPTR.shtml
 \subsubsection{Wybrane elementy składni TPTP}
@@ -409,7 +410,7 @@ Pełny spis domen \url{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&Fi
 \newline
 BNF składni TPTP \url{http://www.tptp.org/TPTP/SyntaxBNF.html}
 \newline
-Tutorial składni TPTP znajduje się pod linkiem \url{http://www.tptp.org/TPTP/TR/TPTPTR.shtml} Aby poznać jak zapisywana jest formuła, polecam przeczytać \textit{The Formulae Section}
+Tutorial składni TPTP znajduje się pod linkiem \url{http://www.tptp.org/TPTP/TR/TPTPTR.shtml} Aby poznać jak zapisywana jest formuła, polecam przeczytać \textit{The Formulae Section}
 
 \subsubsection{Narzędzia dodatkowe TPTP}
 
@@ -577,7 +578,7 @@ Założenia ogólne:
 \noindent
 Szczegóły implementacyjne:
 \begin{itemize}
-  \item logika generatora (backend) używa ogranieczeń sztywnych. Na przykład, generator zmiennych musi wygenerować \textbf{dokładnie} $n$ zmiennych, generator klauzul musi wygenerować \textbf{dokładnie} $m$ klauzul itp.
+  \item logika generatora (backend) używa ogranieczeń sztywnych. Na przykład, generator zmiennych musi wygenerować \textbf{dokładnie} $n$ zmiennych, generator klauzul musi wygenerować \textbf{dokładnie} $m$ klauzul itp.
   \item ograniecznia miękkie, tzn. wygeneruj formułę z \textbf{około} $n$ zmiennych i \textbf{około} $m$ klauzul, uzyskiwane są przez wygenerowanie dokładnych warości na frontendzie i uruchomienie generatora z dokładnymi wartościami
   \item generatory są obiektami tylko do odczytu
 \end{itemize}
@@ -773,7 +774,7 @@ cnf(simple_clause_2, axiom,
 % 1 funktorów: [f] o argumentowości 0 - funktor stały
 % 0 zmiennych
 \end{minted}
-
+\newpage
 \section{Zestaw testowy}
 
 
@@ -784,7 +785,7 @@ Zestaw to formuły CNF różnej długości
 \begin{itemize}
   \item liczba klauzul to 100, 200, 500, 1000, 2500, 5000
   \item stosunek atomów do klauzul wynosi 2, 3, 4, 5, 10 (2 oznacza, że jeśli liczba klauzul to 100, wtedy liczba atomów to 200)
-  \item maksymalna długość klauzuli to ilość wszystkich zmiennych / ilość klauzul
+  \item maksymalna długość klauzuli to ilość wszystkich zmiennych / ilość klauzul
 \end{itemize}
 
 \noindent
@@ -794,7 +795,7 @@ Zestaw to formuły CNF różnej długości
 \begin{itemize}
   \item liczba klauzul to 100, 200, 500, 1000, 2500, 5000
   \item stosunek atomów bezpieczeństwa do atomów żywotnościowych wynosi 2, 3, 4, 5, 10
-  \item maksymalna długość klauzuli to ilość wszystkich zmiennych / ilość klauzul
+  \item maksymalna długość klauzuli to ilość wszystkich zmiennych / ilość klauzul
 \end{itemize}
 
 \noindent
@@ -821,7 +822,7 @@ Zestaw skupia się na k-SAT:
 \end{itemize}
 
 % \noindent
-% \textbf{Problem:} Jak zmiesznie klauzul i zmiennych wpływa na czas wykonania? TODO nie wiemy co badać
+% \textbf{•}f{Problem:} Jak zmiesznie klauzul i zmiennych wpływa na czas wykonania? TODO nie wiemy co badać
 
 % Zestaw stworzony jest z mieszania niezależnych grup klauzul (grupy nie współdzielą zmiennych).  Mieszanie polega na dodaniu klauzul, które operują na wspólnym zbiorze zmiennych z obu grup.
 % \begin{itemize}
@@ -838,7 +839,59 @@ Zestaw skupia się na k-SAT:
 %
 \section{Wnioski}
 
-Przykładowe wnioski
+Celem projektu było zbadanie które z czynników formuł logicznych wpływają najbardziej na działanie proverów SPASS oraz Prover9. Aby odpowiedzieć na to pytanie napisany został generator formuł o zadanych parametrach które następnie były przepuszczane przez provery z użyciem strategii blackbox. Na wyjściu otrzymane zostały pliki JSON z parametrami wejścia takimi jak: liczba klauzul, atomów, predykatów, funktorów, zmiennych oraz parametrami wyjścia: czasem wykonania, maksymalnym zużyciem pamięci (peak memory) oraz statusem (spełnialna, niespełnialna, timeout). W celu ograniczenia czasu wykonywania się benchmarków wprowadzono górną granicę czasu na każdy test case: 300 sekund.
+
+\subsection{Zestaw 1}
+
+Jak widać na wykresach załączonych poniżej według oczekiwań największy wpływ na czas wykonywania/używaną pamięć największy wpływ ma ilość klauzul.
+Zarówno na czas wykonania oraz na zużytą pamięć zauważalny wpływ ma również stosunek liczby atomów do klauzul, pierwszy taki skok możemy zauważyć w Proverze9 dla test case'ów o 200 klauzulach, gdzie test case o 2000 atomach zakończył się timeout'em przy niewielkim wzroście pamięci. Zwiększenie się czasu wykonywania oraz zużytej pamięci widać bardzo dobrze dla test case'ów Provera9 o 500 oraz 1000 klauzulach. Dla 2500 klauzul i stosunku atomy/klauzule większego lub równego od 4 oraz dla wszystkich testcase'ów o 5000 klauzulach benchmark kończył się timeoutem. Warto zauważyć coraz bardziej stromy wzrost zużytej pamięci dla większych ilości klauzul dla Provera9. Dla SPASS już od najmniejszych pod względem ilości klauzul test case'ach zużycie pamięci jest znacząco większe nawet od największych pod względem ilości klauzul test case'ach w Proverze9 co przemawia na korzyść tego provera.
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set1/set1 charts/01 Prover9 number of clauses vs time.jpg}}
+  \caption{Prover9 zestaw 1 liczba klauzul vs czas}
+\end{figure}
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set1/set1 charts/02 Prover9 number of clauses vs peak memory.jpg}}
+  \caption{Prover9 zestaw 1 liczba klauzul vs pamięć}
+\end{figure}
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set1/set1 charts/11 SPASS number of clauses vs time.jpg}}
+  \caption{SPASS zestaw 1 liczba klauzul vs czas}
+\end{figure}
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set1/set1 charts/12 SPASS number of clauses vs peak memory.jpg}}
+  \caption{SPASS zestaw 1 liczba klauzul vs pamięć}
+\end{figure}
+
+
+
+
+\subsection{Zestaw 2}
+
+W zestawie 2 badano wpływ stosunku ilości atomów bezpieczeństwa do ilości atomów żywotności. W grupach test case'ów o tych samych ilościach klauzul zadano różne stosunki ilości atomów bezpieczeństwa do ilości atomów żywotności. Z otrzymanych wyników można wywnioskować, że zbyt nierówny stosunek tych liczb (odbiegający od 1 w obie strony) wpływa znacząco na czas wykonywania się benchmarku, wpływ ten jest większy dla Provera9 niż dla SPASS. Najlepiej widać tą zależność w Proverze9 dla test case'ów z 1000 klauzul. Tak samo jak dla zestawu 1 SPASS zużywa znacząco więcej pamięci niż Prover9 jednakże w zestawie 2 można zauważyć kilkukrotnie mniejszą ilość timeout'ów dla SPASS.
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set2/set2 charts/01 Prover9 number of clauses vs time.jpg}}
+  \caption{Prover9 zestaw 2 liczba klauzul vs czas}
+\end{figure}
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set2/set2 charts/02 Prover9 number of clauses vs peak memory.jpg}}
+  \caption{Prover9 zestaw 2 liczba klauzul vs pamięć}
+\end{figure}
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set2/set2 charts/11 SPASS number of clauses vs time.jpg}}
+  \caption{SPASS zestaw 2 liczba klauzul vs czas}
+\end{figure}
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set2/set2 charts/12 SPASS number of clauses vs peak memory.jpg}}
+  \caption{SPASS zestaw 2 liczba klauzul vs pamięć}
+\end{figure}
 
 \printglossary
 
