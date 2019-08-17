@@ -893,6 +893,53 @@ W zestawie 2 badano wpływ stosunku ilości atomów bezpieczeństwa do ilości a
   \caption{SPASS zestaw 2 liczba klauzul vs pamięć}
 \end{figure}
 
+
+\subsection{Zestaw 3}
+
+W zestawie 3 badano wpływ udziału klauzul k-SAT na czas wykonywania/pamięć w zależności od k. Zadano klauzule o różnym stopniu rozłożenia spośród wartości k $\epsilon$ \{1,5,10,20\}. Jak można było oczekiwać, test case'y o tej samej sumarycznej liczbie klauzul a o najmniejszym udziale klauzul z wysokim k miały najszybszy czas wykonywania oraz zużywały najmniej pamięci. Warto zwrócić uwagę na stopień tej zależności czyli zdecydowanę przewagę szybkości rozwiązań test case'ów o największym procentowym udziale klauzul 1-SAT, wraz ze wzrostem k czas rośnie lecz przyrost ten maleje co sugeruje zależność logarytmiczną czasu wykonania od~k. Dla Provera9 najlepiej wpływ k widać na wykresie zależności liczby klauzul od pamięci (Rys 21.), charakterystyczne są grupy trzech test case'ów o tych samych liczbach klauzul a innym rozłożeniu k. Dla SPASS wyniki dają podobne wnioski, zauważalne jest kolejny raz wysokie zużycie pamięci i niewiele mniejsza liczba timeout'ów w porównaniu do Provera9.
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.85\textwidth]{outputs/set3/set3 charts/01 Prover9 number of clauses vs time.jpg}}
+  \caption{Prover9 zestaw 3 liczba klauzul vs czas}
+\end{figure}
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.85\textwidth]{outputs/set3/set3 charts/02 Prover9 number of clauses vs peak memory.jpg}}
+  \caption{Prover9 zestaw 3 liczba klauzul vs pamięć}
+\end{figure}
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set3/set3 charts/03 Prover9 number of atoms vs time.jpg}}
+  \caption{Prover9 zestaw 3 liczba atomów vs czas}
+\end{figure}
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set3/set3 charts/04 Prover9 number of atoms vs peak memory.jpg}}
+  \caption{Prover9 zestaw 3 liczba atomów vs pamięć}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set3/set3 charts/11 SPASS number of clauses vs time.jpg}}
+  \caption{SPASS zestaw 3 liczba klauzul vs czas}
+\end{figure}
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set3/set3 charts/12 SPASS number of clauses vs peak memory.jpg}}
+  \caption{SPASS zestaw 3 liczba klauzul vs pamięć}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set3/set3 charts/13 SPASS number of atoms vs time.jpg}}
+  \caption{SPASS zestaw 3 liczba atomów vs czas}
+\end{figure}
+
+\begin{figure}[H]
+  \centerline{\includegraphics[width=0.9\textwidth]{outputs/set3/set3 charts/14 SPASS number of atoms vs peak memory.jpg}}
+  \caption{SPASS zestaw 3 liczba atomów vs czas}
+\end{figure}
+
 \printglossary
 
 \end{document}
