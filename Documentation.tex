@@ -46,20 +46,25 @@
   bgcolor=bg
 }
 
-% custom lexers for toml, ladr and spass
+% custom lexer for toml
 \newminted[tomlcode]{lexers/toml.py:TomlLexer -x}{}
 \newmintinline[tomlcodeinline]{lexers/toml.py:TomlLexer -x}{}
 \newmintedfile[tomlfile]{lexers/toml.py:TomlLexer -x}{}
 
-% custom lexers for ladr, ladr and spass
+% custom lexer for ladr
 \newminted[ladrcode]{lexers/ladr.py:LadrLexer -x}{}
 \newmintinline[ladrcodeinline]{lexers/ladr.py:LadrLexer -x}{}
 \newmintedfile[ladrfile]{lexers/ladr.py:LadrLexer -x}{}
 
-% custom lexers for spass, ladr and spass
+% custom lexer for spass
 \newminted[spasscode]{lexers/spass.py:SpassLexer -x}{}
 \newmintinline[spasscodeinline]{lexers/Spass.py:SpassLexer -x}{}
 \newmintedfile[spassfile]{lexers/spass.py:SpassLexer -x}{}
+
+% custom lexer for tptpt
+\newminted[tptpcode]{lexers/tptp.py:TptpLexer -x}{}
+\newmintinline[tptpcodeinline]{lexers/tptp.py:TptpLexer -x}{}
+\newmintedfile[tptpfile]{lexers/tptp.py:TptpLexer -x}{}
 
 \loadglsentries{glossaries}
 \makeglossaries
@@ -102,11 +107,11 @@ Provery traktowane są jako czarne skrzynki (blackbox), ich parametry są modyfi
 Żywotność oraz bezpieczeństwo mogą zostać wyrażone na przykład w postaci formuły logicznej pierwszego rzędu, czyli problemu SAT.
 W formacie TPTP formuły żywotnościowe i bezpieczeństwa można przedstawić jako:
 \begin{itemize}
-  \item kwantyfikatory (\gls{FOF})- w tptp kwantyfikator uniwersalny to \mintinline{text}{!}, a kwantyfikator egzystencjalny \mintinline{text}{?}
+  \item kwantyfikatory (\gls{FOF}) - w tptp kwantyfikator uniwersalny to \mintinline{text}{!}, a kwantyfikator egzystencjalny \mintinline{text}{?}
   \item kaluzule \gls{CNF} - powstaje po przekonwertowaniu formuły z kwantyfikatorem w klazulę
 \end{itemize}
 
-\begin{minted}{text}
+\begin{tptpcode}
 fof(simple_exists, axiom,
  ? [W,Z] :  p(W, Z) | p(a, b)
   ).
@@ -114,9 +119,9 @@ fof(simple_exists, axiom,
 % converted with TPTP2X, otter algorithm
 cnf(simple_exists_1,axiom,
     ( p(sk1,sk2) | p(a,b) )).
-\end{minted}
+\end{tptpcode}
 
-\begin{minted}{text}
+\begin{tptpcode}
 fof(simple_for_all, axiom,
  ! [W,Z] :  p(W, Z) | p(a, b)
   ).
@@ -124,9 +129,9 @@ fof(simple_for_all, axiom,
 % converted with TPTP2X, otter algorithm
 cnf(simple_for_all_1,axiom,
     ( p(A,B) | p(a,b) )).
-\end{minted}
+\end{tptpcode}
 
-\begin{minted}{text}
+\begin{tptpcode}
 % dla każdego X, Y operacja lesseq, to to samo co less lub równość
 fof(this_is_obvious, axiom,
   ! [X,Y] : ( $lesseq(X,Y) <=> ( $less(X,Y) | X = Y ) )
@@ -141,9 +146,9 @@ cnf(this_is_obvious_2,axiom,
 
 cnf(this_is_obvious_3,axiom,
     ( A != B | $lesseq(A,B) )).
-\end{minted}
+\end{tptpcode}
 
-\begin{minted}{text}
+\begin{tptpcode}
 fof(combined, axiom,
  ? [W,Z] : ( ! [X, Y] : p(W, Z, X)  | d(Y) )
   ).
@@ -151,11 +156,7 @@ fof(combined, axiom,
 % converted with TPTP2X, otter algorithm
 cnf(combined_1,axiom,
     ( p(sk1,sk2,A) | d(B) )).
-\end{minted}
-
-\begin{minted}{text}
-\end{minted}
-
+\end{tptpcode}
 
 \subsubsection{Przykład: zdawanie egzaminu}
 
@@ -179,42 +180,6 @@ Warunek bezpieczeństwa: tylko jedno światło powinno być zielone
 \noindent
 Warunek żywotnościowy: każde światło powinno kiedyć zmienić się na zielone
 
-\subsubsection{Przykład: bramka logiczna \textit{and} TODO: check}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.5]{images/AND.png}
-  \caption{Bramka logiczna \textit{and}}
-\end{figure}
-
-Można jej przypisać formułę żywotnościową w postaci 4 klauzul logiki pierwszego rzędu. Bramka nie posiada formuł bezpieczeństwa.
-
-\begin{enumerate}
-  \item $p \land q \Rightarrow 1$
-  \item $\lnot p \land q \Rightarrow 0$
-  \item $p \land \lnot q \Rightarrow 0$
-  \item $\lnot p \land \lnot q \Rightarrow 0$.
-\end{enumerate}
-
-\noindent
-Spełnialność powyższych założeń można już sprawdzić proverach, które działają w logice pierwszego rzędu.
-
-Jeśli jest potrzeba (\gls{prover} tego wymaga), można przekonwertować do postaci \gls{CNF}:
-
-\begin{enumerate}
-  \item $p \land q \Rightarrow 1 \Leftrightarrow p \land q \lor 0 \Leftrightarrow (p \lor 0) \land (q \lor 0)$
-  \item $\lnot p \land q \Rightarrow 0 \Leftrightarrow \lnot p \land q \lor 1 \Leftrightarrow (\lnot p \lor 1) \land (q \lor 1) $
-  \item $p \land \lnot q \Rightarrow 0 \Leftrightarrow p \land \lnot q \lor 1 \Leftrightarrow (p \lor 1) \land (\lnot q \lor 1)$
-  \item $\lnot p \land \lnot q \Rightarrow 0 \Leftrightarrow \lnot p \land \lnot q \lor 1 \Leftrightarrow (\lnot p \lor 1) \land (\lnot q \lor 1)$
-\end{enumerate}
-
-\noindent
-Fomuła \gls{CNF} to koniunkcja powyższych formuł: $
-(p \lor 0) \land (q \lor 0) \land
-(\lnot p \lor 1) \land (q \lor 1) \land
-(p \lor 1) \land (\lnot q \lor 1) \land
-(\lnot p \lor 1) \land (\lnot q \lor 1)
-$
 
 \section{Benchmark}
 
@@ -247,7 +212,7 @@ Zbadane zostaną statystyki proverów ze względu na następujące właściwośc
 
 Example in tptp syntax:
 
-\begin{minted}{text}
+\begin{tptpcode}
 % total in this example: 2 clauses, 6 atoms, 4 predicates, 1 functor, 2 variables
 
 % clause: 4 atoms, 4 predicates, 0 functors, 1 variable
@@ -264,7 +229,7 @@ cnf(clause2, negated_conjecture,
     | p4(f(X)) % f(X) is a functor
     )).
 
-\end{minted}
+\end{tptpcode}
 
 \begin{figure}[H]
   \centering
@@ -710,11 +675,11 @@ jest to zbiór termów połączonych dysjunkcją ($\lor$)
 
 % \textbf{Kwantyfikator} not in scope
 
-\begin{minted}{text}
+\begin{tptpcode}
 % TPTP CNF formula example 1
 cnf(simple_clause_1, axiom,
     ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
-
+ 
 % powyższa formuła składa się z:
 % 1 klauzuli: w tym 0 jednostkowa, 1 Horn
 % 4 literały: [p(f,f), ~p(a,b), p(X, V), pp(X)]
@@ -722,9 +687,9 @@ cnf(simple_clause_1, axiom,
 % 2 predykatów: [p, pp] o argumentowości 1: [pp] i 2: [p]
 % 3 funktorów: [f, a, b] o argumentowości 0 - funktory stałe
 % 2 zmiennych: [X, V] w tym 1 zmienna singletonowo
-\end{minted}
+\end{tptpcode}
 
-\begin{minted}{text}
+\begin{tptpcode}
 % TPTP CNF formula example 2
 cnf(simple_clause_1, axiom,
     ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
@@ -742,9 +707,9 @@ cnf(simple_clause_3, axiom,
 % 3 predykatów: [p, pp, ppp] o argumentowości 0: [ppp], 1: [pp] i 2: [p]
 % 3 funktorów: [f, a, b] o argumentowości 0 - funktory stałe
 % 3 zmiennych: [X, V] w tym 2 zmienne singletonowe
-\end{minted}
+\end{tptpcode}
 
-\begin{minted}{text}
+\begin{tptpcode}
 % TPTP CNF formula example 3
 cnf(simple_clause_1, axiom,
     ( p(f,f) | ~p(f,f) )).
@@ -756,9 +721,9 @@ cnf(simple_clause_1, axiom,
 % 1 predykatu: [p] o argumentowości 2
 % 1 funktorów: [f] o argumentowości 0 - funktor stały
 % 0 zmiennych
-\end{minted}
+\end{tptpcode}
 
-\begin{minted}{text}
+\begin{tptpcode}
 % TPTP CNF formula example 4
 cnf(simple_clause_1, axiom,
     ( p(f,f) | ~p(f,f) )).
@@ -773,7 +738,8 @@ cnf(simple_clause_2, axiom,
 % 1 predykatu: [p] o argumentowości 2
 % 1 funktorów: [f] o argumentowości 0 - funktor stały
 % 0 zmiennych
-\end{minted}
+\end{tptpcode}
+
 \newpage
 \section{Zestaw testowy}
 
