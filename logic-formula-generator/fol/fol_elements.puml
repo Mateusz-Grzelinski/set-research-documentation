@@ -1,0 +1,81 @@
+
+@startuml
+
+Quantifier  --> FolElement
+ExistentialQuantifier <-- Quantifier
+UniversalQuantifier <-- Quantifier
+
+FolFormula --> FolElement
+FolElement <-- Literal
+FolElement <-- Atom
+FolElement <-- Predicate
+FolElement <|-- Term
+Term <-- Functor
+Term <-- Variable
+
+/' ExistentialQuantifier -[hidden]- Literal  '/
+/' UniversalQuantifier-[hidden]- Literal  '/
+
+CNFFormula o- CNFClause
+FolFormula o- Quantifier
+FolFormula -o Quantifier
+FolFormula o- FolFormula
+
+FolFormula o- Literal
+CNFClause o- Literal
+Literal o- Atom
+Atom o- Predicate
+Atom o- Variable
+Predicate -o Term
+
+class CNFFormula {
+	cnf/1
+	cnf/2
+	..
+}
+
+class ExistentialQuantifier {
+	exitst [V1, V2] (formulae)
+	..
+}
+class UniversalQuantifier{
+	for_all [V1] (formulae)
+	..
+}
+
+class CNFClause {
+	cnf(literal | literal).
+	..
+}
+
+class FolFormula {
+	formulae -> literal
+	literal | literal & quantifier
+	..
+}
+
+class Literal {
+	atom, ~atom
+	..
+}
+
+class Atom {
+	V, p, V = V, p != V
+	..
+}
+
+class Predicate {
+	p, p(f), p(V, f)
+	..
+}
+
+class Functor {
+	f, f(f), f(V), f(f(f))
+	..
+}
+
+class Variable {
+	V1, V2
+	..
+}
+@enduml

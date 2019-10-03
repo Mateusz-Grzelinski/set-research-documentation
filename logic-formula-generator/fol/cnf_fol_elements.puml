@@ -1,0 +1,56 @@
+@startuml
+
+AstElement <|-- FolElement
+FolElement <-- CNFFormula
+FolElement <-- CNFClause
+FolElement <-- Literal
+FolElement <-- Atom
+FolElement <-- Predicate
+FolElement <|-- Term
+Term <-- Functor
+Term <-- Variable
+
+
+CNFFormula o- CNFClause
+CNFClause o- Literal
+Literal o- Atom
+Atom o- Predicate
+Atom o- Variable
+Predicate -o Term
+
+class CNFFormula {
+	cnf/1
+	cnf/2
+	..
+}
+
+class CNFClause {
+	cnf(literal | literal).
+	..
+}
+
+class Literal {
+	atom, ~atom
+	..
+}
+
+class Atom {
+	V, p, V = V, p != V
+	..
+}
+
+class Predicate {
+	p, p(f), p(V, f)
+	..
+}
+
+class Functor {
+	f, f(f), f(V), f(f(f))
+	..
+}
+
+class Variable {
+	V1, V2
+	..
+}
+@enduml
