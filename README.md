@@ -6,7 +6,7 @@ The following packages are requires
 
 - pygmentize (python)
 - minted (latex), depends on pygmentize
-- texlive-core
+- texlive-core, texlive-science,
 
 Optional
 

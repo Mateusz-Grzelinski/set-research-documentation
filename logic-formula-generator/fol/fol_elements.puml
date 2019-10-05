@@ -28,10 +28,15 @@ Atom o- Predicate
 Atom o- Variable
 Predicate -o Term
 
+hide fields
+
 class CNFFormula {
 	cnf/1
 	cnf/2
 	..
+}
+
+abstract class Quantifier {
 }
 
 class ExistentialQuantifier {
@@ -77,5 +82,11 @@ class Functor {
 class Variable {
 	V1, V2
 	..
+}
+
+abstract class Term {
+}
+
+abstract class FolElement {
 }
 @enduml
