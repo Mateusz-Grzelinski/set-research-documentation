@@ -71,14 +71,14 @@ Number of literals in formula can be represented as:
 \begin{align*}
 	l(x) &= x_1|c_1| + x_2|c_2| + \dots + x_x|c_x| = \sum_{i=1}^{x} x_i |c_i| \\
 	x &= x_1 + x_2 + \dots + x_n \\
-	c_i &\in AllowedClausesLen, \forall_{i,j} c^i \neq c^j  \\
+	c_i &\in AllowedClausesLen: \forall_{i \neq j} c_i \neq c_j  \\
 	\text{where }
 		&x \text{ -- number of clauses in formula} \\
 		&l(x) \text{ -- number of literals in formula} \\
 		&|c_i| \text{ -- number of clauses with length i} \\
 \end{align*}
 
-By solving above equation we can reduce greedyness of algorithm. By using integer programming we can solve following equation within user defined thresholds and return random formula.
+By solving above equation we can reduce greediness of algorithm. By using integer programming we can solve following equation within user defined thresholds and return random formula.
 
 \begin{align*}
 	l(x) &= \sum_{i=1}^{x} x_i |c_i| \\

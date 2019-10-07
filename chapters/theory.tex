@@ -12,32 +12,378 @@ Using this generator the following datasets were created:
 \item TODO
 \end{enumerate}
 
+\section{Formal system}
+% https://en.wikipedia.org/wiki/Formal_system
+TODO
+A formal system is used to infer theorems from axioms according to a set of rules. These rules used to carry out the inference of theorems from axioms are known as the logical calculus of the formal system. A formal system is essentially an "axiomatic system". A formal system may represent a well-defined system of abstract thought.
+
 \section{Formal logical systems}
 
-\subsection{Propositional Logic}
+% https://en.wikipedia.org/wiki/Formal_system#Logical_system
+A logical system or, for short, a logic, is a formal system together with its semantics.
 
-\subsection{First Order Logic}
+\section{Propositional Logic}
+\subsection{Elements of Propositional Logic}
+
+\textbf{Literal} is variable or negated variable
+
+\textbf{Variable} is number
+
+\textbf{Clause} is set of literals connected witth logical \textit{or}, separated by \mintinline{text}{0}
+
+\subsection{Example of Propositional Logic in DIMACS syntax}
+
+\begin{minted}{text}
+c DIMACS CNF formula example 1
+c
+p cnf 3 2
+1 -3 0
+2 3 -1 0
+
+c above formula consists of:
+c 2 clauses
+c 3 variables: [1,2,3]
+c 5 literals
+\end{minted}
+
+
+\section{First Order Logic}
+
+First Order Logc also known as predicates logic, quantificational logic, and first-order predicate calculus.
+
+\subsection{Elements of FOL}
+
+\textbf{Term}
+is variable, constant or result of functor.
+
+\textbf{Atom}
+is logical statement, that can not be further separated. Atom can contain variable or predicates.
+
+\textbf{Equality atom}
+is atom with 2 elements connected with comparison sign $=$.
+
+\textbf{Literal}
+is atom or its negation.
+
+\textbf{Variable}
+TODO. Note, that unlike propositional logic, variable scope is clause or quantifier.
+
+\textbf{Singleton variable}
+is used only once in clause
+
+\textbf{Clause}
+is disjunction of literals
+
+\textbf{Unit clause}
+is clause with only one literal
+
+\textbf{Horn clause}
+is clause, which contains at least one positive literal
+
+\textbf{RR clause} - ??
+
+\textbf{Predicates}
+is logical operator, which return true or false. predicates operates on specyfic number of terms. This number is constant and called predicate \textbf{arity}
+
+\textbf{Functor}
+is logical operator, that returns term. Functor has constant arity.
+
+\textbf{Constant functor}
+is functor with arity 0.
+
+\textbf{Quantifier}
+is TODO
+
+\textbf{Existential quantifier}
+is TODO
+
+\textbf{Universal quantifier}
+is TODO
+
+\subsection{Examples of FOL in TPTP syntax}
+
+\begin{tptpcode}
+	TODO write examples
+% TPTP FOL formula example 1
+fof(simple_clause_1, axiom,
+    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
+
+% Above formula contains:
+% 1 clause, 0 unit, 1 Horn
+% 4 literals: [p(f,f), ~p(a,b), p(X, V), pp(X)]
+% 4 atoms: [p(f,f), p(a,b), p(X, V), pp(X)]
+% 2 predicatess [p, pp] with arity 1: [pp] i 2: [p]
+% 3 functors: [f, a, b] with arity 0, 3 constant functors
+% 2 variables: [X, V], 1 singleton
+\end{tptpcode}
 
 \section{Conjunnctive Normal Form}
 
-\subsection{Conjunnctive Normal Form in Propositional logic}
+\subsection{Examples of CNF in Propositional Logic}
 
-\subsection{Conjunnctive Normal Form in First Order Logic}
+\subsection{Examples of CNF in First Order Logic}
+
+\gls{CNF} in \gls{FOL} is much more expressive. Below are examples of \gls{CNF} in \gls{TPTP} syntax.
+
+\begin{tptpcode}
+% TPTP CNF formula example 1
+cnf(simple_clause_1, axiom,
+    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
+
+% above formula contains:
+% 1 clauses: w tym 0 jednostkowa, 1 Horn
+% 4 literals: [p(f,f), ~p(a,b), p(X, V), pp(X)]
+% 4 atoms: [p(f,f), p(a,b), p(X, V), pp(X)]
+% 2 predicates: [p, pp] with arity 1: [pp] i 2: [p]
+% 3 functors: [f, a, b] with arity 0 - funktory stałe
+% 2 variables: [X, V] w tym 1 zmienna singletonowo
+\end{tptpcode}
+
+\begin{tptpcode}
+% TPTP CNF formula example 2
+cnf(simple_clause_1, axiom,
+    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
+
+cnf(simple_clause_2, axiom,
+    ( pp(f) | pp(X) )).
+
+cnf(simple_clause_3, axiom,
+    ( ppp )).
+
+% above formula contains:
+% 3 clauses, w tym 1 klauzula jednostkowa, 3 Horn
+% 4 literals: [p(f,f), ~p(a,b), p(X, V), pp(X)]
+% 4 atoms: [p(f,f), p(a,b), p(X, V), pp(X)]
+% 3 predicates: [p, pp, ppp] with arity 0: [ppp], 1: [pp] i 2: [p]
+% 3 functors: [f, a, b] with arity 0 - funktory stałe
+% 3 variables: [X, V] w tym 2 zmienne singletonowe
+\end{tptpcode}
+
+\begin{tptpcode}
+% TPTP CNF formula example 3
+cnf(simple_clause_1, axiom,
+    ( p(f,f) | ~p(f,f) )).
+
+% above formula contains:
+% 1 clauses, w tym 0 jednowtkowa, 1 Horn
+% 2 literals: [p(f,f), ~p(f,f)]
+% 1 atoms: [p(f,f)]
+% 1 predicates: [p] with arity 2
+% 1 functors: [f] with arity 0 - constant functors
+% 0 variables
+\end{tptpcode}
+
+\begin{tptpcode}
+% TPTP CNF formula example 4
+cnf(simple_clause_1, axiom,
+    ( p(f,f) | ~p(f,f) )).
+
+cnf(simple_clause_2, axiom,
+    ( ~p(f,f) )).
+
+% above formula contains:
+% 2 clauses, w tym 1 jednostkowa, 1 Horn
+% 2 literals: [p(f,f), ~p(f,f)]
+% 1 atoms: [p(f,f)]
+% 1 predicates: [p] with arity 2
+% 1 functors: [f] with arity 0 - constant functors
+% 0 variables
+\end{tptpcode}
 
 \section{Safety and Liveness}
 
-\subsection{Safety and Liveness in First Order Logic}
+\textbf{Liveness} is system property, that states, that something good will eventually happen.
+Liveness formula guarantees that there is at least one case, where formula evaluates to true.
 
-\subsection{Safety and Liveness in Conjunnctive Normal Form}
+\textbf{Safety} is sytem property, that states, that something bad will never happens.
+Safety formula always evaluates to true.
+
+\subsection{Safety and liveness representation in FOL, CNF}
+
+Liveness and safety can be expressed as quantifiers, it can be also represented in \gls{CNF}.
+In the following examples TPTP syntax will be used to represent different formulas expressed in \gls{FOL} and \gls{CNF}. To convert \gls{FOL} to \gls{CNF} otter algorithm can be used (TODO describe).
+
+\begin{tptpcode}
+fof(simple_exists, axiom,
+ ? [W,Z] :  p(W, Z) | p(a, b)
+  ).
+
+% converted with TPTP2X, otter algorithm
+cnf(simple_exists_1,axiom,
+    ( p(sk1,sk2) | p(a,b) )).
+\end{tptpcode}
+
+\begin{tptpcode}
+fof(simple_for_all, axiom,
+ ! [W,Z] :  p(W, Z) | p(a, b)
+  ).
+
+% converted with TPTP2X, otter algorithm
+cnf(simple_for_all_1,axiom,
+    ( p(A,B) | p(a,b) )).
+\end{tptpcode}
+
+\begin{tptpcode}
+% dla każdego X, Y operacja lesseq, to to samo co less lub równość
+fof(this_is_obvious, axiom,
+  ! [X,Y] : ( $lesseq(X,Y) <=> ( $less(X,Y) | X = Y ) )
+  ).
+
+% converted with TPTP2X, otter algorithm
+cnf(this_is_obvious_1,axiom,
+    ( ~ $lesseq(A,B) | $less(A,B) | A = B )).
+
+cnf(this_is_obvious_2,axiom,
+    ( ~ $less(A,B) | $lesseq(A,B) )).
+
+cnf(this_is_obvious_3,axiom,
+    ( A != B | $lesseq(A,B) )).
+\end{tptpcode}
+
+\begin{tptpcode}
+fof(combined, axiom,
+ ? [W,Z] : ( ! [X, Y] : p(W, Z, X)  | d(Y) )
+  ).
+
+% converted with TPTP2X, otter algorithm
+cnf(combined_1,axiom,
+    ( p(sk1,sk2,A) | d(B) )).
+\end{tptpcode}
+
+\subsubsection{Przykład: zdawanie egzaminu}
+
+\noindent
+Problem: zalicz egzamin, aby zdać kurs
+
+\noindent
+Warunek bezpieczeństwa: jeżeli podejmujesz się egzaminu, zalicz go
+
+\noindent
+Warunek żywotnościowy: kiedyś musisz podejść do egzaminu
+
+\subsubsection{Przykład: światła na skrzyżowaniu}
+
+\noindent
+Problem: samochody chcą przejechać przez skrzyżowanie
+
+\noindent
+Warunek bezpieczeństwa: tylko jedno światło powinno być zielone
+
+\noindent
+Warunek żywotnościowy: każde światło powinno kiedyć zmienić się na zielone
 
 \section{Formats used for representing formulas}
 
-\subsection{TPTP}
+
 
 \subsection{DIMACS}
 
-\subsection{QDIMACS}
+Format DIMACS is simple format for representing propositional logic. It has no formal standard but is widely used because of its simplicity.
 
-\subsection{LADR}
+Character $c$ is used as single line comment symbol, $p$ $cnf$ is keyword meaning this is \gls{CNF} problem. The following 2 numbers mean respectively: number of variables, number of clauses in formula.
+
+\subsection{TPTP}
+
+TPTP - Thousands of Problems for Theorem Provers - is both problem library used for testing \gls{ATP} systems and standard describing syntax fox those tests. Next to TPTP library there is \gls{TSTP} - library of solutions produced by different solvers. Problems are classified into different domains: LCL - Logic Calculi, COL - Combinatory Logic and more.
+
+In TPTP syntax supports several logic systems: \gls{TPI}, \gls{THF}, \gls{TFF}, \gls{FOF}, \gls{CNF}. Celem benchmarka jest badanie proverów logiku pierwszego rzędu, więc interesują nas \gls{CNF}, \gls{TFF}, \gls{FOF} (TFF/FOF with external clausifiers).
+
+\noindent
+Official wesite \url{http://www.tptp.org}
+\newline
+Full domain list \url{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&File=THFSynopsis}
+\newline
+\gls{BNF} for TPTP syntax \url{http://www.tptp.org/TPTP/SyntaxBNF.html}
+\newline
+Tutorial (technical document) for TPTP syntax can be found at \url{http://www.tptp.org/TPTP/TR/TPTPTR.shtml}
+
+\subsubsection{Elements of TPTP syntax}
+
+This is description of TPTP elements used in this thesis. TODO: check if all elements are there
+
+\begin{itemize}
+  \item The syntax for atoms is that of Prolog: variables start with upper case letters, atoms and terms are written in prefix notation, uninterpreted predicatess and functors either start with lower case and contain alphanumerics and underscore, or are in 'single quotes'.
+
+  \item Each logical formula is wrapped in an annotated formula structure of the form  \newline \mintinline{text}{language(name,role,formula,source,[useful_info])}
+
+    \begin{itemize}
+      \item role gives the user semantics of the formula, one of
+        \mintinline{text}{axiom},
+        \mintinline{text}{hypothesis},
+        \mintinline{text}{definition},
+        \mintinline{text}{assumption},
+        \mintinline{text}{lemma},
+        \mintinline{text}{theorem},
+        \mintinline{text}{corollary},
+        \mintinline{text}{conjecture},
+        \mintinline{text}{negated_conjecture},
+        \mintinline{text}{plain},
+        \mintinline{text}{type},
+        and \mintinline{text}{unknown}.  Axiom-like formulae are those with the roles
+        \mintinline{text}{axiom},
+        \mintinline{text}{hypothesis},
+        \mintinline{text}{definition},
+        \mintinline{text}{assumption},
+        \mintinline{text}{lemma},
+        \mintinline{text}{theorem},
+        and \mintinline{text}{corollary}. They are accepted, without proof, as a basis for proving conjectures in THF, TFF, and FOF problems. In CNF problems the axiom-like formulae are accepted as part of the set whose satisfiability has to be established. \mintinline{text}{conjecture} occur in only THF, TFF, and FOF problems, and are to all be proven from the axiom(-like) formulae. A problem is solved only when all conjectures are proven. TPTP problems never contain more than one conjecture. \mintinline{text}{negated_conjectures} are formed from negation of a \mintinline{text}{conjecture}, typically in FOF to CNF conversion.
+      \item The \mintinline{text}{useful_info} field of an annotated formula is optional, and if it is not used then the \mintinline{text}{source} field becomes optional. The \mintinline{text}{source} field is used to record where the annotated formula came from, and is most commonly a file record or an inference record.
+    \end{itemize}
+
+  \item The language also supports interpreted predicatess and functors. These come in two varieties: defined predicates and functors, whose interpretation is specified by the TPTP language, and system predicates and functors, whose interpretation is ATP system specific. The defined predicates recognized so far are \mintinline{text}{$true} and \mintinline{text}{$false} \mintinline{text}{=} and \mintinline{text}{!=} \mintinline{text}{$distinct} (only \gls{TFF} language) and  arithmetic predicates (only \gls{TFF} and \gls{THF}).
+    Interpreted predicatess and functors are syntactically distinct from uninterpreted ones - they are \mintinline{text}{=} and \mintinline{text}{!=}, or start with a \$, a '', or a digit. Non-variable symbols can be given a type globally, in the formula with role type. The defined types are \mintinline{text}{$o} - the Boolean type, \mintinline{text}{$i} - the type of individuals, \mintinline{text}{$real} - the type of reals, \mintinline{text}{$rat} - the type of rational, and \mintinline{text}{$int} - the type of integers. New types are introduced in formulae with the type role, based on \mintinline{text}{$tType} - the type of all types.
+
+  \item The universal quantifier is \mintinline{text}{!}, the existential quantifier is \mintinline{text}{?}, and the lambda binder is \mintinline{text}{^}. Quantified formulae are written in the form \mintinline{text}{Quantifier [Variables] :  Formula}
+
+  \item The binary connectives are infix \mintinline{text}{|} for disjunction, infix \mintinline{text}{&} for conjunction, infix \mintinline{text}{<=>} for equivalence, infix \mintinline{text}{=>} for implication, infix \mintinline{text}{<=} for reverse implication, infix \mintinline{text}{<~>} for non-equivalence (XOR), infix \mintinline{text}{~|} for negated disjunction (NOR), infix	\mintinline{text}{~&} for negated conjunction (NAND), infix \mintinline{text}{@} for application. The only unary connective is prefix \mintinline{text}{~} for negation
+
+  \item  Arithmetic system are used in only the THF and TFF languages. This includes:
+    \mintinline{text}{$real} (real number)
+    \mintinline{text}{$rat} (rational)
+    \mintinline{text}{$to_int} (cast to int)
+    \mintinline{text}{$to_rat}
+    \mintinline{text}{$to_real}
+    \mintinline{text}{$is_int}
+    \mintinline{text}{$is_rat}
+    \mintinline{text}{$is_real},
+    unary operators:
+    \mintinline{text}{$floor}
+    \mintinline{text}{$round}
+    \mintinline{text}{$ceiling}
+    \mintinline{text}{$truncate},
+    comparison of 2 numbers:
+    \mintinline{text}{=}
+    \mintinline{text}{$less}
+    \mintinline{text}{$lesseq}
+    \mintinline{text}{$greater}
+    \mintinline{text}{$greatereq}
+    \mintinline{text}{$uminus}
+    \mintinline{text}{$sum}
+    \mintinline{text}{$difference}
+    \mintinline{text}{$product}
+    \mintinline{text}{$quotient}
+    \mintinline{text}{$quotient_e} (e for Euclidean quotient)
+    \mintinline{text}{$quotient_t} (t for truncate)
+    \mintinline{text}{$quotient_f} (f for floor)
+    \mintinline{text}{$distinct}
+    \mintinline{text}{$remainder_e}
+    \mintinline{text}{$remainder_t}
+    \mintinline{text}{$remainder_f}
+\end{itemize}
+
+\subsubsection{Additional tools in TPTP library}
+
+TPTP ships with TPTP4X (written in c), TPTP2X (written in prolog) utilities, which are used for reformatting, transforming, and generating TPTP problem files. Example of functionalities:
+
+\begin{itemize}
+  \item converting \gls{FOF} to \gls{CNF}
+  \item converting TPTP to syntax required by prover9, dimacs, otter, dfg and more
+  \item optimization \gls{FOF}, \gls{CNF} with different algorithms
+  \item change order of \gls{CNF}
+\end{itemize}
+
+\subsection{Others}
+
+LADR - format required by prover9
 
 \section{Existing formula generators}
