@@ -1,8 +1,8 @@
 
 \newglossaryentry{SAT} {
     name=SAT,
-    first={SAT (Boolean satisfiability problem)},
-    description={ \textit{ang. Boolean satisfiability problem} - problem spełnialności – zagadnienie rachunku zdań, określające czy dla danej formuły logicznej istnieje takie podstawienie (wartościowanie) zmiennych zdaniowych, żeby formuła była prawdziwa}
+    first={SAT (Boolean Satisfiability Problem)},
+    description={Boolean Satisfiability Problem - problem spełnialności – zagadnienie rachunku zdań, określające czy dla danej formuły logicznej istnieje takie podstawienie (wartościowanie) zmiennych zdaniowych, żeby formuła była prawdziwa}
 }
 
 \newglossaryentry{LADR} {
@@ -19,27 +19,19 @@
 \newglossaryentry{FOF} {
     name=FOF,
     first={FOF (First Order Formula)},
-    description={\textit{ang. First Order Formula} rachunek kwantyfikatorów, rachunek predykatów pierwszego rzędu. System rachunku predykatów pierwszego rzędu składa się z:
-\begin{itemize}
-    \item zmiennych nazwowych (litery, za które wolno podstawić nazwy dowolnych przedmiotów)
-    \item stałych nazwowych (nazwy własne przedmiotów)
-    \item liter predykatowych (predykaty)
-    \item symboli funkcyjnych (funktory nazwotwórcze od argumentów nazwowych)
-    \item stałych logicznych (spójniki prawdziwościowe rachunku zdań i kwantyfikatory)
-    \item znaków pomocniczych (nawiasy)
-    \item symbolu równości
-\end{itemize}
-    }
+    description={First Order Formula}
 }
+
 \newglossaryentry{FOL} {
     name=FOL,
     first={FOL (First Order Logic)},
-    description={\textit{ang. First Order Logic}}
+    description={First Order Logic}
 }
 
-\newglossaryentry{TemporalLogic} {
-    name={Logika temporalna},
-    description={logika umożliwiająca rozważanie zależności czasowych bez wprowadzania czasu explicite}
+\newglossaryentry{TL} {
+    name={Temporal Logic},
+    first={TL (Temporal Logic)},
+    description={Temporal Logic}
 }
 
 \newglossaryentry{prover} {
@@ -49,39 +41,39 @@
 
 \newglossaryentry{CNF} {
     name=CNF,
-    first={CNF (conjunctive normal form)},
-    description={\textit{ang. conjunctive normal form} - koniunkcyjna postać normalna. Podzbiór FOF}
+    first={CNF (Conjunctive Normal Form)},
+    description={Conjunctive Normal Form}
 }
 
 \newglossaryentry{ATP} {
     name=ATP,
     first={ATP (Automated Theorem Proving)},
-    description={\textit{ang. Automated Theorem Proving} ATP systems are enormously powerful computer programs, capable of solving immensely difficult problems, \url{http://www.tptp.org/OverviewOfATP.html}}
+    description={Automated Theorem Proving. ATP systems are enormously powerful computer programs, capable of solving immensely difficult problems, \url{http://www.tptp.org/OverviewOfATP.html}}
 }
 
 % source http://www.tptp.org/Seminars/TPTPWorldTutorial/
 \newglossaryentry{THF} {
     name=THF,
     first={THF (Typed Higher-order Logic)},
-    description={\textit{ang. Typed Higher-order Logic}}
+    description={Typed Higher-order Logic}
 }
 
 \newglossaryentry{TFF} {
     name=TFF,
     first={TFF (Typed First-order Logic)},
-    description={\textit{ang. Typed First-order Logic}}
+    description={Typed First-order Logic}
 }
 
 \newglossaryentry{PRP} {
     name={PRP},
     first={PRP (Propositional logic)},
-    description={\textit{ang. Propositional Logic}}
+    description={Propositional Logic}
 }
 
 \newglossaryentry{TPI} {
     name=TPI,
     first={TPI (TPTP Process Instruction)},
-    description={\textit{ang. TPTP Process Instruction} - source \url{http://www.tptp.org/Seminars/TPI/Abstract.html}}
+    description={TPTP Process Instruction - source \url{http://www.tptp.org/Seminars/TPI/Abstract.html}}
 }
 
 \newglossaryentry{LTL} {
@@ -113,7 +105,7 @@
 
 \newglossaryentry{Klauzula} {
     name=Klauzula,
-    description={\textit{ang. clause} – zbiór formuł logicznych. Klauzulę nazywamy prawdziwą wtedy i tylko wtedy, gdy alternatywa jej formuł logicznych jest prawdziwa. Klauzula pusta jest zawsze fałszywa. }
+    description={clause – zbiór formuł logicznych. Klauzulę nazywamy prawdziwą wtedy i tylko wtedy, gdy alternatywa jej formuł logicznych jest prawdziwa. Klauzula pusta jest zawsze fałszywa. }
 }
 
 \newglossaryentry{Klauzula Horna} {
@@ -138,10 +130,7 @@
 
 \newglossaryentry{Term} {
     name=Term,
-    description={wyrażenie składające się ze zmiennych oraz symboli
-    funkcyjnych o dowolnej argumentowości (w tym o argumentowości 0, czyli
-    stałych) z pewnego ustalonego zbioru. Termem może być: zmienna, atom albo
-    złożenie termów}
+    description={wyrażenie składające się ze zmiennych oraz symboli funkcyjnych o dowolnej argumentowości (w tym o argumentowości 0, czyli stałych) z pewnego ustalonego zbioru. Termem może być: zmienna, atom albo złożenie termów}
 }
 
 \newglossaryentry{Predykat} {
@@ -149,15 +138,34 @@
     description={ustala n-argumentową relację między jego argumentami. n może być 0. n jest nazywane argumentowością predykatu}
 }
 
+\newglossaryentry{TPTP2X} {
+    name=TPTP2X,
+    first={TPTP2X},
+    description={The TPTP2X utility is a multi-functional utility for reformatting, transforming, and generating TPTP problem files.}
+}
+
+\newglossaryentry{TPTP4X} {
+    name=TPTP4X,
+    first={TPTP4X (Thousands of Problems for Theorem Provers)},
+    description={The TPTP4X utility is a multi-functional utility for reformatting, transforming, and generating TPTP problem files. It is the successor to the TPTP2X utility, and offers some of the same functionality, and some extra functionality. TPTP4X is written in C, and is thus faster than TPTP2X.}
+}
+
 \newglossaryentry{TPTP} {
     name=TPTP,
-    description={TPTP (Thousands of Problems for Theorem Provers)}
-    description={Thousands of Problems for Theorem Provers}
+    first={TPTP (Thousands of Problems for Theorem Provers)},
+    description={Thousands of Problems for Theorem Provers, official wesite \url{http://www.tptp.org}}
 }
+
 \newglossaryentry{TSTP} {
     name=TSTP,
-    description={TSTP (Thousands of Solutions from Theorem Provers)}
+    first={TSTP (Thousands of Solutions from Theorem Provers)},
     description={Thousands of Solutions from Theorem Provers}
+}
+
+\newglossaryentry{SMTLIB} {
+    name=SMTLIB,
+    first={SMTLIB (Satisfiability Modulo theories (SMT) library)},
+  description={SMT-LIB is an international initiative aimed at facilitating research and development in Satisfiability Modulo Theories (SMT). Homepage \url{http://smtlib.cs.uiowa.edu/index.shtml}}
 }
 
 % as reference:

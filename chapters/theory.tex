@@ -9,49 +9,70 @@ The goal of this this thesis is to create random \gls{FOL} generator. User will 
 
 Using this generator the following datasets were created:
 \begin{enumerate}
-\item TODO
+  \item TODO
 \end{enumerate}
 
 \section{Formal system}
 % https://en.wikipedia.org/wiki/Formal_system
-TODO
+% https://cs.lmu.edu/~ray/notes/formalsystems/
+A formal system consists of a language over some alphabet of symbols together with (axioms and) inference rules that distinguish some of the strings in the language as theorems.
+
 A formal system is used to infer theorems from axioms according to a set of rules. These rules used to carry out the inference of theorems from axioms are known as the logical calculus of the formal system. A formal system is essentially an "axiomatic system". A formal system may represent a well-defined system of abstract thought.
 
 \section{Formal logical systems}
-
+% https://en.wikipedia.org/wiki/Mathematical_logic#Formal_logical_systems
 % https://en.wikipedia.org/wiki/Formal_system#Logical_system
+
 A logical system or, for short, a logic, is a formal system together with its semantics.
 
+At its core, mathematical logic deals with mathematical concepts expressed using formal logical systems. These systems, though they differ in many details, share the common property of considering only expressions in a fixed formal language. The systems of propositional logic and first-order logic are the most widely studied today, because of their applicability to foundations of mathematics and because of their desirable proof-theoretic properties. Stronger classical logics such as second-order logic or infinitary logic are also studied, along with nonclassical logics such as intuitionistic logic. 
+
+Classical logic systems
+
+\begin{itemize}
+  \item Propositional logic 
+  \item First order logic (FOL)
+  \item Infinitary logic - is a logic that allows infinitely long statements and/or infinitely long proofs
+  \item Higher order logic (HOL) - is a form of predicate logic that is distinguished from first-order logic by additional quantifiers and, sometimes, stronger semantics
+\end{itemize}
+
+Nonclassical and modal logic
+\begin{itemize}
+  \item modal logic systems: K, D, T, B, S4, S5
+  \item deontic logic 
+  \item epistemic logic
+  \item Temporal logic (TL)
+  \item Intuitionistic logic 
+\end{itemize}
+
 \section{Propositional Logic}
+% https://en.wikipedia.org/wiki/Propositional_calculus
+Also known as propositional calculus, statement logic, zeroth order logic \footnote{sometimes zeroth order logic is considered different system \url{https://en.wikipedia.org/wiki/Zeroth-order_logic}} is basic type of logical system that is taught in school. It operates on propositions (which can be true or false) which are connected by logical connectives. The propositions without logical connectives are called atomic propositions.
+
 \subsection{Elements of Propositional Logic}
+
+In this thesis several elements are going to be referenced. They have slightly different meaning in context of propositional logic.
+
+\textbf{Variable} is proposition that can be true or false
 
 \textbf{Literal} is variable or negated variable
 
-\textbf{Variable} is number
+\textbf{Clause} is set of literals connected with logical or ($\lor$), separated by \mintinline{text}{0}
 
-\textbf{Clause} is set of literals connected witth logical \textit{or}, separated by \mintinline{text}{0}
+The following example contains 3 variables and 5 literals and happens to be in \gls{CNF}:
 
-\subsection{Example of Propositional Logic in DIMACS syntax}
-
-\begin{minted}{text}
-c DIMACS CNF formula example 1
-c
-p cnf 3 2
-1 -3 0
-2 3 -1 0
-
-c above formula consists of:
-c 2 clauses
-c 3 variables: [1,2,3]
-c 5 literals
-\end{minted}
+\begin{equation} \label{eg:PL_1}
+  (V1 \lor \neg V3) \land (V2 \lor  V3 \lor ~V1)
+\end{equation}
 
 
 \section{First Order Logic}
 
-First Order Logc also known as predicates logic, quantificational logic, and first-order predicate calculus.
+First Order Logc also known as predicates logic, quantificational logic, and first-order predicate calculus it extends propositional logic by adding predicates, functors and quantifiers and non-logical objects.
 
 \subsection{Elements of FOL}
+
+First Order Logic is as much more elements than proportional logic. Definitions of FOL elements are contained below.
 
 \textbf{Term}
 is variable, constant or result of functor.
@@ -66,7 +87,7 @@ is atom with 2 elements connected with comparison sign $=$.
 is atom or its negation.
 
 \textbf{Variable}
-TODO. Note, that unlike propositional logic, variable scope is clause or quantifier.
+TODO. Note, that unlike propositional logic, variable scope is clause or quantifier. Usually starts with capital letter.
 
 \textbf{Singleton variable}
 is used only once in clause
@@ -83,10 +104,11 @@ is clause, which contains at least one positive literal
 \textbf{RR clause} - ??
 
 \textbf{Predicates}
-is logical operator, which return true or false. predicates operates on specyfic number of terms. This number is constant and called predicate \textbf{arity}
+is logical operator, which return true or false. predicates operates on specyfic number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate_name/arity$, eg. $p/1$. Name of predicate is usually lowercase.
+
 
 \textbf{Functor}
-is logical operator, that returns term. Functor has constant arity.
+is logical operator, that returns term. Functor has constant arity. Usually noted as $functor_name/arity$, eg. $f/1$. Name of functor  is usually lowercase.
 
 \textbf{Constant functor}
 is functor with arity 0.
@@ -100,28 +122,18 @@ is TODO
 \textbf{Universal quantifier}
 is TODO
 
-\subsection{Examples of FOL in TPTP syntax}
+The following FOL example contains 1 existential quantifier, 2 variables $W$, $Z$, 1 predicate $p/1$, 2 constant functors $a$, $b$.
+\begin{equation} \label{eg:FOL_1}
+  \exists_{W,Z} p(W,Z) | p(a, b)
+\end{equation}
 
-\begin{tptpcode}
-	TODO write examples
-% TPTP FOL formula example 1
-fof(simple_clause_1, axiom,
-    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
+\section{Normal Forms}
 
-% Above formula contains:
-% 1 clause, 0 unit, 1 Horn
-% 4 literals: [p(f,f), ~p(a,b), p(X, V), pp(X)]
-% 4 atoms: [p(f,f), p(a,b), p(X, V), pp(X)]
-% 2 predicatess [p, pp] with arity 1: [pp] i 2: [p]
-% 3 functors: [f, a, b] with arity 0, 3 constant functors
-% 2 variables: [X, V], 1 singleton
-\end{tptpcode}
+\subsection{Conjunnctive Normal Form}
 
-\section{Conjunnctive Normal Form}
+\subsubsection{Examples of CNF in Propositional Logic}
 
-\subsection{Examples of CNF in Propositional Logic}
-
-\subsection{Examples of CNF in First Order Logic}
+\subsubsection{Examples of CNF in First Order Logic}
 
 \gls{CNF} in \gls{FOL} is much more expressive. Below are examples of \gls{CNF} in \gls{TPTP} syntax.
 
@@ -190,7 +202,9 @@ cnf(simple_clause_2, axiom,
 % 0 variables
 \end{tptpcode}
 
-\section{Safety and Liveness}
+\section{Properties of systems}
+
+\subsection{Safety and Liveness}
 
 \textbf{Liveness} is system property, that states, that something good will eventually happen.
 Liveness formula guarantees that there is at least one case, where formula evaluates to true.
@@ -202,53 +216,6 @@ Safety formula always evaluates to true.
 
 Liveness and safety can be expressed as quantifiers, it can be also represented in \gls{CNF}.
 In the following examples TPTP syntax will be used to represent different formulas expressed in \gls{FOL} and \gls{CNF}. To convert \gls{FOL} to \gls{CNF} otter algorithm can be used (TODO describe).
-
-\begin{tptpcode}
-fof(simple_exists, axiom,
- ? [W,Z] :  p(W, Z) | p(a, b)
-  ).
-
-% converted with TPTP2X, otter algorithm
-cnf(simple_exists_1,axiom,
-    ( p(sk1,sk2) | p(a,b) )).
-\end{tptpcode}
-
-\begin{tptpcode}
-fof(simple_for_all, axiom,
- ! [W,Z] :  p(W, Z) | p(a, b)
-  ).
-
-% converted with TPTP2X, otter algorithm
-cnf(simple_for_all_1,axiom,
-    ( p(A,B) | p(a,b) )).
-\end{tptpcode}
-
-\begin{tptpcode}
-% dla każdego X, Y operacja lesseq, to to samo co less lub równość
-fof(this_is_obvious, axiom,
-  ! [X,Y] : ( $lesseq(X,Y) <=> ( $less(X,Y) | X = Y ) )
-  ).
-
-% converted with TPTP2X, otter algorithm
-cnf(this_is_obvious_1,axiom,
-    ( ~ $lesseq(A,B) | $less(A,B) | A = B )).
-
-cnf(this_is_obvious_2,axiom,
-    ( ~ $less(A,B) | $lesseq(A,B) )).
-
-cnf(this_is_obvious_3,axiom,
-    ( A != B | $lesseq(A,B) )).
-\end{tptpcode}
-
-\begin{tptpcode}
-fof(combined, axiom,
- ? [W,Z] : ( ! [X, Y] : p(W, Z, X)  | d(Y) )
-  ).
-
-% converted with TPTP2X, otter algorithm
-cnf(combined_1,axiom,
-    ( p(sk1,sk2,A) | d(B) )).
-\end{tptpcode}
 
 \subsubsection{Przykład: zdawanie egzaminu}
 
@@ -274,32 +241,41 @@ Warunek żywotnościowy: każde światło powinno kiedyć zmienić się na zielo
 
 \section{Formats used for representing formulas}
 
-
-
 \subsection{DIMACS}
 
-Format DIMACS is simple format for representing propositional logic. It has no formal standard but is widely used because of its simplicity.
+Format DIMACS is simple format for representing propositional logic in \gls{CNF}. It has no formal standard but is widely used because of its simplicity.
 
-Character $c$ is used as single line comment symbol, $p$ $cnf$ is keyword meaning this is \gls{CNF} problem. The following 2 numbers mean respectively: number of variables, number of clauses in formula.
+Character $c$ is used as single line comment symbol, $p$ $cnf$ is keyword meaning this is \gls{CNF} problem. The following 2 numbers mean respectively: number of variables, number of clauses in formula.  Character $0$ separates clauses, number represent variables, minus sign represents negation.
+
+
+\begin{listing}
+  \caption{DIMACS representation of \ref{eg:PL_1}}
+  \begin{minted}{text}
+p cnf 3 2
+1 -3 0
+2 3 -1 0
+
+c above formula consists of:
+c 2 clauses
+c 3 variables: [1,2,3]
+c 5 literals
+  \end{minted}
+\end{listing}
 
 \subsection{TPTP}
 
-TPTP - Thousands of Problems for Theorem Provers - is both problem library used for testing \gls{ATP} systems and standard describing syntax fox those tests. Next to TPTP library there is \gls{TSTP} - library of solutions produced by different solvers. Problems are classified into different domains: LCL - Logic Calculi, COL - Combinatory Logic and more.
+\gls{TPTP} \cite{Sut17} - Thousands of Problems for Theorem Provers - is both problem library used for testing \gls{ATP} systems and standard describing syntax for those tests. Next to TPTP library there is \gls{TSTP} - library of solutions produced by various solvers. Problems are classified into different domains: LCL - Logic Calculi, COL - Combinatory Logic and more.
 
-In TPTP syntax supports several logic systems: \gls{TPI}, \gls{THF}, \gls{TFF}, \gls{FOF}, \gls{CNF}. Celem benchmarka jest badanie proverów logiku pierwszego rzędu, więc interesują nas \gls{CNF}, \gls{TFF}, \gls{FOF} (TFF/FOF with external clausifiers).
-
-\noindent
-Official wesite \url{http://www.tptp.org}
-\newline
-Full domain list \url{http://www.tptp.org/cgi-bin/SeeTPTP?Category=Documents&File=THFSynopsis}
-\newline
-\gls{BNF} for TPTP syntax \url{http://www.tptp.org/TPTP/SyntaxBNF.html}
-\newline
-Tutorial (technical document) for TPTP syntax can be found at \url{http://www.tptp.org/TPTP/TR/TPTPTR.shtml}
+In TPTP syntax supports several logic systems: \gls{TPI}, \gls{THF}, \gls{TFF}, \gls{FOF}, \gls{CNF}. 
+The 
+Celem benchmarka jest badanie proverów logiku pierwszego rzędu, więc interesują nas \gls{CNF}, \gls{TFF}, \gls{FOF} (TFF/FOF with external clausifiers).
 
 \subsubsection{Elements of TPTP syntax}
 
 This is description of TPTP elements used in this thesis. TODO: check if all elements are there
+\newline
+Full description (technical document) for TPTP syntax can be found at \url{http://www.tptp.org/TPTP/TR/TPTPTR.shtml}
+
 
 \begin{itemize}
   \item The syntax for atoms is that of Prolog: variables start with upper case letters, atoms and terms are written in prefix notation, uninterpreted predicatess and functors either start with lower case and contain alphanumerics and underscore, or are in 'single quotes'.
@@ -373,7 +349,7 @@ This is description of TPTP elements used in this thesis. TODO: check if all ele
 
 \subsubsection{Additional tools in TPTP library}
 
-TPTP ships with TPTP4X (written in c), TPTP2X (written in prolog) utilities, which are used for reformatting, transforming, and generating TPTP problem files. Example of functionalities:
+TPTP ships with \gls{TPTP4X} (written in c), \gls{TPTP2X} (written in prolog) utilities, which are used for reformatting, transforming, and generating TPTP problem files. Example of functionalities:
 
 \begin{itemize}
   \item converting \gls{FOF} to \gls{CNF}
@@ -382,8 +358,94 @@ TPTP ships with TPTP4X (written in c), TPTP2X (written in prolog) utilities, whi
   \item change order of \gls{CNF}
 \end{itemize}
 
+\subsubsection{Examples of FOL and CNF in TPTP syntax}
+
+\begin{listing}[ht]
+  \caption{TPTP CNF formula}
+\begin{tptpcode}
+cnf(simple_clause_1, axiom,
+    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
+
+% Above formula contains:
+% 1 clause, 0 unit, 1 Horn
+% 4 literals: [p(f,f), ~p(a,b), p(X, V), pp(X)]
+% 4 atoms: [p(f,f), p(a,b), p(X, V), pp(X)]
+% 2 predicatess [p, pp] with arity 1: [pp] i 2: [p]
+% 3 functors: [f, a, b] with arity 0, 3 constant functors
+% 2 variables: [X, V], 1 singleton
+\end{tptpcode}
+\end{listing}
+
+\begin{listing}[ht]
+  \caption{TPTP representation of \ref{eg:FOL_1}, translated to CNF}
+\begin{tptpcode}
+fof(simple_exists, axiom,
+ ? [W,Z] :  p(W, Z) | p(a, b)
+  ).
+
+% converted with TPTP2X, otter algorithm
+cnf(simple_exists_1,axiom,
+    ( p(sk1,sk2) | p(a,b) )).
+\end{tptpcode}
+\end{listing}
+
+\begin{listing}[ht]
+  \caption{TPTP FOL formula with universal quantifier, translated to CNF}
+\begin{tptpcode}
+fof(simple_for_all, axiom,
+ ! [W,Z] :  p(W, Z) | p(a, b)
+  ).
+
+% converted wit[ht] TPTP2X, otter algorithm
+cnf(simple_for_all_1,axiom,
+    ( p(A,B) | p(a,b) )).
+\end{tptpcode}
+\end{listing}
+
+\begin{listing}[ht]
+  \caption{TPTP FOL formula, translated to CNF}
+\begin{tptpcode}
+% for every X, Y operation lesseq is the same as less or equal
+fof(this_is_obvious, axiom,
+  ! [X,Y] : ( $lesseq(X,Y) <=> ( $less(X,Y) | X = Y ) )
+  ).
+
+% converted with TPTP2X, otter algorithm
+cnf(this_is_obvious_1,axiom,
+    ( ~ $lesseq(A,B) | $less(A,B) | A = B )).
+
+cnf(this_is_obvious_2,axiom,
+    ( ~ $less(A,B) | $lesseq(A,B) )).
+
+cnf(this_is_obvious_3,axiom,
+    ( A != B | $lesseq(A,B) )).
+\end{tptpcode}
+\end{listing}
+
+\begin{listing}[ht]
+  \caption{TPTP FOL formula with both quantifiers, translated to CNF}
+\begin{tptpcode}
+fof(combined, axiom,
+ ? [W,Z] : ( ! [X, Y] : p(W, Z, X)  | d(Y) )
+  ).
+
+% converted with TPTP2X, otter algorithm
+cnf(combined_1,axiom,
+    ( p(sk1,sk2,A) | d(B) )).
+\end{tptpcode}
+\end{listing}
+
 \subsection{Others}
 
-LADR - format required by prover9
+\begin{itemize}
+  \item \gls{LADR} - format required by prover9
+  \item SMT-LIB - standard for encoding SMT problems, used for example by Z3 prover
+\end{itemize}
 
-\section{Existing formula generators}
+
+\section{Existing formula generators and benchmarks}
+
+SMT-LIB \cite{BarFT-RR-17}
+
+SATLIB \cite{Hol00}
+
