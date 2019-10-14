@@ -1,0 +1,52 @@
+\chapter{Algorithm}
+
+\section{Basic algorithm}
+
+The basic algorithm is greedy:
+\begin{enumerate}
+	\item Generate all possible formulas, based on user given values
+	\item Pick first one that matches requirements
+\end{enumerate}
+
+Although presented algorithm is greedy, it can be optimized by solving equasions, that define user requirements.
+
+\section{Resolve user constrains}
+
+CNF formula $F_{cnf}$ consists of clauses $c1, c2, \dots$. The order of clauses in not important.
+
+\begin{align*}
+	&F_{cnf}(x) = \{c1, c2, \dots\, cx\} \\
+	\text{where }
+		&x \text{ -- number of clauses in formula}
+\end{align*}
+
+If we group clauses by their length:
+\begin{align*}
+	&F_{cnf}(x) = \bigcup_{i=1}^c c_i \\
+	\text{where }
+		&c_i \text{ -- set of clauses with length i}
+\end{align*}
+
+Number of literals in formula can be represented as:
+\begin{align*}
+	l(x) &= x_1|c_1| + x_2|c_2| + \dots + x_x|c_x| = \sum_{i=1}^{x} x_i |c_i| \\
+	x &= x_1 + x_2 + \dots + x_n \\
+	c_i &\in AllowedClausesLen: \forall_{i \neq j} c_i \neq c_j  \\
+	\text{where }
+		&x \text{ -- number of clauses in formula} \\
+		&l(x) \text{ -- number of literals in formula} \\
+		&|c_i| \text{ -- number of clauses with length i} \\
+\end{align*}
+
+By solving above equation we can reduce greediness of algorithm. By using integer programming we can solve following equation within user defined thresholds and return random formula.
+
+\begin{align*}
+	l(x) &= \sum_{i=1}^{x} x_i |c_i| \\
+	x &= \sum_i^x x_i \\
+	l_{min} &< l(x) < l_{max} \\
+	c_{min} &< x < c_{max} \\
+	\text{where }
+		&x \text{ -- number of clauses in formula} \\
+		&l(x) \text{ -- number of literals in formula} \\
+		&|c_i| \text{ -- number of clauses with length i} \\
+\end{align*}

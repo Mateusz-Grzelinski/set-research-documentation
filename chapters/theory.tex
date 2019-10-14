@@ -15,6 +15,8 @@ Using this generator the following datasets were created:
 \section{Formal system}
 % https://en.wikipedia.org/wiki/Formal_system
 % https://cs.lmu.edu/~ray/notes/formalsystems/
+TODO
+
 A formal system consists of a language over some alphabet of symbols together with (axioms and) inference rules that distinguish some of the strings in the language as theorems.
 
 A formal system is used to infer theorems from axioms according to a set of rules. These rules used to carry out the inference of theorems from axioms are known as the logical calculus of the formal system. A formal system is essentially an "axiomatic system". A formal system may represent a well-defined system of abstract thought.
@@ -22,6 +24,8 @@ A formal system is used to infer theorems from axioms according to a set of rule
 \section{Formal logical systems}
 % https://en.wikipedia.org/wiki/Mathematical_logic#Formal_logical_systems
 % https://en.wikipedia.org/wiki/Formal_system#Logical_system
+
+TODO 
 
 A logical system or, for short, a logic, is a formal system together with its semantics.
 
@@ -104,30 +108,32 @@ is clause, which contains at least one positive literal
 \textbf{RR clause} - ??
 
 \textbf{Predicates}
-is logical operator, which return true or false. predicates operates on specyfic number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate_name/arity$, eg. $p/1$. Name of predicate is usually lowercase.
-
+is logical operator, which return true or false. predicates operates on specyfic number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate\_name/arity$, eg. $p/1$. Name of predicate is usually lowercase.
 
 \textbf{Functor}
-is logical operator, that returns term. Functor has constant arity. Usually noted as $functor_name/arity$, eg. $f/1$. Name of functor  is usually lowercase.
+is logical operator, that returns term. Functor has constant arity. Usually noted as $functor\_name/arity$, eg. $f/1$. Name of functor  is usually lowercase.
 
 \textbf{Constant functor}
 is functor with arity 0.
 
+% https://en.wikipedia.org/wiki/Quantifier_(logic)
 \textbf{Quantifier}
-is TODO
+specifies the quantity of specimens in the universe that satisfy an open formula (formula with at least one free variable). A formula beginning with a quantifier is called a quantified formula.
 
 \textbf{Existential quantifier}
-is TODO
+is equivalent to a logical disjunction of propositions, this is, at least one proposition must be true.
 
 \textbf{Universal quantifier}
-is TODO
+is equivalent to a logical conjunction of propositions, this is, all propositions must be true.
 
-The following FOL example contains 1 existential quantifier, 2 variables $W$, $Z$, 1 predicate $p/1$, 2 constant functors $a$, $b$.
+The following \gls{FOL} example contains 1 existential quantifier, 2 variables $W$, $Z$, 1 predicate $p/1$, 2 constant functors $a$, $b$.
 \begin{equation} \label{eg:FOL_1}
   \exists_{W,Z} p(W,Z) | p(a, b)
 \end{equation}
 
 \section{Normal Forms}
+
+TODO
 
 \subsection{Conjunnctive Normal Form}
 
@@ -135,74 +141,9 @@ The following FOL example contains 1 existential quantifier, 2 variables $W$, $Z
 
 \subsubsection{Examples of CNF in First Order Logic}
 
-\gls{CNF} in \gls{FOL} is much more expressive. Below are examples of \gls{CNF} in \gls{TPTP} syntax.
+\section{Properties of computer systems}
 
-\begin{tptpcode}
-% TPTP CNF formula example 1
-cnf(simple_clause_1, axiom,
-    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
-
-% above formula contains:
-% 1 clauses: w tym 0 jednostkowa, 1 Horn
-% 4 literals: [p(f,f), ~p(a,b), p(X, V), pp(X)]
-% 4 atoms: [p(f,f), p(a,b), p(X, V), pp(X)]
-% 2 predicates: [p, pp] with arity 1: [pp] i 2: [p]
-% 3 functors: [f, a, b] with arity 0 - funktory stałe
-% 2 variables: [X, V] w tym 1 zmienna singletonowo
-\end{tptpcode}
-
-\begin{tptpcode}
-% TPTP CNF formula example 2
-cnf(simple_clause_1, axiom,
-    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
-
-cnf(simple_clause_2, axiom,
-    ( pp(f) | pp(X) )).
-
-cnf(simple_clause_3, axiom,
-    ( ppp )).
-
-% above formula contains:
-% 3 clauses, w tym 1 klauzula jednostkowa, 3 Horn
-% 4 literals: [p(f,f), ~p(a,b), p(X, V), pp(X)]
-% 4 atoms: [p(f,f), p(a,b), p(X, V), pp(X)]
-% 3 predicates: [p, pp, ppp] with arity 0: [ppp], 1: [pp] i 2: [p]
-% 3 functors: [f, a, b] with arity 0 - funktory stałe
-% 3 variables: [X, V] w tym 2 zmienne singletonowe
-\end{tptpcode}
-
-\begin{tptpcode}
-% TPTP CNF formula example 3
-cnf(simple_clause_1, axiom,
-    ( p(f,f) | ~p(f,f) )).
-
-% above formula contains:
-% 1 clauses, w tym 0 jednowtkowa, 1 Horn
-% 2 literals: [p(f,f), ~p(f,f)]
-% 1 atoms: [p(f,f)]
-% 1 predicates: [p] with arity 2
-% 1 functors: [f] with arity 0 - constant functors
-% 0 variables
-\end{tptpcode}
-
-\begin{tptpcode}
-% TPTP CNF formula example 4
-cnf(simple_clause_1, axiom,
-    ( p(f,f) | ~p(f,f) )).
-
-cnf(simple_clause_2, axiom,
-    ( ~p(f,f) )).
-
-% above formula contains:
-% 2 clauses, w tym 1 jednostkowa, 1 Horn
-% 2 literals: [p(f,f), ~p(f,f)]
-% 1 atoms: [p(f,f)]
-% 1 predicates: [p] with arity 2
-% 1 functors: [f] with arity 0 - constant functors
-% 0 variables
-\end{tptpcode}
-
-\section{Properties of systems}
+TODO
 
 \subsection{Safety and Liveness}
 
@@ -210,15 +151,15 @@ cnf(simple_clause_2, axiom,
 Liveness formula guarantees that there is at least one case, where formula evaluates to true.
 
 \textbf{Safety} is sytem property, that states, that something bad will never happens.
-Safety formula always evaluates to true.
+Safety formula must always be satisfied.
 
-\subsection{Safety and liveness representation in FOL, CNF}
+\subsection{Safety and liveness representation in logic systems}
 
 Liveness and safety can be expressed as quantifiers, it can be also represented in \gls{CNF}.
 In the following examples TPTP syntax will be used to represent different formulas expressed in \gls{FOL} and \gls{CNF}. To convert \gls{FOL} to \gls{CNF} otter algorithm can be used (TODO describe).
 
-\subsubsection{Przykład: zdawanie egzaminu}
-
+\subsection{Examples}
+Przykład: zdawanie egzaminu
 \noindent
 Problem: zalicz egzamin, aby zdać kurs
 
@@ -228,7 +169,7 @@ Warunek bezpieczeństwa: jeżeli podejmujesz się egzaminu, zalicz go
 \noindent
 Warunek żywotnościowy: kiedyś musisz podejść do egzaminu
 
-\subsubsection{Przykład: światła na skrzyżowaniu}
+Przykład: światła na skrzyżowaniu
 
 \noindent
 Problem: samochody chcą przejechać przez skrzyżowanie
@@ -241,6 +182,8 @@ Warunek żywotnościowy: każde światło powinno kiedyć zmienić się na zielo
 
 \section{Formats used for representing formulas}
 
+Many provers implement its own language for representing logic formulas. One of more popular (subjectively)  seems to be DIMACS for propositional logic and TPTP for first order logic.
+
 \subsection{DIMACS}
 
 Format DIMACS is simple format for representing propositional logic in \gls{CNF}. It has no formal standard but is widely used because of its simplicity.
@@ -248,7 +191,7 @@ Format DIMACS is simple format for representing propositional logic in \gls{CNF}
 Character $c$ is used as single line comment symbol, $p$ $cnf$ is keyword meaning this is \gls{CNF} problem. The following 2 numbers mean respectively: number of variables, number of clauses in formula.  Character $0$ separates clauses, number represent variables, minus sign represents negation.
 
 
-\begin{listing}
+\begin{listing}[H]
   \caption{DIMACS representation of \ref{eg:PL_1}}
   \begin{minted}{text}
 p cnf 3 2
@@ -352,7 +295,7 @@ Full description (technical document) for TPTP syntax can be found at \url{http:
 TPTP ships with \gls{TPTP4X} (written in c), \gls{TPTP2X} (written in prolog) utilities, which are used for reformatting, transforming, and generating TPTP problem files. Example of functionalities:
 
 \begin{itemize}
-  \item converting \gls{FOF} to \gls{CNF}
+  \item converting \gls{FOF} to \gls{CNF} (eg. with otter \cite{McC-Otter-URL}, bundy \cite{Bun83} algorithm, details in \cite{SM96})
   \item converting TPTP to syntax required by prover9, dimacs, otter, dfg and more
   \item optimization \gls{FOF}, \gls{CNF} with different algorithms
   \item change order of \gls{CNF}
@@ -360,7 +303,7 @@ TPTP ships with \gls{TPTP4X} (written in c), \gls{TPTP2X} (written in prolog) ut
 
 \subsubsection{Examples of FOL and CNF in TPTP syntax}
 
-\begin{listing}[ht]
+\begin{listing}[H]
   \caption{TPTP CNF formula}
 \begin{tptpcode}
 cnf(simple_clause_1, axiom,
@@ -376,7 +319,7 @@ cnf(simple_clause_1, axiom,
 \end{tptpcode}
 \end{listing}
 
-\begin{listing}[ht]
+\begin{listing}[H]
   \caption{TPTP representation of \ref{eg:FOL_1}, translated to CNF}
 \begin{tptpcode}
 fof(simple_exists, axiom,
@@ -389,20 +332,20 @@ cnf(simple_exists_1,axiom,
 \end{tptpcode}
 \end{listing}
 
-\begin{listing}[ht]
+\begin{listing}[H]
   \caption{TPTP FOL formula with universal quantifier, translated to CNF}
 \begin{tptpcode}
 fof(simple_for_all, axiom,
  ! [W,Z] :  p(W, Z) | p(a, b)
   ).
 
-% converted wit[ht] TPTP2X, otter algorithm
+% converted wit[H] TPTP2X, otter algorithm
 cnf(simple_for_all_1,axiom,
     ( p(A,B) | p(a,b) )).
 \end{tptpcode}
 \end{listing}
 
-\begin{listing}[ht]
+\begin{listing}[H]
   \caption{TPTP FOL formula, translated to CNF}
 \begin{tptpcode}
 % for every X, Y operation lesseq is the same as less or equal
@@ -422,7 +365,7 @@ cnf(this_is_obvious_3,axiom,
 \end{tptpcode}
 \end{listing}
 
-\begin{listing}[ht]
+\begin{listing}[H]
   \caption{TPTP FOL formula with both quantifiers, translated to CNF}
 \begin{tptpcode}
 fof(combined, axiom,
@@ -435,7 +378,7 @@ cnf(combined_1,axiom,
 \end{tptpcode}
 \end{listing}
 
-\subsection{Others}
+\subsection{Other formats}
 
 \begin{itemize}
   \item \gls{LADR} - format required by prover9
@@ -449,3 +392,8 @@ SMT-LIB \cite{BarFT-RR-17}
 
 SATLIB \cite{Hol00}
 
+\url{https://toughsat.appspot.com/}
+
+pysat \url{https://pysathq.github.io/}
+
+CNFgen \url{https://massimolauria.net/cnfgen/}
