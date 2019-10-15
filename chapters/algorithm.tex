@@ -12,7 +12,7 @@ Although presented algorithm is greedy, it can be optimized by solving equasions
 
 \section{Resolve user constrains}
 
-CNF formula $F_{cnf}$ consists of clauses $c1, c2, \dots$. The order of clauses in not important.
+CNF formula $F_{cnf}$ consists of unordered clauses $c1, c2, \dots$. 
 
 \begin{align*}
 	&F_{cnf}(x) = \{c1, c2, \dots\, cx\} \\
@@ -40,13 +40,15 @@ Number of literals in formula can be represented as:
 
 By solving above equation we can reduce greediness of algorithm. By using integer programming we can solve following equation within user defined thresholds and return random formula.
 
-\begin{align*}
+\begin{align}
 	l(x) &= \sum_{i=1}^{x} x_i |c_i| \\
 	x &= \sum_i^x x_i \\
 	l_{min} &< l(x) < l_{max} \\
 	c_{min} &< x < c_{max} \\
-	\text{where }
-		&x \text{ -- number of clauses in formula} \\
-		&l(x) \text{ -- number of literals in formula} \\
-		&|c_i| \text{ -- number of clauses with length i} \\
-\end{align*}
+	\text{where } 
+		&x \text{ -- number of clauses in formula} \nonumber \\
+		&l(x) \text{ -- number of literals in formula} \nonumber  \\
+		&|c_i| \text{ -- number of clauses with length i} \nonumber
+\end{align}
+
+Above equation can be solved with several methods. The first one is to use one of algorithms from \gls{ILP}. The second is to use \gls{SMT} solver.

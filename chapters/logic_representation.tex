@@ -2,7 +2,31 @@
 
 When talking about formula we would often describe formula by $n$ number of elements, eg. formula has 4 predicates. In sense of implementation more specyfic vocabulary is needed. From now on when talking abount $n$ occurrences of element, mathematical sense is assumed (usually it is element name and arity). In implementation user will be asked to provide \textit{signature} of element. Signature is differentiated by argument types that is holds. This is importatant thus name of signature is often irrelevant and can be filled later. Element \textit{instance} is every occurance of in formula.
 
-TODO table with differences
+\begin{table}
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{|c|X|X|}
+    \hline
+    FOL element & Mathematical sense & Signature \\
+    \hline
+    Variable & by name and scope? $V1$, $V2$ & there is only one signature for variable \\  
+    \hline
+    Functor & by name and arity $f/0$, $f/1$ & by types of arguments $f(Variable)$, $f(functor)$ \\
+    \hline
+    Predicate & by name and arity $p/0$, $p/1$ & by types of arguments $p(Variable)$, $p(functor)$ \\
+    \hline
+    Atom & by connective and operands $p/0$, $p/1 = V$ & by connective and operands signatures $p(Variable)$, $p(Variable) = p(Functor)$ \\
+    \hline
+    Literal & by negation sign and atom & by negation sign and atom signature \\
+    \hline
+    Clause & by ? & \\
+    \hline
+    Formula & & \\
+    \hline
+  \end{tabularx}
+  \caption{Comparison of how elements of FOL in sense of math and signature}
+\end{table}
+
 
 In this chapter every element of \gls{FOL} will be described in context of implementation along with some computational complexity adnotations.
 
@@ -18,14 +42,10 @@ In this chapter every element of \gls{FOL} will be described in context of imple
 \subsection{Functor}
 
 Functor can contain variable or another functor.
-
-How many types (ignore functor and variable names) of functors $f$ can be produced, knowing that
-\begin{itemize}
-	\item $n$ is recursion depth,
-	\item $a$ is arity,
-	\item subfunctors have arity less or equal to $a$?
-\end{itemize}
-
+Given that
+$n$ is functor recursion depth,
+$a$ is functor arity,
+we can produce $f(n, a)$ number of functor signatures
 
 \begin{align*}
 	&f(n, a) =

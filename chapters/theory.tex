@@ -4,7 +4,7 @@
 The goal of this this thesis is to create random \gls{FOL} generator. User will be able to define:
 \begin{itemize}
 \item what classes of \gls{FOL} elements want to include
-\item how many elements given class should appear in rendered formula (withing given threashold)
+\item how many elements given class should appear in rendered formula (within given threashold)
 \end{itemize}
 
 Using this generator the following datasets were created:
@@ -55,13 +55,9 @@ Also known as propositional calculus, statement logic, zeroth order logic \footn
 
 \subsection{Elements of Propositional Logic}
 
-In this thesis several elements are going to be referenced. They have slightly different meaning in context of propositional logic.
+\textbf{Variable} (atomic formula, placeholder) is proposition that can be true or false
 
-\textbf{Variable} is proposition that can be true or false
-
-\textbf{Literal} is variable or negated variable
-
-\textbf{Clause} is set of literals connected with logical or ($\lor$), separated by \mintinline{text}{0}
+\textbf{Literal} in general is atom or its negation, in propositional logic it is variable or negated variable
 
 The following example contains 3 variables and 5 literals and happens to be in \gls{CNF}:
 
@@ -91,21 +87,11 @@ is atom with 2 elements connected with comparison sign $=$.
 is atom or its negation.
 
 \textbf{Variable}
-TODO. Note, that unlike propositional logic, variable scope is clause or quantifier. Usually starts with capital letter.
+unlike propositional logic, variables in \gls{FOL} can stand for a relation (between terms) but which has not been specifically assigned any particular relation.
+Variable scope is clause or quantifier. Usually starts with capital letter.
 
 \textbf{Singleton variable}
 is used only once in clause
-
-\textbf{Clause}
-is disjunction of literals
-
-\textbf{Unit clause}
-is clause with only one literal
-
-\textbf{Horn clause}
-is clause, which contains at least one positive literal
-
-\textbf{RR clause} - ??
 
 \textbf{Predicates}
 is logical operator, which return true or false. predicates operates on specyfic number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate\_name/arity$, eg. $p/1$. Name of predicate is usually lowercase.
@@ -126,6 +112,17 @@ is equivalent to a logical disjunction of propositions, this is, at least one pr
 \textbf{Universal quantifier}
 is equivalent to a logical conjunction of propositions, this is, all propositions must be true.
 
+\textbf{Clause}
+is disjunction of literals
+
+\textbf{Unit clause}
+is clause with only one literal
+
+\textbf{Horn clause}
+is clause, which contains at least one positive literal
+
+\textbf{RR clause} - ??
+
 The following \gls{FOL} example contains 1 existential quantifier, 2 variables $W$, $Z$, 1 predicate $p/1$, 2 constant functors $a$, $b$.
 \begin{equation} \label{eg:FOL_1}
   \exists_{W,Z} p(W,Z) | p(a, b)
@@ -143,20 +140,29 @@ TODO
 
 \section{Properties of computer systems}
 
-TODO
+System properties were first discussed in context of concurrecny \cite{Lampert77} as a tool for formal verification multiprocess programs. One of first proposed properties were safety and liveness. These properties can apply to computer systems in general and be expressed in different formal sysmtems. Below are informal definitions of safety and liveness properties of a system.
 
-\subsection{Safety and Liveness}
+\subsection{Safety and liveness}
 
-\textbf{Liveness} is system property, that states, that something good will eventually happen.
+\textbf{Liveness} \cite{Klimek99} is system property, that states, that something good will eventually happen.
 Liveness formula guarantees that there is at least one case, where formula evaluates to true.
 
-\textbf{Safety} is sytem property, that states, that something bad will never happens.
+\textbf{Safety} \cite{Klimek99} is sytem property, that states, that something bad will never happens.
 Safety formula must always be satisfied.
 
 \subsection{Safety and liveness representation in logic systems}
 
-Liveness and safety can be expressed as quantifiers, it can be also represented in \gls{CNF}.
-In the following examples TPTP syntax will be used to represent different formulas expressed in \gls{FOL} and \gls{CNF}. To convert \gls{FOL} to \gls{CNF} otter algorithm can be used (TODO describe).
+In \gls{FOL} liveness and safety can be expressed as quantifiers, safety as universal quantifier and liveness as existential quantifier. Every \gls{FOL} can be converted to \gls{CNF}, so system properties can be also represented in \gls{CNF}, if needed. It can be done for example with otter algorithm \cite{McC-Otter-URL} or skolemisation.
+
+In \gls{FOL} system properties could look like:
+\begin{itemize}
+  \item Safety formula: $\forall_x p(x)$
+  \item Safety formula: $\forall_{x,y} p(x,f(y))$ 
+  \item Liveness formula: $\exists_x p(x) \lor p1(x)$
+  \item Liveness formula: $\exists_{x,y} p(x,f(y))$ 
+\end{itemize}
+
+The combinations of quantifiers (that correspond to combinations of liveness and safety properties) are not discused in this thesis. For example: $\forall_x \exists_y p(x, y)$, $\exists_y \forall_x p(x, y)$
 
 \subsection{Examples}
 Przykład: zdawanie egzaminu
