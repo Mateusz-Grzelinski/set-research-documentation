@@ -1,16 +1,70 @@
-\chapter{Algorithm}
+\chapter{Gerarator parameters and algorithm}
+
+When talking about formula we would often describe formula by $n$ number of elements, eg. formula has 4 predicates. In sense of implementation more specyfic vocabulary is needed. From now on when talking abount $n$ occurrences of element, mathematical sense is assumed (usually it is element name and arity). In implementation user will be asked to provide \textit{signature} of element. Signature is differentiated by argument types that is holds. This is importatant thus name of signature is often irrelevant and can be filled later. Element \textit{instance} is every occurance of in formula.
+
+\begin{table}
+  \centering
+  \footnotesize
+  \begin{tabularx}{\textwidth}{|c|X|X|}
+    \hline
+    FOL element & Unique element in mathematical sense & Unique element in signature \\
+    \hline
+    Variable & by name and scope $V1$, $V2, \dots$ & there is only one signature for variable \\  
+    \hline
+    Functor & by name and arity $f/0$, $f/1, \dots$ & by types of arguments $f(Variable)$, $f(functor), \dots$ \\
+    \hline
+    Predicate & by name and arity $p/0$, $p/1$, \dots & by types of arguments $p(Variable)$, $p(functor), \dots$ \\
+    \hline
+    Atom & by connective and operands $p/0$, $p/1 = V, \dots$ & by connective and operands signatures $p(Variable)$, $p(Variable) = p(Functor), \dots$ \\
+    \hline
+  \end{tabularx}
+  \caption{Comparison of how elements of FOL in sense of math and signature. Elements not included here simply does not make have signature}
+\end{table}
+
+\section{CNF Generator parameters}
+
+User defines generator in 3 steps.
+\begin{enumerate}
+  \item \textbf{Allowed FOL signatures}
+
+    In this step user defines set of allowed \gls{FOL} elements:
+    \begin{itemize}
+      \item set of allowed functor arities $a_f = \{0, 1, 2,\dots\}$
+      \item maximum recursion depth $n$ for functors
+      \item set of allowed predicate arities $a_p = \{0, 1, 2,\dots\}$
+      \item set of atom allowed connectives, that is no connective or/and any subset of $AllowedConnectives = \{=, !=, \emptyset\}$
+      % \item if negated literals are allowed
+      \item set of allowed clause lengths $AllowedClausesLen = \{1,2,\dots\}$
+      \item set of allowed number of clauses in formula $AllowedFormulaLen = \{1,2,\dots\}$
+    \end{itemize}
+  \item \textbf{How many instances of elements are allowed}
+
+    In this step user defines what properties formula should have:
+    \begin{itemize}
+      \item formula contains from $c_{min}$ to $c_{max}$ clauses, but the best solution is considered middle of this range
+      \item formula contains from $l_{min}$ to $l_{max}$ literals, but the best solution is considered middle of this range
+    \end{itemize}
+  \item \textbf{Post processing - names for term-like FOL elemnents and literal}
+
+    In this step user defines:
+    \begin{itemize}
+      \item set of variable names $\{'v1','v2',\dots\}$
+      \item set of functor names $\{'f1','f2',\dots\}$
+      \item set of predicate names $\{'p1','p2',\dots\}$
+      \item ammount of literals to be negated
+    \end{itemize}
+\end{enumerate}
 
 \section{Basic algorithm}
 
-The basic algorithm is greedy:
 \begin{enumerate}
-	\item Generate all possible formulas, based on user given values
-	\item Pick first one that matches requirements
+  \item Resolve user constraints \ref{sec:ResolveUserConstrains}
+  \item Generate possible formula based on signatures \ref{chap:LogicInternalRepresentation}
+  \item Post process - give unique names
 \end{enumerate}
 
-Although presented algorithm is greedy, it can be optimized by solving equasions, that define user requirements.
-
-\section{Resolve user constrains}
+\section{Resolve user constraints}
+\label{sec:ResolveUserConstrains}
 
 CNF formula $F_{cnf}$ consists of unordered clauses $c1, c2, \dots$. 
 
@@ -24,7 +78,7 @@ If we group clauses by their length:
 \begin{align*}
 	&F_{cnf}(x) = \bigcup_{i=1}^c c_i \\
 	\text{where }
-		&c_i \text{ -- set of clauses with length i}
+		&c_i \text{ -- set of clauses with length i} 
 \end{align*}
 
 Number of literals in formula can be represented as:
@@ -33,9 +87,9 @@ Number of literals in formula can be represented as:
 	x &= x_1 + x_2 + \dots + x_n \\
 	c_i &\in AllowedClausesLen: \forall_{i \neq j} c_i \neq c_j  \\
 	\text{where }
-		&x \text{ -- number of clauses in formula} \\
-		&l(x) \text{ -- number of literals in formula} \\
-		&|c_i| \text{ -- number of clauses with length i} \\
+		&x \text{ -- number of clauses in formula} \\ 
+		&l(x) \text{ -- number of literals in formula} \\ 
+		&|c_i| \text{ -- number of clauses with length i} 
 \end{align*}
 
 By solving above equation we can reduce greediness of algorithm. By using integer programming we can solve following equation within user defined thresholds and return random formula.

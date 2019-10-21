@@ -12,24 +12,17 @@ Using this generator the following datasets were created:
   \item TODO
 \end{enumerate}
 
-\section{Formal system}
-% https://en.wikipedia.org/wiki/Formal_system
-% https://cs.lmu.edu/~ray/notes/formalsystems/
-TODO
-
-A formal system consists of a language over some alphabet of symbols together with (axioms and) inference rules that distinguish some of the strings in the language as theorems.
-
-A formal system is used to infer theorems from axioms according to a set of rules. These rules used to carry out the inference of theorems from axioms are known as the logical calculus of the formal system. A formal system is essentially an "axiomatic system". A formal system may represent a well-defined system of abstract thought.
 
 \section{Formal logical systems}
 % https://en.wikipedia.org/wiki/Mathematical_logic#Formal_logical_systems
 % https://en.wikipedia.org/wiki/Formal_system#Logical_system
+% https://en.wikipedia.org/wiki/Formal_system
+% https://cs.lmu.edu/~ray/notes/formalsystems/
 
-TODO 
+A formal system consists of a language over some alphabet of symbols together with (axioms and) inference rules that distinguish some of the strings in the language as theorems.
+These rules used to carry out the inference of theorems from axioms are known as the logical calculus of the formal system. A formal system is essentially an "axiomatic system". A formal system may represent a well-defined system of abstract thought.
 
-A logical system or, for short, a logic, is a formal system together with its semantics.
-
-At its core, mathematical logic deals with mathematical concepts expressed using formal logical systems. These systems, though they differ in many details, share the common property of considering only expressions in a fixed formal language. The systems of propositional logic and first-order logic are the most widely studied today, because of their applicability to foundations of mathematics and because of their desirable proof-theoretic properties. Stronger classical logics such as second-order logic or infinitary logic are also studied, along with nonclassical logics such as intuitionistic logic. 
+At its core, mathematical logic deals with mathematical concepts expressed using formal logical systems. These systems, though they differ in many details, share the common property of considering only expressions in a fixed formal language. The systems of propositional logic and first-order logic are the most widely studied today and in context of this thesis only first-order logic will be discussed. The rest is provided as point of reference in logical formal systems.
 
 Classical logic systems
 
@@ -57,14 +50,13 @@ Also known as propositional calculus, statement logic, zeroth order logic \footn
 
 \textbf{Variable} (atomic formula, placeholder) is proposition that can be true or false
 
-\textbf{Literal} in general is atom or its negation, in propositional logic it is variable or negated variable
+\textbf{Literal} in general is atom or its negation, in propositional logic it would be variable or negated variable
 
 The following example contains 3 variables and 5 literals and happens to be in \gls{CNF}:
 
 \begin{equation} \label{eg:PL_1}
   (V1 \lor \neg V3) \land (V2 \lor  V3 \lor ~V1)
 \end{equation}
-
 
 \section{First Order Logic}
 
@@ -112,6 +104,17 @@ is equivalent to a logical disjunction of propositions, this is, at least one pr
 \textbf{Universal quantifier}
 is equivalent to a logical conjunction of propositions, this is, all propositions must be true.
 
+The following \gls{FOL} example contains 1 existential quantifier, 2 variables $W$, $Z$, 1 predicate $p/2$, 2 constant functors $a/0$, $b/0$.
+\begin{equation} \label{eg:FOL_1}
+  \exists_{W,Z} p(W,Z) | p(a, b)
+\end{equation}
+
+\section{Normal Forms}
+
+TODO
+
+\subsection{Conjunnctive Normal Form}
+
 \textbf{Clause}
 is disjunction of literals
 
@@ -122,17 +125,6 @@ is clause with only one literal
 is clause, which contains at least one positive literal
 
 \textbf{RR clause} - ??
-
-The following \gls{FOL} example contains 1 existential quantifier, 2 variables $W$, $Z$, 1 predicate $p/1$, 2 constant functors $a$, $b$.
-\begin{equation} \label{eg:FOL_1}
-  \exists_{W,Z} p(W,Z) | p(a, b)
-\end{equation}
-
-\section{Normal Forms}
-
-TODO
-
-\subsection{Conjunnctive Normal Form}
 
 \subsubsection{Examples of CNF in Propositional Logic}
 
@@ -156,8 +148,8 @@ In \gls{FOL} liveness and safety can be expressed as quantifiers, safety as univ
 
 In \gls{FOL} system properties could look like:
 \begin{itemize}
-  \item Safety formula: $\forall_x p(x)$
-  \item Safety formula: $\forall_{x,y} p(x,f(y))$ 
+  \item Safety formula: $\forall_x \neg p(x)$
+  \item Safety formula: $\forall_{x,y} \neg p(x,f(y))$ 
   \item Liveness formula: $\exists_x p(x) \lor p1(x)$
   \item Liveness formula: $\exists_{x,y} p(x,f(y))$ 
 \end{itemize}
