@@ -1,17 +1,27 @@
 \chapter{Introduction}
 % \label{cha:Introduction}
 
-The goal of this this thesis is to create random \gls{FOL} generator. User will be able to define:
+The goal of this this thesis is to create random \gls{FOL} generator. User will be able to generate \gls{FOL} formulas in \gls{CNF} with followting parameters:
 \begin{itemize}
-\item what classes of \gls{FOL} elements want to include
-\item how many elements given class should appear in rendered formula (within given threashold)
+  \item functor names 
+  \item functor arity
+  \item predicate names 
+  \item predicate arities
+  \item atom connectives
+  \item clause lengths
+  \item variable names
+  \item number of clauses
+  \item number of literals
 \end{itemize}
 
-Using this generator the following datasets were created:
-\begin{enumerate}
-  \item TODO
-\end{enumerate}
 
+% \section{Formal system}
+% https://en.wikipedia.org/wiki/Formal_system
+% https://cs.lmu.edu/~ray/notes/formalsystems/
+% 
+% A formal system consists of a language over some alphabet of symbols together with (axioms and) inference rules that distinguish some of the strings in the language as theorems.
+% 
+% A formal system is used to infer theorems from axioms according to a set of rules. These rules used to carry out the inference of theorems from axioms are known as the logical calculus of the formal system. A formal system is essentially an "axiomatic system". A formal system may represent a well-defined system of abstract thought.
 
 \section{Formal logical systems}
 % https://en.wikipedia.org/wiki/Mathematical_logic#Formal_logical_systems
@@ -22,15 +32,17 @@ Using this generator the following datasets were created:
 A formal system consists of a language over some alphabet of symbols together with (axioms and) inference rules that distinguish some of the strings in the language as theorems.
 These rules used to carry out the inference of theorems from axioms are known as the logical calculus of the formal system. A formal system is essentially an "axiomatic system". A formal system may represent a well-defined system of abstract thought.
 
+A logical system or, for short, a logic, is a formal system together with its semantics.
+
 At its core, mathematical logic deals with mathematical concepts expressed using formal logical systems. These systems, though they differ in many details, share the common property of considering only expressions in a fixed formal language. The systems of propositional logic and first-order logic are the most widely studied today and in context of this thesis only first-order logic will be discussed. The rest is provided as point of reference in logical formal systems.
 
 Classical logic systems
 
 \begin{itemize}
-  \item Propositional logic 
-  \item First order logic (FOL)
-  \item Infinitary logic - is a logic that allows infinitely long statements and/or infinitely long proofs
-  \item Higher order logic (HOL) - is a form of predicate logic that is distinguished from first-order logic by additional quantifiers and, sometimes, stronger semantics
+  \item propositional logic 
+  \item first order logic (FOL)
+  \item infinitary logic - is a logic that allows infinitely long statements and/or infinitely long proofs
+  \item higher order logic (HOL) - is a form of predicate logic that is distinguished from first-order logic by additional quantifiers and, sometimes, stronger semantics
 \end{itemize}
 
 Nonclassical and modal logic
@@ -38,9 +50,13 @@ Nonclassical and modal logic
   \item modal logic systems: K, D, T, B, S4, S5
   \item deontic logic 
   \item epistemic logic
-  \item Temporal logic (TL)
-  \item Intuitionistic logic 
+  \item temporal logic
+  \item intuitionistic Logic 
 \end{itemize}
+
+\section{Normal forms}
+
+Representing logic formula in one of normal forms sometimes can enable new reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other examples of normal forms are Disjunctive normal form, 
 
 \section{Propositional Logic}
 % https://en.wikipedia.org/wiki/Propositional_calculus
@@ -60,7 +76,7 @@ The following example contains 3 variables and 5 literals and happens to be in \
 
 \section{First Order Logic}
 
-First Order Logc also known as predicates logic, quantificational logic, and first-order predicate calculus it extends propositional logic by adding predicates, functors and quantifiers and non-logical objects.
+First Order Logc also known as predicates logic, quantificational logic, and first-order predicate calculus extends propositional logic by adding predicates, functors and quantifiers and non-logical objects.
 
 \subsection{Elements of FOL}
 
@@ -78,15 +94,25 @@ is atom with 2 elements connected with comparison sign $=$.
 \textbf{Literal}
 is atom or its negation.
 
+% http://mathworld.wolfram.com/First-OrderLogic.html
 \textbf{Variable}
 unlike propositional logic, variables in \gls{FOL} can stand for a relation (between terms) but which has not been specifically assigned any particular relation.
-Variable scope is clause or quantifier. Usually starts with capital letter.
+Usually starts with capital letter. If variables is used in quantifier it is called bound variable, otherwise it is called free variable.
 
 \textbf{Singleton variable}
 is used only once in clause
 
+\textbf{Clause}
+is disjunction of literals
+
+\textbf{Unit clause}
+is clause with only one literal
+
+\textbf{Horn clause}
+is clause, which contains at least one positive literal
+
 \textbf{Predicates}
-is logical operator, which return true or false. predicates operates on specyfic number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate\_name/arity$, eg. $p/1$. Name of predicate is usually lowercase.
+is logical operator, which return true or false. predicates operates on specific number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate\_name/arity$, eg. $p/1$. Name of predicate is usually lowercase.
 
 \textbf{Functor}
 is logical operator, that returns term. Functor has constant arity. Usually noted as $functor\_name/arity$, eg. $f/1$. Name of functor  is usually lowercase.
@@ -108,75 +134,6 @@ The following \gls{FOL} example contains 1 existential quantifier, 2 variables $
 \begin{equation} \label{eg:FOL_1}
   \exists_{W,Z} p(W,Z) | p(a, b)
 \end{equation}
-
-\section{Normal Forms}
-
-TODO
-
-\subsection{Conjunnctive Normal Form}
-
-\textbf{Clause}
-is disjunction of literals
-
-\textbf{Unit clause}
-is clause with only one literal
-
-\textbf{Horn clause}
-is clause, which contains at least one positive literal
-
-\textbf{RR clause} - ??
-
-\subsubsection{Examples of CNF in Propositional Logic}
-
-\subsubsection{Examples of CNF in First Order Logic}
-
-\section{Properties of computer systems}
-
-System properties were first discussed in context of concurrecny \cite{Lampert77} as a tool for formal verification multiprocess programs. One of first proposed properties were safety and liveness. These properties can apply to computer systems in general and be expressed in different formal sysmtems. Below are informal definitions of safety and liveness properties of a system.
-
-\subsection{Safety and liveness}
-
-\textbf{Liveness} \cite{Klimek99} is system property, that states, that something good will eventually happen.
-Liveness formula guarantees that there is at least one case, where formula evaluates to true.
-
-\textbf{Safety} \cite{Klimek99} is sytem property, that states, that something bad will never happens.
-Safety formula must always be satisfied.
-
-\subsection{Safety and liveness representation in logic systems}
-
-In \gls{FOL} liveness and safety can be expressed as quantifiers, safety as universal quantifier and liveness as existential quantifier. Every \gls{FOL} can be converted to \gls{CNF}, so system properties can be also represented in \gls{CNF}, if needed. It can be done for example with otter algorithm \cite{McC-Otter-URL} or skolemisation.
-
-In \gls{FOL} system properties could look like:
-\begin{itemize}
-  \item Safety formula: $\forall_x \neg p(x)$
-  \item Safety formula: $\forall_{x,y} \neg p(x,f(y))$ 
-  \item Liveness formula: $\exists_x p(x) \lor p1(x)$
-  \item Liveness formula: $\exists_{x,y} p(x,f(y))$ 
-\end{itemize}
-
-The combinations of quantifiers (that correspond to combinations of liveness and safety properties) are not discused in this thesis. For example: $\forall_x \exists_y p(x, y)$, $\exists_y \forall_x p(x, y)$
-
-\subsection{Examples}
-Przykład: zdawanie egzaminu
-\noindent
-Problem: zalicz egzamin, aby zdać kurs
-
-\noindent
-Warunek bezpieczeństwa: jeżeli podejmujesz się egzaminu, zalicz go
-
-\noindent
-Warunek żywotnościowy: kiedyś musisz podejść do egzaminu
-
-Przykład: światła na skrzyżowaniu
-
-\noindent
-Problem: samochody chcą przejechać przez skrzyżowanie
-
-\noindent
-Warunek bezpieczeństwa: tylko jedno światło powinno być zielone
-
-\noindent
-Warunek żywotnościowy: każde światło powinno kiedyć zmienić się na zielone
 
 \section{Formats used for representing formulas}
 
@@ -208,8 +165,6 @@ c 5 literals
 \gls{TPTP} \cite{Sut17} - Thousands of Problems for Theorem Provers - is both problem library used for testing \gls{ATP} systems and standard describing syntax for those tests. Next to TPTP library there is \gls{TSTP} - library of solutions produced by various solvers. Problems are classified into different domains: LCL - Logic Calculi, COL - Combinatory Logic and more.
 
 In TPTP syntax supports several logic systems: \gls{TPI}, \gls{THF}, \gls{TFF}, \gls{FOF}, \gls{CNF}. 
-The 
-Celem benchmarka jest badanie proverów logiku pierwszego rzędu, więc interesują nas \gls{CNF}, \gls{TFF}, \gls{FOF} (TFF/FOF with external clausifiers).
 
 \subsubsection{Elements of TPTP syntax}
 
@@ -379,7 +334,7 @@ cnf(combined_1,axiom,
 \subsection{Other formats}
 
 \begin{itemize}
-  \item \gls{LADR} - format required by prover9
+  \item \gls{LADR} - input format for prover9
   \item SMT-LIB - standard for encoding SMT problems, used for example by Z3 prover
 \end{itemize}
 

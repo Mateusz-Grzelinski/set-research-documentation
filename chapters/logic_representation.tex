@@ -1,14 +1,14 @@
 \chapter{Logic internal representation}
 \label{chap:LogicInternalRepresentation}
 
-In this chapter every element of \gls{FOL} will be described in context of implementation along with some computational complexity adnotations.
+In this chapter every element of \gls{FOL} will be described in context of implementation along with some computational complexity annotations.
 
-\section{First Order Logic elements}
+\section{First order logic elements}
 
 \begin{figure}[H]
 \begin{centering}
-  \includegraphics[width=\textwidth]{logic-formula-generator/fol/fol_elements.png}
-  \caption{Class diagram for FOL}
+  \includegraphics[width=\textwidth]{logic-formula-generator/fol/cnf_fol_elements.png}
+  \caption{Class diagram for internal representation of first order logic elements}
 \end{centering}
 \end{figure}
 
@@ -23,7 +23,7 @@ $f(n, a)$ number of functor signatures can be produced.
 \begin{align}
 	&f(n, a) =
 	\begin{cases}
-		a, \text{for } n = 0, \\
+    a, \text{for } n = 0, \\
 		a \sum_{i=n}^{i=1} \sum_{j=a}^{j=0} f(n-i,a-j) \\
 	\end{cases}
 \end{align}
@@ -31,7 +31,7 @@ $f(n, a)$ number of functor signatures can be produced.
 Given that functor arity $a_f$ is in range $[a_{fmin}, a_{fmax}]$  and maximal recursion depth is $n_{max}$, $f(n_{max}, a_{fmin}, a_{fmax})$ number of functor signatures can be produced.
 
 \begin{align}
-	f(n_{max}, a_{fmin}, a_{fmax}) = \sum_{i=0}^{n_{max}} \sum_{j=a_{fmin}}^{a_{fmax}} f(i, j),
+  f(n_{max}, a_{fmin}, a_{fmax}) = \sum_{i=0}^{n_{max}} \sum_{j=a_{fmin}}^{a_{fmax}} f(i, j) \label{eq:functor}
 \end{align}
 
 \subsection{Predicates}
@@ -50,7 +50,7 @@ Given that $a_p$ is predicate arity, $P(a_p)$ number of predicate signatures can
 Given that predicate arity $a_p$ is in range $[a_{pmin}, a_{pmax}]$, $p(a_{fmin}, a_{fmax})$ number of functor signatures can be produced.
 
 \begin{align}
-	p(a_{pmin}, a_{pmax}) = \sum_{i=a_{pmin}}^{a_{pmax}} p(i),
+  p(a_{pmin}, a_{pmax}) = \sum_{i=a_{pmin}}^{a_{pmax}} p(i) \label{eq:predicate}
 \end{align}
 
 \subsection{Atoms}
@@ -62,44 +62,44 @@ Given that atom $connective$, $A(connective)$ atom signatures can be produced.
 	A(connective) &= 
   \begin{cases}
     (p(a_{pmin}, a_{pmax}) + 1)^{2}, \text{for } connective \in \{'=', '!='\} \\
-    p(a_{pmin}, a_{pmax}) + 1, \text{for } connective \in \{\emptyset\}
+    p(a_{pmin}, a_{pmax}) + 1, \text{for } connective \in \{\emptyset\} \label{eq:atom}
   \end{cases}
 \end{align}
 
-\subsection{Literals}
-
-Literal is atom or its negation.
-
-\begin{align}
-  L = A(AllowedConnectives) * 2
-\end{align}
+% \subsection{Literals}
+%
+% Literal is atom or its negation.
+%
+% \begin{align}
+  % L = A(AllowedConnectives) * 2 \label{eq:literal}
+% \end{align}
 
 \subsection{CNF Clause}
 
-Clause $C$ can contain only literals $L$. The order of literals is irrelevant $C = \{l1, 12, \dots\}$
+Clause $C$ can contain only atoms $A$. The order of atoms is irrelevant $C = \{a1, a2, \dots\}$
 
 Given that 
 clause length $l$ and 
-set of unique literals $L = \{l1, l2, \dots\}$, $\forall_{i,j \in L} i \neq j$
-$C(l)$ clauses can be produced.
+set of unique atoms $A = \{a1, a2, \dots\}$, $\forall_{i,j \in L} i \neq j$
+$C(a)$ clauses can be produced. Atoms can repeat.
 
 \begin{align}
-  C(l) = \binom{L}{l},
+  C(l) = \binom{A + l - 1}{l}
 \end{align}
 
 Given that clause length $l$ is in range $[l_{min}, l_{max}]$
 
 \begin{align}
-  C(l) = \sum_{i=l_{min}}^{i=l_{max}} C(i)
+  C(l) = \sum_{i=l_{min}}^{i=l_{max}} C(i) \label{eq:clause}
 \end{align}
 
 \subsection{CNF formulas}
 
 Given that
-formula contains $c$ clauses and
+formula contains $x$ clauses and
 set of unique clauses $C = \{c1,c2, \dots\}$
-$F$ formulas can be produced.
+$F$ formulas can be produced. Clauses can repeat.
 
 \begin{align}
-	&F_{cnf}(x) = \binom{|C|}{x}
+  &F_{cnf}(x) = \binom{C(l) + x - 1}{x} \label{eq:cnfformula}
 \end{align}

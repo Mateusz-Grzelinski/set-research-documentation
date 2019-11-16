@@ -1,0 +1,81 @@
+\chapter{Case study - generating random system properties}
+
+One of the uses of random \gls{FOL} can be to generate random formula that represent system properties. That formula can be used as input for benchmark.
+
+\section{Properties of computer systems}
+
+System properties were first discussed in context of concurrency \cite{Lampert77} as a tool for formal verification multiprocess programs. One of first proposed properties were safety and liveness. These properties can apply to computer systems in general and be expressed in different formal systems.
+
+\textbf{Liveness} \cite{Klimek99} is system property, that states, that something good will eventually happen.
+Liveness formula guarantees that there is at least one case, where formula evaluates to true.
+
+\textbf{Safety} \cite{Klimek99} is system property, that states, that something bad will never happens.
+Safety formula must always be satisfied.
+
+\subsection{Safety and liveness representation in logic systems}
+
+In \gls{FOL} liveness and safety can be expressed as quantifiers, safety as universal quantifier and liveness as existential quantifier. Every \gls{FOL} can be converted to \gls{CNF}, so system properties can be also represented in \gls{CNF}, if needed. It can be done for example with otter algorithm \cite{McC-Otter-URL} or skolemisation.
+
+In \gls{FOL} system properties could look like:
+\begin{itemize}
+  \item Safety formula: $\forall_x \neg p(x)$
+  \item Safety formula: $\forall_{x,y} \neg p(x,f(y))$ 
+  \item Liveness formula: $\exists_x p(x) \lor p1(x)$
+  \item Liveness formula: $\exists_{x,y} p(x,f(y))$ 
+\end{itemize}
+
+The combinations of quantifiers (that correspond to combinations of liveness and safety properties) are not discussed in this thesis. For example: $\forall_x \exists_y p(x, y)$, $\exists_y \forall_x p(x, y)$
+
+\subsection{Example}
+
+Example: collisionless lights on crossroad
+
+\noindent
+Problem: cars want to drive through crossroad.
+
+\noindent
+Safety property: only one light can be green.
+
+\noindent
+Liveness property: every light should eventually turn green.
+
+\section{Generating dataset}
+
+The following code snippet would generate random \gls{FOL} formula, that would represent liveness and safety properties.
+
+\begin{minted}{python}
+import src.ast.first_order_logic as fol
+from src.ast.exporters.tptp import TPTPExporter
+from src.generators import IntegerRange
+from src.generators.presets.first_order_logic import CNFFormulaGenerator
+
+if __name__ == '__main__':
+    gen = CNFFormulaGenerator(
+        functor_names={'f1'}, functor_arity={0}, functor_recursion_depth=0,
+        predicate_names={'p1', 'p2'}, predicate_arities={0, 1},
+        atom_connectives={''},
+        clause_lengths={1, 2, 3},
+        variable_names={'V1', 'V2'},
+        number_of_clauses=IntegerRange(min=3, max=10),
+        number_of_literals=IntegerRange(min=1, max=30)
+    ).generate()
+
+    exporter = TPTPExporter(
+        output_dir='./temp-out',
+        filename_handle=lambda stat: 'dataset1')
+
+    for i, formula in enumerate(gen):
+        exporter.export(expression=formula, filename_suffix=str(i))
+\end{minted}
+
+According to chapter \ref{chap:LogicInternalRepresentation}, \mintinline{python}{CNFFormulaGenerator} is going to generate number of signatures:
+\begin{itemize}
+  \item 1 variable signature (see table \ref{tab:signatureComparison}): \tptpcodeinline{[V]}
+  \item $f(n_{max}, a_{fmin}, a_{fmax}) = f(0, 0, 0) = \sum_{i=0}^{0} \sum_{j=0}^0 f(i, j) = 1$ functor signature \ref{eq:functor}: \tptpcodeinline{[f]}
+  \item $p(a_{pmin}, a_{pmax}) = p(0, 1) = \sum_{i=0}^1 p(i) = 3$ predicate signatures \ref{eq:predicate}: \tptpcodeinline{[p, p(V), p(f)]}
+  \item $A(connnective) = A(\emptyset) = p(a_{pmin}, a_{pmax}) + 1 = 3 + 1 = 4$ atom signatures \ref{eq:atom}: \tptpcodeinline{[p(V), V, p(f), p]}
+  % \item $L = A(AllowedConnectives) * 2 = 3 * 2 = 6$ literal connectives
+  \item $C(l) = \sum_{i=l_{min}}^{i=l_{max}} C(i) = \sum_{i=1}^{3} C(i) = C(1) + C(2) + C(3) = \binom{4 + 1 -1}{1} + \binom{4 + 2 - 1}{2} + \binom{4 + 3 - 1}{3} = 4 + 10 + 20 = 34$ clause signatures \ref{eq:clause}: \tptpcodeinline{cnf(V|V|V)., cnf(V|V)., cnf(V)., cnf(V|p(V))., ...]}
+\end{itemize}
+
+The exact number of literals and clauses in generated formula is computed internally by Z3 solver. But assuming that we want formula to have 2 clauses (with any number of literals), there are $F_{cnf}(x) = \binom{C(l) + x - 1}{x} = \binom{34 + 2 - 1}{2} = 595$ \gls{CNF} formula signatures \ref{eq:cnfformula} that can be generated. The final step is post processing (give elements random names and optionally negation sign).

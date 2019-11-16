@@ -1,13 +1,13 @@
-\chapter{Gerarator parameters and algorithm}
+\chapter{Generator parameters and algorithm}
 
-When talking about formula we would often describe formula by $n$ number of elements, eg. formula has 4 predicates. In sense of implementation more specyfic vocabulary is needed. From now on when talking abount $n$ occurrences of element, mathematical sense is assumed (usually it is element name and arity). In implementation user will be asked to provide \textit{signature} of element. Signature is differentiated by argument types that is holds. This is importatant thus name of signature is often irrelevant and can be filled later. Element \textit{instance} is every occurance of in formula.
+When talking about formula we would often describe formula by $n$ number of elements, eg. formula has 4 predicates. In sense of implementation more specific vocabulary is needed. From now on when talking about $n$ occurrences of element, mathematical sense is assumed (usually it is element name and arity). In implementation user will be asked to provide \textit{signature} of element. Signature is differentiated by argument types that is holds. This is important thus name of signature is often irrelevant and can be modified later. Element \textit{instance} is every occurrence of in formula. See \ref{tab:signatureComparison}
 
 \begin{table}
   \centering
   \footnotesize
   \begin{tabularx}{\textwidth}{|c|X|X|}
     \hline
-    FOL element & Unique element in mathematical sense & Unique element in signature \\
+    FOL element & Unique element in mathematical sense & Unique element as signature \\
     \hline
     Variable & by name and scope $V1$, $V2, \dots$ & there is only one signature for variable \\  
     \hline
@@ -19,13 +19,14 @@ When talking about formula we would often describe formula by $n$ number of elem
     \hline
   \end{tabularx}
   \caption{Comparison of how elements of FOL in sense of math and signature. Elements not included here simply does not make have signature}
+  \label{tab:signatureComparison}
 \end{table}
 
 \section{CNF Generator parameters}
 
 User defines generator in 3 steps.
 \begin{enumerate}
-  \item \textbf{Allowed FOL signatures}
+  \item \textbf{Allowed first order logic signatures}
 
     In this step user defines set of allowed \gls{FOL} elements:
     \begin{itemize}
@@ -34,24 +35,27 @@ User defines generator in 3 steps.
       \item set of allowed predicate arities $a_p = \{0, 1, 2,\dots\}$
       \item set of atom allowed connectives, that is no connective or/and any subset of $AllowedConnectives = \{=, !=, \emptyset\}$
       % \item if negated literals are allowed
-      \item set of allowed clause lengths $AllowedClausesLen = \{1,2,\dots\}$
-      \item set of allowed number of clauses in formula $AllowedFormulaLen = \{1,2,\dots\}$
+      \item set of allowed clause lengths $AllowedClausesLengths = \{1,2,\dots\}$
+      \item number of clauses in formula $NumberOfClauses$
+      \item number of literals in formula $NumberOfLiterals$
     \end{itemize}
+
   \item \textbf{How many instances of elements are allowed}
 
     In this step user defines what properties formula should have:
     \begin{itemize}
-      \item formula contains from $c_{min}$ to $c_{max}$ clauses, but the best solution is considered middle of this range
-      \item formula contains from $l_{min}$ to $l_{max}$ literals, but the best solution is considered middle of this range
+      \item formula contains from $c_{min}$ to $c_{max}$ clauses
+      \item formula contains from $l_{min}$ to $l_{max}$ literals
     \end{itemize}
-  \item \textbf{Post processing - names for term-like FOL elemnents and literal}
+
+  \item \textbf{Post processing - names for term-like FOL elements and literal}
 
     In this step user defines:
     \begin{itemize}
       \item set of variable names $\{'v1','v2',\dots\}$
       \item set of functor names $\{'f1','f2',\dots\}$
       \item set of predicate names $\{'p1','p2',\dots\}$
-      \item ammount of literals to be negated
+      \item amount of literals to be negated
     \end{itemize}
 \end{enumerate}
 
@@ -60,11 +64,14 @@ User defines generator in 3 steps.
 \begin{enumerate}
   \item Resolve user constraints \ref{sec:ResolveUserConstrains}
   \item Generate possible formula based on signatures \ref{chap:LogicInternalRepresentation}
-  \item Post process - give unique names
+  \item Post process - give unique names, add unary operators (negation)
+  \item Export formula to file
 \end{enumerate}
 
 \section{Resolve user constraints}
 \label{sec:ResolveUserConstrains}
+
+User constrains are defined in input parameters as $AllowedClausesLengths$, $NumberOfClauses$, $NumberOfLiterals$. To generate random formula withing these constrains, number of clauses with appriopriate clause length must be computed.
 
 CNF formula $F_{cnf}$ consists of unordered clauses $c1, c2, \dots$. 
 
@@ -92,7 +99,7 @@ Number of literals in formula can be represented as:
 		&|c_i| \text{ -- number of clauses with length i} 
 \end{align*}
 
-By solving above equation we can reduce greediness of algorithm. By using integer programming we can solve following equation within user defined thresholds and return random formula.
+So in the end:
 
 \begin{align}
 	l(x) &= \sum_{i=1}^{x} x_i |c_i| \\
@@ -105,4 +112,3 @@ By solving above equation we can reduce greediness of algorithm. By using intege
 		&|c_i| \text{ -- number of clauses with length i} \nonumber
 \end{align}
 
-Above equation can be solved with several methods. The first one is to use one of algorithms from \gls{ILP}. The second is to use \gls{SMT} solver.
