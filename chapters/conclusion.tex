@@ -1,3 +1,13 @@
 \chapter{Conclusion}
 
-In this thesis a basebone for random first order logic formula generator has been presented. The generator can be easily extended for user specific needs. For example user can add arbitrary rule that elements must follow during generation, more output format can be added.
+In this thesis a base for random first order logic formula generator has been presented. The generator can be easily extended for user specific needs. For example user can add arbitrary rule that elements must follow during generation, more output format can be added. The biggest challenge in described algorithm is time and memory complexity. Described approach takes into consideration fact, that there are finite number formulas within user given restrictions - if user requests too many formulas, they will start to repeat what may not be desirable. Solving user constrains with Z3 solver is NP problem and generating combinations and permutations in \textit{random} order requires additional memory.
+
+Alternative approach to using SMT solver would be to take locally optimal decisions and introduce some randomness when taking those decisions. This approach would create arguably "more" random result but introduces number of drawbacks:
+
+\begin{itemize}
+  \item taking many local decisions may not be faster than taking one global - that requires in depth analysis,
+  \item this is non deterministic approach - some possible variants of formula might never/rarely be reached,
+  \item there is no way of detecting duplicate formulas without storing them.
+\end{itemize}
+
+The future development of presented generator would allow to generate formulas in different normal forms, more readable suggestions for constrains errors and ability to auto correct user constraints errors.
