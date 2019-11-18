@@ -44,6 +44,8 @@ Liveness property: every light should eventually turn green.
 The following code snippet would generate random \gls{FOL} formula, that would represent liveness and safety properties.
 
 \begin{minted}{python}
+import math
+
 import src.ast.first_order_logic as fol
 from src.ast.exporters.tptp import TPTPExporter
 from src.generators import IntegerRange
@@ -56,13 +58,14 @@ if __name__ == '__main__':
         atom_connectives={''},
         clause_lengths={1, 2, 3},
         variable_names={'V1', 'V2'},
-        number_of_clauses=IntegerRange(min=3, max=10),
-        number_of_literals=IntegerRange(min=1, max=30)
+        number_of_clauses=IntegerRange(min=3, max=3),
+        number_of_literals=IntegerRange(min=9, max=math.inf)
     ).generate()
 
     exporter = TPTPExporter(
         output_dir='./temp-out',
-        filename_handle=lambda stat: 'dataset1')
+        filename_handle=lambda stat: 'generated_cnf_formula'
+    )
 
     for i, formula in enumerate(gen):
         exporter.export(expression=formula, filename_suffix=str(i))
@@ -78,4 +81,18 @@ According to chapter \ref{chap:LogicInternalRepresentation}, \mintinline{python}
   \item $C(l) = \sum_{i=l_{min}}^{i=l_{max}} C(i) = \sum_{i=1}^{3} C(i) = C(1) + C(2) + C(3) = \binom{4 + 1 -1}{1} + \binom{4 + 2 - 1}{2} + \binom{4 + 3 - 1}{3} = 4 + 10 + 20 = 34$ clause signatures \ref{eq:clause}: \tptpcodeinline{cnf(V|V|V)., cnf(V|V)., cnf(V)., cnf(V|p(V))., ...]}
 \end{itemize}
 
-The exact number of literals and clauses in generated formula is computed internally by Z3 solver. But assuming that we want formula to have 2 clauses (with any number of literals), there are $F_{cnf}(x) = \binom{C(l) + x - 1}{x} = \binom{34 + 2 - 1}{2} = 595$ \gls{CNF} formula signatures \ref{eq:cnfformula} that can be generated. The final step is post processing (give elements random names and optionally negation sign).
+The exact number of literals and clauses in generated formula is computed internally by Z3 solver. In this case formula must have 3 clauses with length 3.
+There are $C(3) = \binom{4 + 3 - 1}{3} = 20$ clause signatures with lenght 3:
+
+\begin{listing}[H]
+  \caption{All possible clause signatures with length 3}
+\begin{tptpcode}
+[cnf(p(f)|p(f)|p(f)).,  cnf(p(f)|p(f)|V).,    cnf(p(f)|p(f)|p).,     cnf(p(f)|p(f)|p(V)).,   
+ cnf(p(f)|V|V).,        cnf(p(f)|V|p).,       cnf(p(f)|V|p(V)).,     cnf(p(f)|p|p).,         
+ cnf(p(f)|p|p(V)).,     cnf(p(f)|p(V)|p(V))., cnf(V|V|V).,           cnf(V|V|p).,            
+ cnf(V|V|p(V)).,        cnf(V|p|p).,          cnf(V|p|p(V)).,        cnf(V|p(V)|p(V)).,      
+ cnf(p|p|p).,           cnf(p|p|p(V)).,       cnf(p|p(V)|p(V)).,     cnf(p(V)|p(V)|p(V)).]
+\end{tptpcode}
+\end{listing}
+
+Based on above signatures, $F_{cnf}(x) = \binom{C(l) + x - 1}{x} = \binom{20 + 3 - 1}{3} = 8000$ (todo check) \gls{CNF} formula signatures \ref{eq:cnfformula} can be generated. The final step is post processing (give elements random names and optionally negation sign).
