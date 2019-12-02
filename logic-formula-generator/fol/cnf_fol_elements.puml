@@ -8,6 +8,7 @@ FolElement <-- Atom
 FolElement <-- Predicate
 FolElement <|-- Term
 Term <-- Functor
+Term o-- Functor
 Term <-- Variable
 
 

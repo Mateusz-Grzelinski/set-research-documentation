@@ -1,0 +1,62 @@
+@startuml
+
+
+ConstaintSolver o- CNFFormulaSignatureGenerator
+CNFFormulaSignatureGenerator o-- CNFClauseSignatureGenerator
+note on link: Clause 
+CNFClauseSignatureGenerator o-- LiteralSignaturegnerator
+note on link: Literal 
+LiteralSignaturegnerator o-- AtomSignatureGenerator
+note on link: Atom 
+AtomSignatureGenerator o-- PredicateSignaturegenerator
+note on link: Predicate 
+AtomSignatureGenerator o-- VariableGenerator
+note on link: Variable
+PredicateSignaturegenerator o-- VariableGenerator
+note on link: Variable
+PredicateSignaturegenerator o-- FunctorSignatureGenerator
+note on link: Functor
+VariableGenerator -o FunctorSignatureGenerator 
+note on link: Variable
+
+class ConstaintSolver {
+  number_of_literals
+  number_of_clauses
+}
+
+class CNFFormulaSignatureGenerator {
+	cnf/1
+	cnf/2
+	..
+}
+
+class CNFClauseSignatureGenerator {
+	cnf(literal | literal).
+	..
+}
+
+class LiteralSignaturegnerator {
+	atom, ~atom
+	..
+}
+
+class AtomSignatureGenerator {
+	V, p, V = V, p != V
+	..
+}
+
+class PredicateSignaturegenerator {
+	p, p(f), p(V, f)
+	..
+}
+
+class FunctorSignatureGenerator {
+	f, f(f), f(V), f(f(f))
+	..
+}
+
+class VariableGenerator {
+	V1, V2
+	..
+}
+@enduml
