@@ -66,14 +66,14 @@ Given that predicate arity $a_p$ is in range $[a_{pmin}, a_{pmax}]$, $p(a_{fmin}
 
 \subsection{Atoms}
 
-Atom can contain variabe or predicate. Atom connects items with binary mathematical connective: $=$ or $!=$ or $\emptyset$ (no connective).
+Atom can contain only predicate. Single variable on its own is not an atom. Atom connects items with binary mathematical connective: $=$ or $!=$ or $\emptyset$ (no connective).
 Given that atom $connective$, $A(connective)$ atom signatures can be produced.
 
 \begin{align}
 	A(connective) &= 
   \begin{cases}
-    (p(a_{pmin}, a_{pmax}) + 1)^{2}, \text{for } connective \in \{'=', '!='\} \\
-    p(a_{pmin}, a_{pmax}) + 1, \text{for } connective \in \{\emptyset\} \label{eq:atom}
+    p(a_{pmin}, a_{pmax})^{2}, \text{for } connective \in \{'=', '!='\} \\
+    p(a_{pmin}, a_{pmax}), \text{for } connective \in \{\emptyset\} \label{eq:atom}
   \end{cases}
 \end{align}
 
