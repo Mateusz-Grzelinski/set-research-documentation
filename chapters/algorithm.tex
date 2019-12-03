@@ -1,6 +1,13 @@
 \chapter{Generator parameters and algorithm}
 
-When talking about formula we would often describe formula by $n$ number of elements, eg. formula has 4 predicates. In sense of implementation more specific vocabulary is needed. From now on when talking about $n$ occurrences of element, mathematical sense is assumed (usually it is element name and arity). In implementation user will be asked to provide \textit{signature} of element. Signature is differentiated by argument types that is holds. This is important thus name of signature is often irrelevant and can be modified later. Element \textit{instance} is every occurrence of in formula. See \ref{tab:signatureComparison}
+In math it is common to characterize element by its name and arity(if applicable), but in implementation name of element can be filled any time and besides arity, often argument type is also important. From now on when talking about $n$ occurrences of element, mathematical sense is assumed. Signature of element is element with 2 differences:
+
+\begin{itemize}
+  \item element name is not important
+  \item types of child elements is important 
+\end{itemize}
+
+See table \ref{tab:signatureComparison} for more details.
 
 \begin{table}
   \centering
@@ -18,7 +25,7 @@ When talking about formula we would often describe formula by $n$ number of elem
     Atom & by connective and operands $p/0$, $p/1 = V, \dots$ & by connective and operands signatures $p(Variable)$, $p(Variable) = p(Functor), \dots$ \\
     \hline
   \end{tabularx}
-  \caption{Comparison of how elements of FOL in sense of math and signature. Elements not included here simply does not make have signature}
+  \caption{Comparison of how elements of FOL in sense of math and signature. Elements not included here simply does not make sense to have signature}
   \label{tab:signatureComparison}
 \end{table}
 

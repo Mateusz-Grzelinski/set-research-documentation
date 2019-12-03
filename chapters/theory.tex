@@ -1,27 +1,12 @@
 \chapter{Introduction}
-% \label{cha:Introduction}
+\label{cha:Introduction}
 
-The goal of this this thesis is to create random \gls{FOL} generator. User will be able to generate \gls{FOL} formulas in \gls{CNF} with followting parameters:
-\begin{itemize}
-  \item functor names 
-  \item functor arity
-  \item predicate names 
-  \item predicate arities
-  \item atom connectives
-  \item clause lengths
-  \item variable names
-  \item number of clauses
-  \item number of literals
-\end{itemize}
+This thesis focuses on creating extensible, easy to use \gls{FOL} generator. The goal is to hide implementation and display user simple interface with objects that correspond to mathematical definitions of elements of first order logic. Any arbitrary rule can be injected into generation to fulfill user specific needs. Those rules are meant to represent fragment or reality that user wants to represent in \gls{FOL}. Formulas generated in this way can be used as testing tool as randomness of formulas can be finely controlled. One of application of such formulas is generating datasets for benchmarks, especially for \gls{SAT} solvers.
 
+Although satisfiability problem has NP complexity, in recent years there has been substantial development in this area. Davis–Putnam–Logemann–Loveland algorithm \footnote{\url{https://en.wikipedia.org/wiki/DPLL_algorithm}} has been superseded by conflict-driven clause learning \footnote{\url{https://en.wikipedia.org/wiki/Conflict-driven_clause_learning}}, heuristics and hardware has improved. Simple problems are probably going to be represented in propositional calculus in formats like DIMACS. Note that this format is so simple that a need for generator in this format is questionable, as one can be written in a matter of hours. For more complex problems it may be easier to encode problems in more expressive language and the next natural step would be first order logic. \gls{FOL} has tools for expressing relation and still many SAT solvers accept input in \gls{FOL}. 
 
-% \section{Formal system}
 % https://en.wikipedia.org/wiki/Formal_system
 % https://cs.lmu.edu/~ray/notes/formalsystems/
-% 
-% A formal system consists of a language over some alphabet of symbols together with (axioms and) inference rules that distinguish some of the strings in the language as theorems.
-% 
-% A formal system is used to infer theorems from axioms according to a set of rules. These rules used to carry out the inference of theorems from axioms are known as the logical calculus of the formal system. A formal system is essentially an "axiomatic system". A formal system may represent a well-defined system of abstract thought.
 
 \section{Formal logical systems}
 % https://en.wikipedia.org/wiki/Mathematical_logic#Formal_logical_systems
@@ -33,10 +18,7 @@ A formal system consists of a language over some alphabet of symbols together wi
 These rules used to carry out the inference of theorems from axioms are known as the logical calculus of the formal system. A formal system is essentially an "axiomatic system". A formal system may represent a well-defined system of abstract thought.
 
 A logical system or, for short, a logic, is a formal system together with its semantics.
-
-At its core, mathematical logic deals with mathematical concepts expressed using formal logical systems. These systems, though they differ in many details, share the common property of considering only expressions in a fixed formal language. The systems of propositional logic and first-order logic are the most widely studied today and in context of this thesis only first-order logic will be discussed. The rest is provided as point of reference in logical formal systems.
-
-Classical logic systems
+Classical logic systems:
 
 \begin{itemize}
   \item propositional logic 
@@ -53,26 +35,6 @@ Nonclassical and modal logic
   \item temporal logic
   \item intuitionistic Logic 
 \end{itemize}
-
-\section{Normal forms}
-
-Representing logic formula in one of normal forms sometimes can enable new reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other examples of normal forms are Disjunctive normal form, 
-
-\section{Propositional Logic}
-% https://en.wikipedia.org/wiki/Propositional_calculus
-Also known as propositional calculus, statement logic, zeroth order logic \footnote{sometimes zeroth order logic is considered different system \url{https://en.wikipedia.org/wiki/Zeroth-order_logic}} is basic type of logical system that is taught in school. It operates on propositions (which can be true or false) which are connected by logical connectives. The propositions without logical connectives are called atomic propositions.
-
-\subsection{Elements of Propositional Logic}
-
-\textbf{Variable} (atomic formula, placeholder) is proposition that can be true or false
-
-\textbf{Literal} in general is atom or its negation, in propositional logic it would be variable or negated variable
-
-The following example contains 3 variables and 5 literals and happens to be in \gls{CNF}:
-
-\begin{equation} \label{eg:PL_1}
-  (V1 \lor \neg V3) \land (V2 \lor  V3 \lor ~V1)
-\end{equation}
 
 \section{First Order Logic}
 
@@ -135,30 +97,13 @@ The following \gls{FOL} example contains 1 existential quantifier, 2 variables $
   \exists_{W,Z} p(W,Z) | p(a, b)
 \end{equation}
 
+\section{Normal forms}
+
+Representing logic formula in one of normal forms sometimes can enable new reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other examples of normal forms are Disjunctive normal form, 
+
 \section{Formats used for representing formulas}
 
 Many provers implement its own language for representing logic formulas. One of more popular (subjectively)  seems to be DIMACS for propositional logic and TPTP for first order logic.
-
-\subsection{DIMACS}
-
-Format DIMACS is simple format for representing propositional logic in \gls{CNF}. It has no formal standard but is widely used because of its simplicity.
-
-Character $c$ is used as single line comment symbol, $p$ $cnf$ is keyword meaning this is \gls{CNF} problem. The following 2 numbers mean respectively: number of variables, number of clauses in formula.  Character $0$ separates clauses, number represent variables, minus sign represents negation.
-
-
-\begin{listing}[H]
-  \caption{DIMACS representation of \ref{eg:PL_1}}
-  \begin{minted}{text}
-p cnf 3 2
-1 -3 0
-2 3 -1 0
-
-c above formula consists of:
-c 2 clauses
-c 3 variables: [1,2,3]
-c 5 literals
-  \end{minted}
-\end{listing}
 
 \subsection{TPTP}
 
@@ -341,12 +286,14 @@ cnf(combined_1,axiom,
 
 \section{Existing formula generators and benchmarks}
 
-SMT-LIB \cite{BarFT-RR-17}
+There are number of benchmarks that can be found for example:
 
-SATLIB \cite{Hol00}
+\begin{itemize}
+  \item SMT-LIB \cite{BarFT-RR-17} 
+  \item SATLIB \cite{Hol00}
+  \item Tough SAT \url{https://toughsat.appspot.com/}
+  \item PySAT \url{https://pysathq.github.io/}
+  \item TPTP \cite{Sut17} - TSTP (Thousands of Solutions from Theorem Provers) to be more precise
+\end{itemize}
 
-\url{https://toughsat.appspot.com/}
-
-pysat \url{https://pysathq.github.io/}
-
-CNFgen \url{https://massimolauria.net/cnfgen/}
+Unfortunately there are not a lot of generators itself. One generator is for example CNFgen \url{https://massimolauria.net/cnfgen/} but it generates only formulas in proposition logic. There are none generators for first order logic.
