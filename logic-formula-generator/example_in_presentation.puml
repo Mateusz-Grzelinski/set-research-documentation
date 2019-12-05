@@ -1,0 +1,24 @@
+
+@startuml
+skinparam dpi 300
+
+skinparam class {
+  backgroundColor Ivory
+  borderColor DarkRed
+}
+
+
+class CNFFormulaGenerator {
+  variable_names={V1,V2,...,V10},
+  functor_names={f1, f2, ..., f10},
+  functor_arity={1,2,...,10},
+  functor_recursion_depth=0,
+  predicate_names={p1, p2, ..., p10},
+  predicate_arities={0,1,...,10},
+  atom_connectives={''},
+  clause_lengths={7,8,9,10},
+  number_of_clauses=IntegerRange(min=800, max=1000),
+  number_of_literals=IntegerRange(min=1000, max=math.inf)
+}
+
+@enduml

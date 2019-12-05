@@ -1,0 +1,43 @@
+
+@startuml
+skinparam dpi 300
+
+skinparam class {
+  backgroundColor Ivory
+  borderColor DarkRed
+}
+
+package SignatureGenerators {
+  note "Every signature generator \ncan be used by CNFFormulaGenerator" as N
+ }
+
+SignatureGenerators -o CNFFormulaGenerator
+CNFFormulaGenerator o-- ConstraintSolver
+CNFFormulaGenerator o-- PostProcessor 
+
+class CNFFormulaGenerator {
+  variable_names 
+  functor_names 
+  functor_arity 
+  functor_recursion_depth 
+  predicate_names
+  predicate_arities
+  atom_connectives
+  clause_lengths 
+  **number_of_literals**
+  **number_of_clauses**
+}
+
+class ConstraintSolver {
+  number_of_literals
+  number_of_clauses
+}
+
+class PostProcessor {
+  predicate_names
+  functor_names
+  variable_names
+  number_of_negated_literals
+}
+
+@enduml

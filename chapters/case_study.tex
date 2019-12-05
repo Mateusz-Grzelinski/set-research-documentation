@@ -24,7 +24,7 @@ In \gls{FOL} system properties could look like:
   \item Liveness formula: $\exists_{x,y} p(x,f(y))$ 
 \end{itemize}
 
-The combinations of quantifiers (that correspond to combinations of liveness and safety properties) are not discussed in this thesis. For example: $\forall_x \exists_y p(x, y)$, $\exists_y \forall_x p(x, y)$
+The combinations of quantifiers (that correspond to combinations of liveness and safety properties) are not discussed in this thesis. For example: $\forall_x \exists_y p(x, y)$, $\exists_y \forall_x p(x, y)$.
 
 \subsection{Example}
 
@@ -41,7 +41,8 @@ Liveness property: every light should eventually turn green.
 
 \section{Generating dataset}
 
-The following code snippet would generate random \gls{FOL} formula, that would represent liveness and safety properties.
+Liveness and safety can be expressed as quantifiers those can be converted to CNF. In this section generation of small and big dataset will be presented.
+The following code snippet would generate random \gls{FOL} formula, that can represent liveness and safety properties.
 
 \begin{minted}{python}
 import math
@@ -88,8 +89,62 @@ There are $C(3) = \binom{4 + 3 - 1}{3} = 20$ clause signatures with lenght 3:
 \begin{listing}[H]
   \caption{All possible clause signatures with length 3 (random order)}
 \begin{tptpcode}
-todo
+{cnf(name,axiom,p(f)|p|p(V))., cnf(name,axiom,p(V)|p(V)|p(V)).,
+ cnf(name,axiom,p(f)|p(f)|p(V))., cnf(name,axiom,p(V)|p|p).,
+ cnf(name,axiom,p(V)|p|p(V))., cnf(name,axiom,p(f)|p(V)|p(f)).,
+ cnf(name,axiom,p(V)|p(f)|p)., cnf(name,axiom,p(f)|p(f)|p(f)).,
+ cnf(name,axiom,p|p(f)|p(f))., cnf(name,axiom,p|p|p(f)).,
+ cnf(name,axiom,p|p|p)., cnf(name,axiom,p|p(f)|p).,
+ cnf(name,axiom,p(f)|p|p)., cnf(name,axiom,p(V)|p(f)|p(f)).,
+ cnf(name,axiom,p|p|p(V))., cnf(name,axiom,p(f)|p|p(f)).,
+ cnf(name,axiom,p(V)|p(V)|p(f))., cnf(name,axiom,p(f)|p(f)|p).,
+ cnf(name,axiom,p|p(V)|p(V))., cnf(name,axiom,p|p(V)|p(f)).}
 \end{tptpcode}
 \end{listing}
 
 Based on above signatures, $F_{cnf}(x) = C(l)^x = 20^3 = 8000$ \gls{CNF} formula signatures \ref{eq:cnfformula} can be generated. The final step is post processing (give elements random names and optionally negation sign).
+
+For the benchmark test we shall generate bigger formulas.
+100 random formulas were generated from this setup and were benchamarked agains solvers Prover9 and SPASS.
+
+\begin{minted}{python}
+    gen = CNFFormulaGenerator(
+        functor_names={f'f{i}' for i in range(5)},
+        functor_arity={i for i in range(10)}, functor_recursion_depth=0,
+        predicate_names={f'p{i}' for i in range(10)}, predicate_arities={i for i in range(10)},
+        atom_connectives={''},
+        clause_lengths={i for i in range(7, 10)},
+        variable_names={f'V{i}' for i in range(10)},
+        number_of_clauses=IntegerRange(min=800, max=1000),
+        number_of_literals=IntegerRange(min=1000, max=math.inf)
+    ).generate(
+\end{minted}
+
+\begin{listing}[H]
+  \caption{Example of generated formula (limited)}
+\begin{tptpcode}
+% ----------------------------------------------------------------------------
+% File      : 0.p 
+% Syntax    : Number of clauses     :  800 (752 non-Horn;   0 unit;   - RR)
+%             Number of atoms       : 5602 (  0 equality)
+%             Maximal clause size   :    9 (  7 average)
+%             Number of predicates  :   10 (2785 propositional; 0-9 arity)
+%             Number of functors    :   10 (783 constant; 0-9 arity)
+%             Number of variables   :38937 (778 singleton)
+%             Maximal term depth    :    0 (  - average)
+% 
+% ----------------------------------------------------------------------------
+cnf(name,axiom,~p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)|p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)|p6(f0(V3, V1, V9, V8, V8, V2, V8, V1, V9), f2(V1, V2, V3, V4, V9, V9, V3), f6(V7, V2, V2))|p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)|p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)|~p6(f0(V3, V1, V9, V8, V8, V2, V8, V1, V9), f2(V1, V2, V3, V4, V9, V9, V3), f6(V7, V2, V2))|p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)|p6(V2, f2(V1, V2, V3, V4, V9, V9, V3), f6(V7, V2, V2))|~p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)).
+...
+\end{tptpcode}
+\end{listing}
+
+All of formulas were UNSAT. The reason may be low number of available names in comparison to number of clauses.
+
+\begin{figure}[ht]
+\begin{centering}
+  \includegraphics[width=\textwidth]{logic-formula-generator/dataset_analysis/execution_times.png}
+  \caption{SPASS and Prover9 execution times on 100 random formulas. All of formulas were UNSAT}
+\end{centering}
+\end{figure}
+

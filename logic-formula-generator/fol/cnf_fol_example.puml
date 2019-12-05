@@ -6,29 +6,18 @@ skinparam class {
   borderColor DarkRed
 }
 
-
 /' AstElement <|-- FolElement '/
-FolElement <-- CNFFormula
-FolElement <-- CNFClause
-FolElement <-- Literal
-FolElement <-- Atom
-FolElement <-- Predicate
-FolElement <|-- Term
-Term <-- Functor
-Term o-- Functor
-Term <-- Variable
 
-
-CNFFormula o- CNFClause
-CNFClause o- Literal
-Literal o- Atom
-Atom o- Predicate
-Atom o- Variable
-Predicate -o Term
+CNFFormula o-- CNFClause
+CNFClause o-- Literal
+Literal o-- Atom
+Atom o-- Predicate
+Predicate o-- Variable
+Predicate o-- Functor
+Functor o-- Variable
 
 class CNFFormula {
-	cnf/1
-	cnf/2
+	cnf/1 & cnf/2
 	..
 }
 
@@ -43,16 +32,13 @@ class Literal {
 }
 
 class Atom {
-	p, V = V, p != V
+	p, p = p, p != V
 	..
 }
 
 class Predicate {
 	p, p(f), p(V, f)
 	..
-}
-
-abstract class Term {
 }
 
 class Functor {

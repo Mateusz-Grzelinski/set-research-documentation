@@ -1,7 +1,13 @@
 @startuml
+skinparam dpi 300
 
+skinparam class {
+  backgroundColor Ivory
+  borderColor DarkRed
+}
 
-ConstaintSolver o- CNFFormulaSignatureGenerator
+package SignatureGenerators {
+
 CNFFormulaSignatureGenerator o-- CNFClauseSignatureGenerator
 note on link: Clause 
 CNFClauseSignatureGenerator o-- LiteralSignaturegnerator
@@ -18,10 +24,6 @@ PredicateSignaturegenerator o-- FunctorSignatureGenerator
 note on link: Functor
 VariableGenerator -o FunctorSignatureGenerator 
 note on link: Variable
-
-class ConstaintSolver {
-  number_of_literals
-  number_of_clauses
 }
 
 class CNFFormulaSignatureGenerator {
@@ -41,7 +43,7 @@ class LiteralSignaturegnerator {
 }
 
 class AtomSignatureGenerator {
-	V, p, V = V, p != V
+	p, V = V, p != V
 	..
 }
 

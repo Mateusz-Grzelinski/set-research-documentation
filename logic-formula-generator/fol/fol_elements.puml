@@ -1,5 +1,11 @@
 
 @startuml
+skinparam dpi 300
+
+skinparam class {
+  backgroundColor Ivory
+  borderColor DarkRed
+}
 
 Quantifier  --> FolElement
 ExistentialQuantifier <-- Quantifier
