@@ -1,9 +1,9 @@
 \chapter{Introduction}
 \label{cha:Introduction}
 
-This thesis is an attempt to create extensible, easy to use \gls{FOL} generator. The goal is to hide implementation and display user simple interface with objects that correspond to mathematical definitions of elements of first order logic. Any arbitrary rule can be injected into generation to fulfill user specific needs. Those rules are meant to represent fragment or reality that user wants to represent in \gls{FOL}. Formulas generated in this way can be used as testing tool as randomness of formulas can be finely controlled. One of application of such formulas is generating datasets for benchmarks, especially for \gls{SAT} solvers.
+This thesis is an attempt to create extensible, easy to use \gls{FOL} formula generator. The goal is to hide implementation and display user simple interface with objects that correspond to mathematical definitions of elements of first order logic. Any arbitrary rule can be injected into generation to fulfill user specific needs. Those rules are meant to represent fragment or reality that user wants to represent in \gls{FOL}. Formulas generated in this way can be used as testing tool as randomness of formulas can be finely controlled. One of application of such formulas is generating datasets for benchmarks, especially for \gls{SAT} solvers.
 
-Although satisfiability problem has NP complexity, in recent years there has been substantial development in this area. Davis–Putnam–Logemann–Loveland algorithm \footnote{\url{https://en.wikipedia.org/wiki/DPLL_algorithm}} has been superseded by conflict-driven clause learning \footnote{\url{https://en.wikipedia.org/wiki/Conflict-driven_clause_learning}}, heuristics and hardware has improved. Simple problems are probably going to be represented in propositional calculus in formats like DIMACS. Note that this format is so simple that a need for generator in this format is questionable, as one can be written in a matter of hours. For more complex problems it may be easier to encode problems in more expressive language and the next natural step would be first order logic. \gls{FOL} has tools for expressing relation and still many SAT solvers accept input in \gls{FOL}. 
+Although satisfiability problem has NP complexity, in recent years there has been substantial development in this area. Davis–Putnam–Logemann–Loveland algorithm \footnote{\url{https://en.wikipedia.org/wiki/DPLL_algorithm}} has been superseded by conflict-driven clause learning \footnote{\url{https://en.wikipedia.org/wiki/Conflict-driven_clause_learning}}, heuristics and hardware has improved. Some input problems are probably going to be represented in propositional calculus in formats like DIMACS because of simplicity of such solution. Note that this format is so simple that a need for generator in this format is questionable, as one can be written in a matter of hours. For more complex problems it may be easier to encode problems in more expressive language and the next natural step would be first order logic. \gls{FOL} has tools for expressing relation and still many SAT solvers accept input in \gls{FOL}. 
 
 % https://en.wikipedia.org/wiki/Formal_system
 % https://cs.lmu.edu/~ray/notes/formalsystems/
@@ -38,20 +38,13 @@ Nonclassical and modal logic
 
 \section{First Order Logic}
 
-First Order Logc also known as predicates logic, quantificational logic, and first-order predicate calculus extends propositional logic by adding predicates, functors and quantifiers and non-logical objects.
-
-\subsection{Elements of FOL}
-
-First Order Logic is as much more elements than proportional logic. Definitions of FOL elements are contained below.
+The main element of propositional calculus is variable. First order logic (also known as predicates logic, first-order predicate calculus) extends propositional logic by adding predicates, functors and quantifiers and non-logical objects. Definitions of FOL elements are contained below.
 
 \textbf{Term}
 is variable, constant or result of functor.
 
 \textbf{Atom}
-is logical statement, that can not be further separated. Atom can contain variable or predicates.
-
-\textbf{Equality atom}
-is atom with 2 elements connected with comparison sign $=$.
+is logical statement, that can not be further separated. Atom consists of predicate, or in case of atom with equality it consists of terms.
 
 \textbf{Literal}
 is atom or its negation.
@@ -74,10 +67,10 @@ is clause with only one literal
 is clause, which contains at least one positive literal
 
 \textbf{Predicates}
-is logical operator, which return true or false. predicates operates on specific number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate\_name/arity$, eg. $p/1$. Name of predicate is usually lowercase.
+is logical operator, which return true or false. predicates operates on specific number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate\_name/arity$, eg. $p/1$. Name of predicate is usually lowercase $p, q, r $
 
 \textbf{Functor}
-is logical operator, that returns term. Functor has constant arity. Usually noted as $functor\_name/arity$, eg. $f/1$. Name of functor  is usually lowercase.
+is logical operator, that returns term. Functor has constant arity. Usually noted as $functor\_name/arity$, eg. $f/1$. Name of functor  is usually lowercase $f, g, h$
 
 \textbf{Constant functor}
 is functor with arity 0.
@@ -99,7 +92,7 @@ The following \gls{FOL} example contains 1 existential quantifier, 2 variables $
 
 \section{Normal forms}
 
-Representing logic formula in one of normal forms sometimes can enable new reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other examples of normal forms are Disjunctive normal form, 
+Representing logic formula in one of normal forms sometimes can enable new reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form (CNF)}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other example of normal form is disjunctive normal form.
 
 \section{Formats used for representing formulas}
 
@@ -113,13 +106,13 @@ In TPTP syntax supports several logic systems: \gls{TPI}, \gls{THF}, \gls{TFF}, 
 
 \subsubsection{Elements of TPTP syntax}
 
-This is description of TPTP elements used in this thesis. TODO: check if all elements are there
+This is description of TPTP elements used in this thesis.
 \newline
 Full description (technical document) for TPTP syntax can be found at \url{http://www.tptp.org/TPTP/TR/TPTPTR.shtml}
 
 
 \begin{itemize}
-  \item The syntax for atoms is that of Prolog: variables start with upper case letters, atoms and terms are written in prefix notation, uninterpreted predicatess and functors either start with lower case and contain alphanumerics and underscore, or are in 'single quotes'.
+  \item The syntax for atoms is that of Prolog: variables start with upper case letters, atoms and terms are written in prefix notation, uninterpreted predicates and functors either start with lower case and contain alphanumerics and underscore, or are in 'single quotes'.
 
   \item Each logical formula is wrapped in an annotated formula structure of the form  \newline \mintinline{text}{language(name,role,formula,source,[useful_info])}
 
@@ -296,4 +289,4 @@ There are number of benchmarks that can be found for example:
   \item TPTP \cite{Sut17} - TSTP (Thousands of Solutions from Theorem Provers) to be more precise
 \end{itemize}
 
-Unfortunately there are not a lot of generators itself. One generator is for example CNFgen \url{https://massimolauria.net/cnfgen/} but it generates only formulas in proposition logic. There are none generators for first order logic.
+Although a lot of benchmarks can be found, there are not a lot of generators. One generator is for example CNFgen \url{https://massimolauria.net/cnfgen/} but it generates only formulas in proposition logic. There are none generators for first order logic.

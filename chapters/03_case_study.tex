@@ -72,41 +72,30 @@ if __name__ == '__main__':
         exporter.export(expression=formula, filename_suffix=str(i))
 \end{minted}
 
-According to chapter \ref{chap:LogicInternalRepresentation}, \mintinline{python}{CNFFormulaGenerator} is going to generate number of signatures:
-\begin{itemize}
-  \item 1 variable signature (see table \ref{tab:signatureComparison}): \tptpcodeinline{[V]}
-  \item $f(n_{max}, a_{fmin}, a_{fmax}) = f(0, 0, 0) = \sum_{i=0}^{0} \sum_{j=0}^0 f(i, j) = 1$ functor signature \ref{eq:functor}: \tptpcodeinline{[f]}
-  \item $p(a_{pmin}, a_{pmax}) = p(0, 1) = \sum_{i=0}^1 p(i) = 3$ predicate signatures \ref{eq:predicate}: \tptpcodeinline{[p, p(V), p(f)]}
-  \item $A(connnective) = A(\emptyset) = p(a_{pmin}, a_{pmax}) = 3$ atom signatures \ref{eq:atom}: \tptpcodeinline{[p(V), p(f), p]}
-  % \item $L = A(AllowedConnectives) * 2 = 3 * 2 = 6$ literal connectives
-  \item $C(l) = \sum_{i=l_{min}}^{i=l_{max}} C(i) = \sum_{i=1}^{3} C(i) = C(1) + C(2) + C(3) = \binom{4 + 1 -1}{1} + \binom{4 + 2 - 1}{2} + \binom{4 + 3 - 1}{3} = 4 + 10 + 20 = 34$ clause signatures \ref{eq:clause}:
-    \tptpcodeinline{todo}
-\end{itemize}
-
 The exact number of literals and clauses in generated formula is computed internally by Z3 solver. In this case formula must have 3 clauses with length 3.
-There are $C(3) = \binom{4 + 3 - 1}{3} = 20$ clause signatures with lenght 3:
 
 \begin{listing}[H]
   \caption{All possible clause signatures with length 3 (random order)}
 \begin{tptpcode}
-{cnf(name,axiom,p(f)|p|p(V))., cnf(name,axiom,p(V)|p(V)|p(V)).,
+{cnf(name,axiom,p(f)|p|p(V)).,    cnf(name,axiom,p(V)|p(V)|p(V)).,
  cnf(name,axiom,p(f)|p(f)|p(V))., cnf(name,axiom,p(V)|p|p).,
- cnf(name,axiom,p(V)|p|p(V))., cnf(name,axiom,p(f)|p(V)|p(f)).,
- cnf(name,axiom,p(V)|p(f)|p)., cnf(name,axiom,p(f)|p(f)|p(f)).,
- cnf(name,axiom,p|p(f)|p(f))., cnf(name,axiom,p|p|p(f)).,
- cnf(name,axiom,p|p|p)., cnf(name,axiom,p|p(f)|p).,
- cnf(name,axiom,p(f)|p|p)., cnf(name,axiom,p(V)|p(f)|p(f)).,
- cnf(name,axiom,p|p|p(V))., cnf(name,axiom,p(f)|p|p(f)).,
+ cnf(name,axiom,p(V)|p|p(V)).,    cnf(name,axiom,p(f)|p(V)|p(f)).,
+ cnf(name,axiom,p(V)|p(f)|p).,    cnf(name,axiom,p(f)|p(f)|p(f)).,
+ cnf(name,axiom,p|p(f)|p(f)).,    cnf(name,axiom,p|p|p(f)).,
+ cnf(name,axiom,p|p|p).,          cnf(name,axiom,p|p(f)|p).,
+ cnf(name,axiom,p(f)|p|p).,       cnf(name,axiom,p(V)|p(f)|p(f)).,
+ cnf(name,axiom,p|p|p(V)).,       cnf(name,axiom,p(f)|p|p(f)).,
  cnf(name,axiom,p(V)|p(V)|p(f))., cnf(name,axiom,p(f)|p(f)|p).,
- cnf(name,axiom,p|p(V)|p(V))., cnf(name,axiom,p|p(V)|p(f)).}
+ cnf(name,axiom,p|p(V)|p(V)).,    cnf(name,axiom,p|p(V)|p(f)).}
 \end{tptpcode}
 \end{listing}
 
-Based on above signatures, $F_{cnf}(x) = C(l)^x = 20^3 = 8000$ \gls{CNF} formula signatures \ref{eq:cnfformula} can be generated. The final step is post processing (give elements random names and optionally negation sign).
-
 For the benchmark test we shall generate bigger formulas.
-100 random formulas were generated from this setup and were benchamarked agains solvers Prover9 and SPASS.
+100 random formulas were generated from setup presented in listing \ref{lis:benchmark_setup_listing} and were benchmarked against solvers Prover9 and SPASS. Results are shown in picture \ref{pic:benchmark_results}
 
+\begin{listing}[H]
+  \caption{All possible clause signatures with length 3 (random order)}
+  \label{lis:benchmark_setup_listing}
 \begin{minted}{python}
     gen = CNFFormulaGenerator(
         functor_names={f'f{i}' for i in range(5)},
@@ -117,8 +106,9 @@ For the benchmark test we shall generate bigger formulas.
         variable_names={f'V{i}' for i in range(10)},
         number_of_clauses=IntegerRange(min=800, max=1000),
         number_of_literals=IntegerRange(min=1000, max=math.inf)
-    ).generate(
+    ).generate()
 \end{minted}
+\end{listing}
 
 \begin{listing}[H]
   \caption{Example of generated formula (limited)}
@@ -145,6 +135,7 @@ All of formulas were UNSAT. The reason may be low number of available names in c
 \begin{centering}
   \includegraphics[width=\textwidth]{logic-formula-generator/dataset_analysis/execution_times.png}
   \caption{SPASS and Prover9 execution times on 100 random formulas. All of formulas were UNSAT}
+  \label{pic:benchmark_results}
 \end{centering}
 \end{figure}
 

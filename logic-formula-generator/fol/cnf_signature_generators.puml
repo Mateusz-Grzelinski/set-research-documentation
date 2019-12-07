@@ -9,21 +9,13 @@ skinparam class {
 package SignatureGenerators {
 
 CNFFormulaSignatureGenerator o-- CNFClauseSignatureGenerator
-note on link: Clause 
 CNFClauseSignatureGenerator o-- LiteralSignaturegnerator
-note on link: Literal 
 LiteralSignaturegnerator o-- AtomSignatureGenerator
-note on link: Atom 
 AtomSignatureGenerator o-- PredicateSignaturegenerator
-note on link: Predicate 
 AtomSignatureGenerator o-- VariableGenerator
-note on link: Variable
 PredicateSignaturegenerator o-- VariableGenerator
-note on link: Variable
 PredicateSignaturegenerator o-- FunctorSignatureGenerator
-note on link: Functor
 VariableGenerator -o FunctorSignatureGenerator 
-note on link: Variable
 }
 
 class CNFFormulaSignatureGenerator {
@@ -43,7 +35,7 @@ class LiteralSignaturegnerator {
 }
 
 class AtomSignatureGenerator {
-	p, V = V, p != V
+	p, V = V, f != V
 	..
 }
 

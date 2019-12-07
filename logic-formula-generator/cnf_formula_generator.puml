@@ -11,9 +11,12 @@ package SignatureGenerators {
   note "Every signature generator \ncan be used by CNFFormulaGenerator" as N
  }
 
-SignatureGenerators -o CNFFormulaGenerator
-CNFFormulaGenerator o-- ConstraintSolver
-CNFFormulaGenerator o-- PostProcessor 
+SignatureGenerators -* CNFFormulaGenerator
+CNFFormulaGenerator *-- ConstraintSolver
+CNFFormulaGenerator *-- PostProcessor 
+CNFFormulaGenerator -> CNFFormula
+CNFFormula <- Exporter
+Exporter <|-- TPTPExporter
 
 class CNFFormulaGenerator {
   variable_names 
@@ -38,6 +41,9 @@ class PostProcessor {
   functor_names
   variable_names
   number_of_negated_literals
+}
+
+abstract class Exporter {
 }
 
 @enduml

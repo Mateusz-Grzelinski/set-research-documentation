@@ -16,7 +16,7 @@ FolElement <-- Predicate
 FolElement <|-- Term
 Term <-- Functor
 Term o-- Functor
-Term <-- Variable
+Term o-- Variable
 
 
 CNFFormula o- CNFClause
@@ -43,7 +43,7 @@ class Literal {
 }
 
 class Atom {
-	p, V = V, p != V
+	p, V = V, f != V
 	..
 }
 
