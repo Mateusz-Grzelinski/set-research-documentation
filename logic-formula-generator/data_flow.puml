@@ -1,0 +1,108 @@
+
+@startuml
+skinparam dpi 300
+
+skinparam class {
+  backgroundColor Ivory
+  borderColor DarkRed
+}
+
+package Generators {
+
+CNFFormulaGenerator <-- CNFClauseGenerator
+note on link: Random clause 
+CNFClauseGenerator <-- CNFFormulaGenerator 
+note on link: Get clause with __n__ literals
+CNFClauseGenerator <-- Literalgnerator
+note on link: Literal 
+Literalgnerator <-- CNFClauseGenerator
+note on link: Get random literal
+}
+
+CNFFormulaGenerator <-- CNFFormulaGenerator 
+note on link: Get formula with:\n2 clauses with 2 literals \n1 clause with 10 literals
+CNFFormulaGenerator <-- CNFFormulaGenerator
+note on link: Random CNF formula
+
+class CNFFormulaGenerator {
+	cnf/1
+	cnf/2
+	..
+}
+
+class CNFClauseGenerator {
+	cnf(literal | literal).
+	..
+}
+
+class CNFFormulaGenerator {
+  variable_names 
+  functor_names 
+  functor_arity 
+  functor_recursion_depth 
+  predicate_names
+  predicate_arities
+  atom_connectives
+  clause_lengths 
+  **number_of_literals**
+  **number_of_clauses**
+}
+
+@enduml
+
+/' package Generators { '/
+/'  '/
+/' CNFFormulaGenerator o-- CNFClauseGenerator '/
+/' note on link: Clause  '/
+/' CNFClauseGenerator o-- Literalgnerator '/
+/' note on link: Literal  '/
+/' Literalgnerator o-- AtomGenerator '/
+/' note on link: Atom  '/
+/' AtomGenerator o-- Predicategenerator '/
+/' note on link: Predicate  '/
+/' AtomGenerator o-- VariableGenerator '/
+/' note on link: Variable '/
+/' Predicategenerator o-- VariableGenerator '/
+/' note on link: Variable '/
+/' Predicategenerator o-- FunctorGenerator '/
+/' note on link: Functor '/
+/' VariableGenerator -o FunctorGenerator  '/
+/' note on link: Variable '/
+/' } '/
+/'  '/
+/' class CNFFormulaGenerator { '/
+	/' cnf/1 '/
+	/' cnf/2 '/
+	/' .. '/
+/' } '/
+/'  '/
+/' class CNFClauseGenerator { '/
+	/' cnf(literal | literal). '/
+	/' .. '/
+/' } '/
+/'  '/
+/' class Literalgnerator { '/
+	/' atom, ~atom '/
+	/' .. '/
+/' } '/
+/'  '/
+/' class AtomGenerator { '/
+	/' p, V = V, f != V '/
+	/' .. '/
+/' } '/
+/'  '/
+/' class Predicategenerator { '/
+	/' p, p(f), p(V, f) '/
+	/' .. '/
+/' } '/
+/'  '/
+/' class FunctorGenerator { '/
+	/' f, f(f), f(V), f(f(f)) '/
+	/' .. '/
+/' } '/
+/'  '/
+/' class VariableGenerator { '/
+	/' V1, V2 '/
+	/' .. '/
+/' } '/
+/' @enduml '/

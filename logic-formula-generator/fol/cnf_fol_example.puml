@@ -12,8 +12,10 @@ CNFFormula o-- CNFClause
 CNFClause o-- Literal
 Literal o-- Atom
 Atom o-- Predicate
+Atom o-- Variable
 Predicate o-- Variable
 Predicate o-- Functor
+Functor --o Atom
 Functor o-- Variable
 
 class CNFFormula {
@@ -32,7 +34,7 @@ class Literal {
 }
 
 class Atom {
-	p, p = p, p != V
+	p, f = f, f != V
 	..
 }
 

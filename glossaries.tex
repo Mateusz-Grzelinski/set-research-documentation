@@ -12,7 +12,7 @@
 
 \newglossaryentry{LADR} {
     name=LADR,
-    description={bilbioteka języka c, która używana jest do budowania Provera9. Określa również format składni wymagany przez Provera9}
+    description={library written in c, shipped with Prover9. It also defines input syntax required by Prover9}
 }
 
 \newglossaryentry{BNF} {
@@ -41,7 +41,7 @@
 
 \newglossaryentry{prover} {
     name=prover,
-    description={inaczej SAT solver, program, który ma za zadanie rozwiązać problem SAT}
+    description={SAT solver}
 }
 
 \newglossaryentry{CNF} {
@@ -87,61 +87,6 @@
     description={jedna z logit temporalnych}
 }
 
-\newglossaryentry{Literal} {
-    name=Literał,
-    description={Jest to atom, lub jego zaprzeczenie}
-}
-
-\newglossaryentry{Atom} {
-    name=Atom,
-    description={formuła, która nie ma żadnych właściwych podformuł. Rodzaje formuł atomowych zależą od rodzaju używanej logiki.
-    Formuły, które nie są atomowe nazywamy złożonymi. }
-}
-
-\newglossaryentry{LogicFormula} {
-    name={Formuła logiczna},
-    description={określenie dozwolonego wyrażenia w wielu systemach logicznych, m.in. w rachunku kwantyfikatorów oraz w rachunku zdań}
-}
-
-\newglossaryentry{ZmiennaZdaniowa} {
-    name=Zmienna zdaniowa,
-    description={bezargumentowy symbol w rachunku zdań. Zmiennym zdaniowym, w procesie zwanym wartościowaniem, przyporządkowywane są wartości prawda lub fałsz.}
-}
-
-\newglossaryentry{Klauzula} {
-    name=Klauzula,
-    description={clause – zbiór formuł logicznych. Klauzulę nazywamy prawdziwą wtedy i tylko wtedy, gdy alternatywa jej formuł logicznych jest prawdziwa. Klauzula pusta jest zawsze fałszywa. }
-}
-
-\newglossaryentry{Klauzula Horna} {
-    name=Klauzula Horna,
-    description={klauzula, w której co najwyżej jeden element jest niezanegowany. Przykładem takich klauzul jest ${p,\neg r,\neg q}$ }
-}
-
-\newglossaryentry{k-SAT} {
-    name=k-SAT,
-    description={jedna klauzula ma dokładnie k literałów, tym rozróżnia się jeszcze:
-\begin{itemize}
-    \item 1-SAT - jedna klauzula ma dokładnie 1 literały, np. $x \land y\land c$ - rozwiązanie w czasie liniowym
-    \item 2-SAT - jedna klauzula ma dokładnie 2 literały, np. $(\neg a\lor b)\land (\neg c\lor a)\land (b\lor d)$ - rozwiązanie w P
-    \item 3-SAT - jedna klauzula ma dokładnie 3 literały, np. $(\neg a\lor b\lor f)\land (\neg c\lor a\lor \neg b)\land (b\lor d\lor h)$ - rozwiązanie w NP 
-    \begin{itemize}
-    \item Not-all-equal 3-satisfiability (NAE3SAT) - tak jak 3-SAT, ale dodatkowo gwarantujemy, że co najmniej jeden literał w każdej klauzuli jest prawdziwy, i co najmniej jeden jest fałszywy (umożliwia to optymalizację)
-    \item 1-in-3-SAT (również zwany one-in-three 3-SAT, exactly-1 3-SAT) - problemem tutaj jest tutaj, czy istnieje takie przypisanie, że dokładnie jeden literał ma wartość TRUE
-    \end{itemize}
-\end{itemize}
-    }
-}
-
-\newglossaryentry{Term} {
-    name=Term,
-    description={wyrażenie składające się ze zmiennych oraz symboli funkcyjnych o dowolnej argumentowości (w tym o argumentowości 0, czyli stałych) z pewnego ustalonego zbioru. Termem może być: zmienna, atom albo złożenie termów}
-}
-
-\newglossaryentry{Predykat} {
-    name=Predykat,
-    description={ustala n-argumentową relację między jego argumentami. n może być 0. n jest nazywane argumentowością predykatu}
-}
 
 \newglossaryentry{TPTP2X} {
     name=TPTP2X,
@@ -176,23 +121,11 @@
 \newglossaryentry{IP} {
     name=IP,
     first={IP (integer programming)},
-    description={integer programming}
+    description={Integer Programming}
 }
 
 \newglossaryentry{ILP} {
     name=ILP,
     first={ILP (integer linear programming)},
-    description={integer linear programming}
+    description={Integer Linear Programming}
 }
-
-% as reference:
-
-% \setabbreviationstyle[acronym]{long-short}
-%
-% \newacronym{a1}{A1}{Apples 1}
-% \newacronym{a2}{A2}{Apples 2}
-%
-% \newglossaryentry{a}{name={A},description={Apples},alias={a1}}
-
-% First use: \gls{a1}, \gls{a2}, \gls{a}.
-% Next use: \gls{a1}, \gls{a2}, \gls{a}.

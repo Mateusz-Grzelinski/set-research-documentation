@@ -23,7 +23,8 @@ CNFFormula o- CNFClause
 CNFClause o- Literal
 Literal o- Atom
 Atom o- Predicate
-Atom o- Variable
+Atom -o Variable
+Atom -o Functor
 Predicate -o Term
 
 class CNFFormula {

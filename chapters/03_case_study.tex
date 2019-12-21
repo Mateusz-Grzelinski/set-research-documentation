@@ -16,19 +16,21 @@ Safety formula must always be satisfied.
 
 In \gls{FOL} liveness and safety can be expressed as quantifiers, safety as universal quantifier and liveness as existential quantifier. Every \gls{FOL} can be converted to \gls{CNF}, so system properties can be also represented in \gls{CNF}, if needed. It can be done for example with otter algorithm \cite{McC-Otter-URL} or skolemisation.
 
-In \gls{FOL} system properties could look like:
+In \gls{FOL} system properties could look like (first is example with quantifiers, followed by CNF equivalent)\footnote{removing quantiviers from first order logic can be automated with TPTP utility using tptp2X utility, option \mintinline{text}{-t clausify:quaife} \ref{sub:AdditionalToolsInTPTPLibrary} }:
 \begin{itemize}
-  \item Safety formula: $\forall_x \neg p(x)$
-  \item Safety formula: $\forall_{x,y} \neg p(x,f(y))$ 
-  \item Liveness formula: $\exists_x p(x) \lor p1(x)$
-  \item Liveness formula: $\exists_{x,y} p(x,f(y))$ 
+  \item Safety formula: $\forall_X p(X) \equiv p(A)$
+  \item Safety formula: $\forall_X p(X, X) \equiv p(A, B)$
+  \item Liveness formula: $\exists_X p(X) \lor \equiv p1(f1)$
+  \item Liveness formula: $\exists_X p(X, X) \equiv p(f1, f2)$
 \end{itemize}
 
-The combinations of quantifiers (that correspond to combinations of liveness and safety properties) are not discussed in this thesis. For example: $\forall_x \exists_y p(x, y)$, $\exists_y \forall_x p(x, y)$.
+The combinations of quantifiers (that correspond to combinations of liveness and safety properties) are not discussed in this thesis. For example (first is example with quantifiers, followed by CNF equivalent):
+\begin{itemize}
+\item $\exists_Y \forall_X p(X, Y) \equiv p(f1, A)$
+\item $\forall_X \exists_Y p(X, Y) \equiv p(A,f1(A)) $
+\end{itemize}
 
-\subsection{Example}
-
-Example: collisionless lights on crossroad
+Example of real life problem expressed in safety and liveness formulas is collisionless lights on crossroad.
 
 \noindent
 Problem: cars want to drive through crossroad.
@@ -41,95 +43,59 @@ Liveness property: every light should eventually turn green.
 
 \section{Generating dataset}
 
-Liveness and safety can be expressed as quantifiers those can be converted to CNF. In this section generation of small and big dataset will be presented.
-The following code snippet would generate random \gls{FOL} formula, that can represent liveness and safety properties.
+The goal is to generate liveness and safety clauses, but do not mix them. In order to achieve that, class $PredicateGenerator$ needs to be modified to yield either formulas with all variables (safety) or formulas with 0-arity functor (liveness). To achieve that $PredicateGenerator$ was subclassed and used to cleate alternative version of $CNFFormulaGenerator$.
 
+\begin{figure}[H]
+\begin{centering}
+  \includegraphics[width=\textwidth]{logic-formula-generator/fol/safety_liveness_predicate_generator.png}
+  \caption{Subclassed PredicateGenerator mimics safety and liveness formulas}
+\end{centering}
+\end{figure}
+
+In this study the impact of ratio of number of atoms to number of clauses will be presented.
+Formulas with 1000 atoms and 100, 200, 300, 400, 500 clauses were generated, 50 for each combination. Number of atoms and number of clauses can vary within 5\%, although solver prefers smaller numbers in general. The rest of parameters for formulasa is shown in listing \ref{lis:CNFSafetyLivenesSnippet}.
+
+50 random formulas were generated and were benchmarked against solvers Prover9 and SPASS. Results are shown in picture \ref{pic:benchmark_results}
+
+\begin{listing}[ht]
+  \caption{Snippet for generating dataset of safety and liveness formulas}
+  \label{lis:CNFSafetyLivenesSnippet}
 \begin{minted}{python}
-import math
-
-import src.ast.first_order_logic as fol
-from src.ast.exporters.tptp import TPTPExporter
-from src.generators import IntegerRange
-from src.generators.presets.first_order_logic import CNFFormulaGenerator
-
-if __name__ == '__main__':
-    gen = CNFFormulaGenerator(
-        functor_names={'f1'}, functor_arity={0}, functor_recursion_depth=0,
-        predicate_names={'p1', 'p2'}, predicate_arities={0, 1},
-        atom_connectives={''},
-        clause_lengths={1, 2, 3},
-        variable_names={'V1', 'V2'},
-        number_of_clauses=IntegerRange(min=3, max=3),
-        number_of_literals=IntegerRange(min=9, max=math.inf)
-    ).generate()
-
-    exporter = TPTPExporter(
-        output_dir='./temp-out',
-        filename_handle=lambda stat: 'generated_cnf_formula'
-    )
-
-    for i, formula in enumerate(gen):
-        exporter.export(expression=formula, filename_suffix=str(i))
-\end{minted}
-
-The exact number of literals and clauses in generated formula is computed internally by Z3 solver. In this case formula must have 3 clauses with length 3.
-
-\begin{listing}[H]
-  \caption{All possible clause signatures with length 3 (random order)}
-\begin{tptpcode}
-{cnf(name,axiom,p(f)|p|p(V)).,    cnf(name,axiom,p(V)|p(V)|p(V)).,
- cnf(name,axiom,p(f)|p(f)|p(V))., cnf(name,axiom,p(V)|p|p).,
- cnf(name,axiom,p(V)|p|p(V)).,    cnf(name,axiom,p(f)|p(V)|p(f)).,
- cnf(name,axiom,p(V)|p(f)|p).,    cnf(name,axiom,p(f)|p(f)|p(f)).,
- cnf(name,axiom,p|p(f)|p(f)).,    cnf(name,axiom,p|p|p(f)).,
- cnf(name,axiom,p|p|p).,          cnf(name,axiom,p|p(f)|p).,
- cnf(name,axiom,p(f)|p|p).,       cnf(name,axiom,p(V)|p(f)|p(f)).,
- cnf(name,axiom,p|p|p(V)).,       cnf(name,axiom,p(f)|p|p(f)).,
- cnf(name,axiom,p(V)|p(V)|p(f))., cnf(name,axiom,p(f)|p(f)|p).,
- cnf(name,axiom,p|p(V)|p(V)).,    cnf(name,axiom,p|p(V)|p(f)).}
-\end{tptpcode}
-\end{listing}
-
-For the benchmark test we shall generate bigger formulas.
-100 random formulas were generated from setup presented in listing \ref{lis:benchmark_setup_listing} and were benchmarked against solvers Prover9 and SPASS. Results are shown in picture \ref{pic:benchmark_results}
-
-\begin{listing}[H]
-  \caption{All possible clause signatures with length 3 (random order)}
-  \label{lis:benchmark_setup_listing}
-\begin{minted}{python}
-    gen = CNFFormulaGenerator(
-        functor_names={f'f{i}' for i in range(5)},
-        functor_arity={i for i in range(10)}, functor_recursion_depth=0,
-        predicate_names={f'p{i}' for i in range(10)}, predicate_arities={i for i in range(10)},
-        atom_connectives={''},
-        clause_lengths={i for i in range(7, 10)},
-        variable_names={f'V{i}' for i in range(10)},
-        number_of_clauses=IntegerRange(min=800, max=1000),
-        number_of_literals=IntegerRange(min=1000, max=math.inf)
-    ).generate()
+gen = CNFSafetyLivenessGenerator(
+    variable_names={f'V{i}' for i in range(10)},
+    functor_names={f'f{i}' for i in range(20)}, functor_arity={0},
+    functor_recursion_depth=0,
+    predicate_names={f'p{i}' for i in range(20)}, predicate_arities={i for i in range(5)},
+    atom_connectives={''},
+    clause_lengths={i for i in range(2, 11)},
+    number_of_clauses=IntegerRange.from_relative(number_of_clauses, threshold),
+    number_of_literals=IntegerRange.from_relative(number_of_literals, threshold),
+    literal_negation_chance=0.1,
+)
 \end{minted}
 \end{listing}
 
-\begin{listing}[H]
+\begin{listing}[ht]
   \caption{Example of generated formula (limited)}
 \begin{tptpcode}
 % ----------------------------------------------------------------------------
 % File      : 0.p 
-% Syntax    : Number of clauses     :  800 (752 non-Horn;   0 unit;   - RR)
-%             Number of atoms       : 5602 (  0 equality)
-%             Maximal clause size   :    9 (  7 average)
-%             Number of predicates  :   10 (2785 propositional; 0-9 arity)
-%             Number of functors    :   10 (783 constant; 0-9 arity)
-%             Number of variables   :38937 (778 singleton)
+% Syntax    : Number of clauses     :   95 ( 95 non-Horn;   0 unit;   - RR)
+%             Number of atoms       :  950 (  0 equality)
+%             Maximal clause size   :   10 ( 10 average)
+%             Number of predicates  :   20 (206 propositional; 0-4 arity)
+%             Number of functors    :   20 (940 constant;   0 arity)
+%             Number of variables   :  943 (327 singleton)
 %             Maximal term depth    :    0 (  - average)
 % 
 % ----------------------------------------------------------------------------
-cnf(name,axiom,~p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)|p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)|p6(f0(V3, V1, V9, V8, V8, V2, V8, V1, V9), f2(V1, V2, V3, V4, V9, V9, V3), f6(V7, V2, V2))|p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)|p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)|~p6(f0(V3, V1, V9, V8, V8, V2, V8, V1, V9), f2(V1, V2, V3, V4, V9, V9, V3), f6(V7, V2, V2))|p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)|p6(V2, f2(V1, V2, V3, V4, V9, V9, V3), f6(V7, V2, V2))|~p4(V5, V8, f8(V2), f4(V9, V7, V6, V1, V8), V2)).
+cnf(name,axiom,p4(V6)|p10(V1, V4, V9)|~p7|p17|p1(V4, V3, V9)|p7|p17|p1(f11, f11, f5)|p7|~p0(f2)).
+cnf(name,axiom,p2(V7, V9)|p4(f19)|p2(f8, f5)|p10(f7, f8, f8)|p12|p6(V2, V6)|p14(f8, f16, f9, f16)|p3(f14, f3, f14, f18)|p11(V3, V9)|p12).
 ...
 \end{tptpcode}
 \end{listing}
 
-All of formulas were UNSAT. The reason may be low number of available names in comparison to number of clauses.
+% All of formulas were UNSAT. The reason may be low number of available names in comparison to number of clauses.
 
 \begin{figure}[ht]
 \begin{centering}

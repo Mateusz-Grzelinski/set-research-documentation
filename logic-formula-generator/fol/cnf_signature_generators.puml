@@ -6,45 +6,46 @@ skinparam class {
   borderColor DarkRed
 }
 
-package SignatureGenerators {
+package Generators {
 
-CNFFormulaSignatureGenerator o-- CNFClauseSignatureGenerator
-CNFClauseSignatureGenerator o-- LiteralSignaturegnerator
-LiteralSignaturegnerator o-- AtomSignatureGenerator
-AtomSignatureGenerator o-- PredicateSignaturegenerator
-AtomSignatureGenerator o-- VariableGenerator
-PredicateSignaturegenerator o-- VariableGenerator
-PredicateSignaturegenerator o-- FunctorSignatureGenerator
-VariableGenerator -o FunctorSignatureGenerator 
+CNFFormulaGenerator o-- CNFClauseGenerator
+CNFClauseGenerator o-- Literalgnerator
+Literalgnerator o-- AtomGenerator
+AtomGenerator o-- Predicategenerator
+AtomGenerator o-- VariableGenerator
+AtomGenerator o-- FunctorGenerator
+Predicategenerator o-- VariableGenerator
+Predicategenerator o-- FunctorGenerator
+VariableGenerator -o FunctorGenerator 
 }
 
-class CNFFormulaSignatureGenerator {
+class CNFFormulaGenerator {
 	cnf/1
 	cnf/2
 	..
 }
 
-class CNFClauseSignatureGenerator {
+class CNFClauseGenerator {
 	cnf(literal | literal).
 	..
 }
 
-class LiteralSignaturegnerator {
+class Literalgnerator {
 	atom, ~atom
 	..
 }
 
-class AtomSignatureGenerator {
+class AtomGenerator {
 	p, V = V, f != V
 	..
 }
 
-class PredicateSignaturegenerator {
+class Predicategenerator {
 	p, p(f), p(V, f)
 	..
 }
 
-class FunctorSignatureGenerator {
+class FunctorGenerator {
 	f, f(f), f(V), f(f(f))
 	..
 }

@@ -1,33 +1,33 @@
 \chapter{Generator parameters and architecture}
 
-In logic it is common to characterize element by its name and arity (if applicable), but in implementation name of element can be filled any time and besides arity, often argument type is also important. From now on when talking about $n$ occurrences of element, mathematical sense is assumed. Signature of element is element with 2 differences:
+In logic it is common to characterize element by its name and arity (if applicable), but in implementation name of element can be filled any time and besides arity, often argument type is also important. 
 
-\begin{itemize}
-  \item element name is not important
-  \item types of child elements is important 
-\end{itemize}
+% \begin{itemize}
+  % \item element name is not important
+  % \item types of child elements is important
+% \end{itemize}
 
-See table \ref{tab:signatureComparison} for more details.
-
-\begin{table}
-  \centering
-  \footnotesize
-  \begin{tabularx}{\textwidth}{|c|X|X|}
-    \hline
-    FOL element & Unique element in mathematical sense & Unique element as signature \\
-    \hline
-    Variable & by name and scope $V1$, $V2, \dots$ & there is only one signature for variable \\  
-    \hline
-    Functor & by name and arity $f/0$, $f/1, \dots$ & by types of arguments $f(Variable)$, $f(functor), \dots$ \\
-    \hline
-    Predicate & by name and arity $p/0$, $p/1$, \dots & by types of arguments $p(Variable)$, $p(functor), \dots$ \\
-    \hline
-    Atom & by connective and operands $p/0$, $f/1 = V, \dots$ & by connective and operands signatures $p(Variable)$, $f(Variable) = f(Functor), \dots$ \\
-    \hline
-  \end{tabularx}
-  \caption{Comparison of how elements of FOL in sense of math and signature. Elements not included here simply does not make sense to have signature}
-  \label{tab:signatureComparison}
-\end{table}
+% See table \ref{tab:signatureComparison} for more details.
+%
+% \begin{table}
+  % \centering
+  % \footnotesize
+  % \begin{tabularx}{\textwidth}{|c|X|X|}
+    % \hline
+    % FOL element & Unique element in mathematical sense & Unique element as signature \\
+    % \hline
+    % Variable & by name and scope $V1$, $V2, \dots$ & there is only one signature for variable \\
+    % \hline
+    % Functor & by name and arity $f/0$, $f/1, \dots$ & by types of arguments $f(Variable)$, $f(functor), \dots$ \\
+    % \hline
+    % Predicate & by name and arity $p/0$, $p/1$, \dots & by types of arguments $p(Variable)$, $p(functor), \dots$ \\
+    % \hline
+    % Atom & by connective and operands $p/0$, $f/1 = V, \dots$ & by connective and operands signatures $p(Variable)$, $f(Variable) = f(Functor), \dots$ \\
+    % \hline
+  % \end{tabularx}
+  % \caption{Comparison of how elements of FOL in sense of math and signature. Elements not included here simply does not make sense to have signature}
+  % \label{tab:signatureComparison}
+% \end{table}
 
 Abstract syntax tree of \gls{FOL} is implemented in the same way as mathematical definition, see picture \ref{pic:fol_elements_class_diagram}.
 
@@ -41,20 +41,21 @@ Abstract syntax tree of \gls{FOL} is implemented in the same way as mathematical
 
 \section{CNF Generator parameters}
 
-User defines generator in 3 steps.
+User defines generator in 2 steps.
 \begin{enumerate}
-  \item \textbf{Allowed first order logic signatures}
+  \item \textbf{General setting for generated formula}
 
     In this step user defines set of allowed \gls{FOL} elements:
     \begin{itemize}
+      \item set of variable names $\{'v1','v2',\dots\}$
+      \item set of functor names $\{'f1','f2',\dots\}$
+      \item set of predicate names $\{'p1','p2',\dots\}$
       \item set of allowed functor arities $a_f = \{0, 1, 2,\dots\}$
       \item maximum recursion depth $n$ for functors
       \item set of allowed predicate arities $a_p = \{0, 1, 2,\dots\}$
       \item set of atom allowed connectives, that is no connective or/and any subset of $AllowedConnectives = \{=, !=, \emptyset\}$
-      % \item if negated literals are allowed
       \item set of allowed clause lengths $AllowedClausesLengths = \{1,2,\dots\}$
-      \item number of clauses in formula $NumberOfClauses$
-      \item number of literals in formula $NumberOfLiterals$
+      \item amount of literals to be negated
     \end{itemize}
 
   \item \textbf{How many instances of elements are allowed}
@@ -65,30 +66,20 @@ User defines generator in 3 steps.
       \item formula contains from $l_{min}$ to $l_{max}$ literals
     \end{itemize}
 
-  \item \textbf{Post processing - names for term-like FOL elements and literal}
-
-    In this step user defines:
-    \begin{itemize}
-      \item set of variable names $\{'v1','v2',\dots\}$
-      \item set of functor names $\{'f1','f2',\dots\}$
-      \item set of predicate names $\{'p1','p2',\dots\}$
-      \item amount of literals to be negated
-    \end{itemize}
 \end{enumerate}
 
 \section{Basic algorithm}
 
 \begin{enumerate}
   \item Resolve user constraints \ref{sec:ResolveUserConstrains}
-  \item Generate possible formula based on signatures \ref{sec:Generators}
-  \item Post process - give unique names, add unary operators (negation)
+  \item Generate possible formula based on generators \ref{sec:Generators}
   \item Export formula to file
 \end{enumerate}
 
 \section{Resolve user constraints}
 \label{sec:ResolveUserConstrains}
 
-User constrains are defined in input parameters as $AllowedClausesLengths$, $NumberOfClauses$, $NumberOfLiterals$. To generate random formula withing these constrains, number of clauses with appriopriate clause length must be computed.
+User constrains are defined in input parameters as $AllowedClausesLengths$, $NumberOfClauses$, $NumberOfLiterals$. To generate random formula withing these constrains, number of clauses with appropriate clause length must be computed.
 
 CNF formula $F_{cnf}$ consists of unordered clauses $c1, c2, \dots$. 
 
@@ -129,8 +120,7 @@ So in the end:
 		&|c_i| \text{ -- number of clauses with length i} \nonumber
 \end{align}
 
-In this chapter every element of \gls{FOL} will be described in context of implementation along with some computational complexity annotations.
-
+Solution of above equation are pairs of numbers: clause length and how many clauses with this length should be used in generated clause.
 
 \section{Generators}
 \label{sec:Generators}

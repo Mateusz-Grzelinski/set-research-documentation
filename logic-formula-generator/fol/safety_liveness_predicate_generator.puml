@@ -1,4 +1,3 @@
-
 @startuml
 skinparam dpi 300
 
@@ -8,16 +7,16 @@ skinparam class {
 }
 
 package Generators {
-  note "Every generator \ncan be used by CNFFormulaGenerator" as N
- }
+  Predicategenerator <-- SafetyLivenessPredicateGenerator
+}
 
-Generators -* CNFFormulaGenerator
-CNFFormulaGenerator *-- ConstraintSolver
-CNFFormulaGenerator -> CNFFormula
+Generators -* CNFSafetyLivenessGenerator
+CNFSafetyLivenessGenerator *-- ConstraintSolver
+CNFSafetyLivenessGenerator -> CNFFormula
 CNFFormula <- Exporter
 Exporter <|-- TPTPExporter
 
-class CNFFormulaGenerator {
+class CNFSafetyLivenessGenerator {
   variable_names 
   functor_names 
   functor_arity 
@@ -36,6 +35,16 @@ class ConstraintSolver {
 }
 
 abstract class Exporter {
+}
+
+class SafetyLivenessPredicateGenerator {
+	p, p(f), p(f, f), p(V, V)
+	..
+}
+
+class Predicategenerator {
+	p, p(f), p(V, f)
+	..
 }
 
 @enduml
