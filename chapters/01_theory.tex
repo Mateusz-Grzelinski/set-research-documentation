@@ -1,40 +1,51 @@
 \chapter{Introduction}
 \label{cha:Introduction}
 
-This thesis is an attempt to create extensible, easy to use \gls{FOL} formula generator. The goal is to hide implementation and display user simple interface with objects that correspond to mathematical definitions of elements of first order logic. Any arbitrary rule can be injected into generation to fulfill user specific needs. Those rules are meant to represent fragment or reality that user wants to represent in \gls{FOL}. Formulas generated in this way can be used as testing tool as randomness of formulas can be finely controlled. One of application of such formulas is generating datasets for benchmarks, especially for \gls{SAT} solvers.
+\gls{SAT} is the problem of determining if there exists an interpretation that satisfies a given Boolean formula. Recently there has been substantial development in this area. Modern approach to SAT solving will use conflict-driven clause learning \footnote{\url{https://en.wikipedia.org/wiki/Conflict-driven_clause_learning}}, various heuristics and make use of better and better hardware. This rapid development in theory of solving SAT problems is followed by number of implementations. Picking best (fastest) implementation of SAT solver for given input problem is not trivial as solving algorithms are based on similar algorithm. Moreover SAT problem has NP complexity what encourages optimizing solvers to specific cases - that is if input formula has frequent pattern, it would be beneficial to optimize solver around that pattern. Input formulas can contain various theories \ref{pic:logicOverview} thus the need of benchmarks becomes apparent.
 
-Although satisfiability problem has NP complexity, in recent years there has been substantial development in this area. Davis–Putnam–Logemann–Loveland algorithm \footnote{\url{https://en.wikipedia.org/wiki/DPLL_algorithm}} has been superseded by conflict-driven clause learning \footnote{\url{https://en.wikipedia.org/wiki/Conflict-driven_clause_learning}}, heuristics and hardware has improved. Some input problems are probably going to be represented in propositional calculus in formats like DIMACS because of simplicity of such solution. Note that this format is so simple that a need for generator in this format is questionable, as one can be written in a matter of hours. For more complex problems it may be easier to encode problems in more expressive language and the next natural step would be first order logic. \gls{FOL} has tools for expressing relation and still many SAT solvers accept input in \gls{FOL}. 
+\begin{figure}[h]
+\begin{centering}
+  \includegraphics[width=0.7\textwidth]{images/smt_lib_logics.png}
+  \caption{Overview of logic by SMT-LIB \url{http://smtlib.cs.uiowa.edu/logics.shtml}
+    \tiny{
+    QF - quantifier free formulas,
+    A - or AX theory ArraysEx,
+    BV - FixedSizeBitVectors,
+    FP - (forthcoming) FloatingPoint theory,
+    IA - theory Ints (Integer Arithmetic),
+    RA - theory Reals (Real Arithmetic),
+    IRA - theory Reals\_Ints (mixed Integer Real Arithmetic),
+    IDL - Integer Difference Logic,
+    RDL - Rational Difference Logic,
+    L - linear,
+    N - non-linear,
+    UF - extension allowing free sort and function symbols
+  }}
+  \label{pic:logicOverview}
+\end{centering}
+\end{figure}
+
+This thesis focuses on first order logic (with equolity) as tool for representing formulas. This is an attempt to create extensible, easy to use \gls{FOL} formula generator. Generator has this advantage over pregenerated dataset that it can precisely map encountered real-life problem into measurable, repeatable custom dataset. The goal is to hide implementation and display user simple interface with objects that correspond to mathematical definitions of elements of first order logic. Any arbitrary rule can be injected into generation to fulfill user specific needs. Those rules are meant to represent fragment or reality that user wants to represent in \gls{FOL}. Formulas generated in this way can be used as testing tool as randomness of formulas can be finely controlled. 
 
 % https://en.wikipedia.org/wiki/Formal_system
 % https://cs.lmu.edu/~ray/notes/formalsystems/
 
-\section{Formal logical systems}
+\chapter{Logical systems}
 % https://en.wikipedia.org/wiki/Mathematical_logic#Formal_logical_systems
 % https://en.wikipedia.org/wiki/Formal_system#Logical_system
 % https://en.wikipedia.org/wiki/Formal_system
 % https://cs.lmu.edu/~ray/notes/formalsystems/
 
-A formal system consists of a language over some alphabet of symbols together with (axioms and) inference rules that distinguish some of the strings in the language as theorems.
-These rules used to carry out the inference of theorems from axioms are known as the logical calculus of the formal system. A formal system is essentially an "axiomatic system". A formal system may represent a well-defined system of abstract thought.
-
-A logical system or, for short, a logic, is a formal system together with its semantics.
-Classical logic systems:
+Formulas must be presented in some kind of formal system. A formal system consists of a language over some alphabet of symbols together with (axioms and) inference rules that distinguish some of the strings in the language as theorems. These rules used to carry out the inference of theorems from axioms are known as the logical calculus of the formal system. A formal system may represent a well-defined system of abstract thought. A logical systemis a formal system together with its semantics. Some recognizable logical formal systems are:
 
 \begin{itemize}
   \item propositional logic 
   \item first order logic (FOL)
-  \item infinitary logic - is a logic that allows infinitely long statements and/or infinitely long proofs
-  \item higher order logic (HOL) - is a form of predicate logic that is distinguished from first-order logic by additional quantifiers and, sometimes, stronger semantics
+  \item higher order logic (HOL)
+  \item temporal logic 
 \end{itemize}
 
-Nonclassical and modal logic
-\begin{itemize}
-  \item modal logic systems: K, D, T, B, S4, S5
-  \item deontic logic 
-  \item epistemic logic
-  \item temporal logic
-  \item intuitionistic Logic 
-\end{itemize}
+The majority of formulas are probably going to be represented in propositional calculus because of simplicity of such notation. Propositional logic deals with variables which are connected with logical connectives. Variable can be true or false. Formula in propositional logic is easy to parse but may lack clarity and may be quite long when compared to different formal logical systems. For more complex problem it may be easier to encode problem in more expressive language and the next natural step would be first order logic. \gls{FOL} has tools for expressing relation and still is easy enough to implement and reason in automated way. 
 
 \section{First Order Logic}
 
@@ -44,7 +55,7 @@ The main element of propositional calculus is variable. First order logic (also 
 is variable, constant or result of functor.
 
 \textbf{Atom}
-is logical statement, that can not be further separated. Atom consists of predicate, or in case of atom with equality it consists of terms.
+is logical statement, that can not be further divided. Atom consists of predicate, or in case of atom with equality it consists of terms.
 
 \textbf{Literal}
 is atom or its negation.
@@ -92,94 +103,53 @@ The following \gls{FOL} example contains 1 existential quantifier, 2 variables $
 
 \section{Normal forms}
 
-Representing logic formula in one of normal forms sometimes can enable new reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form (CNF)}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other example of normal form is disjunctive normal form.
+Representing logic formula in one of normal forms sometimes can enable new or shorter reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form (CNF)}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other example of normal form is disjunctive normal form (DNF) where formula is disjunction of conjunctions.
 
 \section{Formats used for representing formulas}
 
-Many provers implement its own language for representing logic formulas. One of more popular (subjectively)  seems to be DIMACS for propositional logic and TPTP for first order logic.
-
-\subsection{TPTP}
-
-\gls{TPTP} \cite{Sut17} - Thousands of Problems for Theorem Provers - is both problem library used for testing \gls{ATP} systems and standard describing syntax for those tests. Next to TPTP library there is \gls{TSTP} - library of solutions produced by various solvers. Problems are classified into different domains: LCL - Logic Calculi, COL - Combinatory Logic and more.
-
-In TPTP syntax supports several logic systems: \gls{TPI}, \gls{THF}, \gls{TFF}, \gls{FOF}, \gls{CNF}. 
-
-\subsubsection{Elements of TPTP syntax}
-
-This is description of TPTP elements used in this thesis.
-\newline
-Full description (technical document) for TPTP syntax can be found at \url{http://www.tptp.org/TPTP/TR/TPTPTR.shtml}
-
+There are many formats that allow representing logic, for example:
 
 \begin{itemize}
-  \item The syntax for atoms is that of Prolog: variables start with upper case letters, atoms and terms are written in prefix notation, uninterpreted predicates and functors either start with lower case and contain alphanumerics and underscore, or are in 'single quotes'.
+  \item DIMACS - one of more popular formats for propositional logic 
+  \item \gls{LADR} - input format for Prover9 \footnote{Prover9 is an automated theorem prover for first-order and equational logic \url{https://www.cs.unm.edu/~mccune/mace4/}}
+  \item SMT-LIB - standard for encoding SMT problems, used for example by Z3 solver
+  \item \gls{TPTP} 
+\end{itemize}
 
-  \item Each logical formula is wrapped in an annotated formula structure of the form  \newline \mintinline{text}{language(name,role,formula,source,[useful_info])}
+Many provers implement its own language for representing logic formulas like prover9 what creates technical problems of compability between solvers. In this thesis a standard called \gls{TPTP} will be used to represent first order logic formulas.
+
+\subsection{Thousands of Problems for Theorem Provers}
+
+TPTP \cite{Sut17} - Thousands of Problems for Theorem Provers - is both problem library used for testing \gls{ATP} systems and standard describing syntax for those tests. Next to TPTP library there is \gls{TSTP} - library of solutions produced by various solvers. Problems are classified into different domains: LCL - Logic Calculi, COL - Combinatory Logic and more.
+
+TPTP defines syntax for several logic systems: \gls{TPI}, \gls{THF}, \gls{TFF}, \gls{FOF}, \gls{CNF} but in this thesis only \gls{FOF} and \gls{CNF} will be used.
+
+\subsubsection{First order logic in TPTP syntax}
+
+Full description (technical document) for TPTP syntax can be found at \url{http://www.tptp.org/TPTP/TR/TPTPTR.shtml}
+
+\begin{itemize}
+  \item Variables start with upper case letters, atoms and terms are written in prefix notation, uninterpreted predicates and functors either start with lower case and contain alphanumerics and underscore, or are in 'single quotes'.
+
+  \item Each logical formula is wrapped in an annotated formula structure of the form \mintinline{text}{fof(name,role,formula,source,[useful_info])} or \mintinline{text}{cnf(name,role,formula,source,[useful_info])}
 
     \begin{itemize}
-      \item role gives the user semantics of the formula, one of
-        \mintinline{text}{axiom},
-        \mintinline{text}{hypothesis},
-        \mintinline{text}{definition},
-        \mintinline{text}{assumption},
-        \mintinline{text}{lemma},
-        \mintinline{text}{theorem},
-        \mintinline{text}{corollary},
-        \mintinline{text}{conjecture},
-        \mintinline{text}{negated_conjecture},
-        \mintinline{text}{plain},
-        \mintinline{text}{type},
-        and \mintinline{text}{unknown}.  Axiom-like formulae are those with the roles
-        \mintinline{text}{axiom},
-        \mintinline{text}{hypothesis},
-        \mintinline{text}{definition},
-        \mintinline{text}{assumption},
-        \mintinline{text}{lemma},
-        \mintinline{text}{theorem},
-        and \mintinline{text}{corollary}. They are accepted, without proof, as a basis for proving conjectures in THF, TFF, and FOF problems. In CNF problems the axiom-like formulae are accepted as part of the set whose satisfiability has to be established. \mintinline{text}{conjecture} occur in only THF, TFF, and FOF problems, and are to all be proven from the axiom(-like) formulae. A problem is solved only when all conjectures are proven. TPTP problems never contain more than one conjecture. \mintinline{text}{negated_conjectures} are formed from negation of a \mintinline{text}{conjecture}, typically in FOF to CNF conversion.
-      \item The \mintinline{text}{useful_info} field of an annotated formula is optional, and if it is not used then the \mintinline{text}{source} field becomes optional. The \mintinline{text}{source} field is used to record where the annotated formula came from, and is most commonly a file record or an inference record.
+      \item \mintinline{text}{name} is only for documenting purposes
+      \item \mintinline{text}{role} gives the user semantics of the formula, in context of SAT problem it will be usually \mintinline{text}{axiom}, but can also for example \mintinline{text}{hypothesis} or \mintinline{text}{definition}. They are accepted, without proof, as a basis for proving conjectures. In CNF problems the axiom-like formulae are accepted as part of the set whose satisfiability has to be established. A problem is solved only when all formulas with role \mintinline{text}{conjecture} are proven. TPTP problems never contain more than one conjecture. \mintinline{text}{negated_conjectures} are formed from negation of a \mintinline{text}{conjecture}, typically in FOF to CNF conversion.
+      \item \mintinline{text}{formula} is logical formula
+      \item the \mintinline{text}{source} field is used to record where the annotated formula came from, and is most commonly a file record or an inference record
+      \item the \mintinline{text}{useful_info} field of an annotated formula is optional, and if it is not used then the \mintinline{text}{source} field becomes optional
     \end{itemize}
 
-  \item The language also supports interpreted predicatess and functors. These come in two varieties: defined predicates and functors, whose interpretation is specified by the TPTP language, and system predicates and functors, whose interpretation is ATP system specific. The defined predicates recognized so far are \mintinline{text}{$true} and \mintinline{text}{$false} \mintinline{text}{=} and \mintinline{text}{!=} \mintinline{text}{$distinct} (only \gls{TFF} language) and  arithmetic predicates (only \gls{TFF} and \gls{THF}).
-    Interpreted predicatess and functors are syntactically distinct from uninterpreted ones - they are \mintinline{text}{=} and \mintinline{text}{!=}, or start with a \$, a '', or a digit. Non-variable symbols can be given a type globally, in the formula with role type. The defined types are \mintinline{text}{$o} - the Boolean type, \mintinline{text}{$i} - the type of individuals, \mintinline{text}{$real} - the type of reals, \mintinline{text}{$rat} - the type of rational, and \mintinline{text}{$int} - the type of integers. New types are introduced in formulae with the type role, based on \mintinline{text}{$tType} - the type of all types.
+  \item The language also supports interpreted predicates and functors. These come in two varieties: 
+    \begin{itemize}
+      \item defined predicates and functors, whose interpretation is specified by the TPTP language like \mintinline{text}{$true} and \mintinline{text}{$false}, \mintinline{text}{=} and \mintinline{text}{!=} and arithmetic predicates
+      \item system predicates and functors, whose interpretation is \gls{ATP} system specific, like \mintinline{text}{$o} - the Boolean type, \mintinline{text}{$i} - the type of individuals, \mintinline{text}{$real} - the type of reals, \mintinline{text}{$rat} - the type of rational, and \mintinline{text}{$int} - the type of integers.
+    \end{itemize}
 
   \item The universal quantifier is \mintinline{text}{!}, the existential quantifier is \mintinline{text}{?}, and the lambda binder is \mintinline{text}{^}. Quantified formulae are written in the form \mintinline{text}{Quantifier [Variables] :  Formula}
 
   \item The binary connectives are infix \mintinline{text}{|} for disjunction, infix \mintinline{text}{&} for conjunction, infix \mintinline{text}{<=>} for equivalence, infix \mintinline{text}{=>} for implication, infix \mintinline{text}{<=} for reverse implication, infix \mintinline{text}{<~>} for non-equivalence (XOR), infix \mintinline{text}{~|} for negated disjunction (NOR), infix	\mintinline{text}{~&} for negated conjunction (NAND), infix \mintinline{text}{@} for application. The only unary connective is prefix \mintinline{text}{~} for negation
-
-  \item  Arithmetic system are used in only the THF and TFF languages. This includes:
-    \mintinline{text}{$real} (real number)
-    \mintinline{text}{$rat} (rational)
-    \mintinline{text}{$to_int} (cast to int)
-    \mintinline{text}{$to_rat}
-    \mintinline{text}{$to_real}
-    \mintinline{text}{$is_int}
-    \mintinline{text}{$is_rat}
-    \mintinline{text}{$is_real},
-    unary operators:
-    \mintinline{text}{$floor}
-    \mintinline{text}{$round}
-    \mintinline{text}{$ceiling}
-    \mintinline{text}{$truncate},
-    comparison of 2 numbers:
-    \mintinline{text}{=}
-    \mintinline{text}{$less}
-    \mintinline{text}{$lesseq}
-    \mintinline{text}{$greater}
-    \mintinline{text}{$greatereq}
-    \mintinline{text}{$uminus}
-    \mintinline{text}{$sum}
-    \mintinline{text}{$difference}
-    \mintinline{text}{$product}
-    \mintinline{text}{$quotient}
-    \mintinline{text}{$quotient_e} (e for Euclidean quotient)
-    \mintinline{text}{$quotient_t} (t for truncate)
-    \mintinline{text}{$quotient_f} (f for floor)
-    \mintinline{text}{$distinct}
-    \mintinline{text}{$remainder_e}
-    \mintinline{text}{$remainder_t}
-    \mintinline{text}{$remainder_f}
-\end{itemize}
 
 \subsubsection{Additional tools in TPTP library}
 \label{sub:AdditionalToolsInTPTPLibrary}
@@ -195,30 +165,15 @@ TPTP ships with \gls{TPTP4X} (written in c), \gls{TPTP2X} (written in prolog) ut
 
 \subsubsection{Examples of FOL and CNF in TPTP syntax}
 
-\begin{listing}[H]
-  \caption{TPTP CNF formula}
-\begin{tptpcode}
-cnf(simple_clause_1, axiom,
-    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
-
-% Above formula contains:
-% 1 clause, 0 unit, 1 Horn
-% 4 literals: [p(f,f), ~p(a,b), p(X, V), pp(X)]
-% 4 atoms: [p(f,f), p(a,b), p(X, V), pp(X)]
-% 2 predicatess [p, pp] with arity 1: [pp] i 2: [p]
-% 3 functors: [f, a, b] with arity 0, 3 constant functors
-% 2 variables: [X, V], 1 singleton
-\end{tptpcode}
-\end{listing}
+For comparison examples of \gls{FOL} formulas are also shown in CNF. 
 
 \begin{listing}[H]
-  \caption{TPTP representation of \ref{eg:FOL_1}, translated to CNF}
+  \caption{TPTP FOL formula with existential quantifier, translated to CNF}
 \begin{tptpcode}
 fof(simple_exists, axiom,
- ? [W,Z] :  p(W, Z) | p(a, b)
+ ? [W,Z] : p(W, Z) | p(a, b)
   ).
-
-% converted with TPTP2X, otter algorithm
+% equivalent in CNF, converted with TPTP2X, otter algorithm
 cnf(simple_exists_1,axiom,
     ( p(sk1,sk2) | p(a,b) )).
 \end{tptpcode}
@@ -228,10 +183,9 @@ cnf(simple_exists_1,axiom,
   \caption{TPTP FOL formula with universal quantifier, translated to CNF}
 \begin{tptpcode}
 fof(simple_for_all, axiom,
- ! [W,Z] :  p(W, Z) | p(a, b)
+ ! [W,Z] : p(W, Z) | p(a, b)
   ).
-
-% converted wit[H] TPTP2X, otter algorithm
+% equivalent in CNF, converted with TPTP2X, otter algorithm
 cnf(simple_for_all_1,axiom,
     ( p(A,B) | p(a,b) )).
 \end{tptpcode}
@@ -244,8 +198,7 @@ cnf(simple_for_all_1,axiom,
 fof(this_is_obvious, axiom,
   ! [X,Y] : ( $lesseq(X,Y) <=> ( $less(X,Y) | X = Y ) )
   ).
-
-% converted with TPTP2X, otter algorithm
+% equivalent in CNF, converted with TPTP2X, otter algorithm
 cnf(this_is_obvious_1,axiom,
     ( ~ $lesseq(A,B) | $less(A,B) | A = B )).
 
@@ -257,37 +210,3 @@ cnf(this_is_obvious_3,axiom,
 \end{tptpcode}
 \end{listing}
 
-\begin{listing}[H]
-  \caption{TPTP FOL formula with both quantifiers, translated to CNF}
-\begin{tptpcode}
-fof(combined, axiom,
- ? [W,Z] : ( ! [X, Y] : p(W, Z, X)  | d(Y) )
-  ).
-
-% converted with TPTP2X, otter algorithm
-cnf(combined_1,axiom,
-    ( p(sk1,sk2,A) | d(B) )).
-\end{tptpcode}
-\end{listing}
-
-\subsection{Other formats}
-
-\begin{itemize}
-  \item \gls{LADR} - input format for prover9
-  \item SMT-LIB - standard for encoding SMT problems, used for example by Z3 prover
-\end{itemize}
-
-
-\section{Existing formula generators and benchmarks}
-
-There are number of benchmarks that can be found for example:
-
-\begin{itemize}
-  \item SMT-LIB \cite{BarFT-RR-17} 
-  \item SATLIB \cite{Hol00}
-  \item Tough SAT \url{https://toughsat.appspot.com/}
-  \item PySAT \url{https://pysathq.github.io/}
-  \item TPTP \cite{Sut17} - TSTP (Thousands of Solutions from Theorem Provers) to be more precise
-\end{itemize}
-
-Although a lot of benchmarks can be found, there are not a lot of generators. One generator is for example CNFgen \url{https://massimolauria.net/cnfgen/} but it generates only formulas in proposition logic. There are none generators for first order logic.

@@ -30,17 +30,6 @@ The combinations of quantifiers (that correspond to combinations of liveness and
 \item $\forall_X \exists_Y p(X, Y) \equiv p(A,f1(A)) $
 \end{itemize}
 
-Example of real life problem expressed in safety and liveness formulas is collisionless lights on crossroad.
-
-\noindent
-Problem: cars want to drive through crossroad.
-
-\noindent
-Safety property: only one light can be green.
-
-\noindent
-Liveness property: every light should eventually turn green.
-
 \section{Generating dataset}
 
 The goal is to generate liveness and safety clauses, but do not mix them. In order to achieve that, class $PredicateGenerator$ needs to be modified to yield either formulas with all variables (safety) or formulas with 0-arity functor (liveness). To achieve that $PredicateGenerator$ was subclassed and used to create alternative version of $CNFFormulaGenerator$.

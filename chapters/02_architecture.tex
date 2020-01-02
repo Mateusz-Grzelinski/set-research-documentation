@@ -1,7 +1,20 @@
-\chapter{Generator parameters and architecture}
+\chapter{Generator}
 
 In logic it is common to characterize element by its name and arity (if applicable), but in implementation name of element can be filled any time and besides arity, often argument type is also important. 
 
+\section{Existing formula generators and benchmarks}
+
+There are number of benchmarks that can be found for example:
+
+\begin{itemize}
+  \item SMT-LIB \cite{BarFT-RR-17} 
+  \item SATLIB \cite{Hol00}
+  \item Tough SAT \url{https://toughsat.appspot.com/}
+  \item PySAT \url{https://pysathq.github.io/}
+  \item TPTP \cite{Sut17} - TSTP (Thousands of Solutions from Theorem Provers) to be more precise
+\end{itemize}
+
+Although a lot of benchmarks can be found, there are not a lot of generators. One generator is for example CNFgen \url{https://massimolauria.net/cnfgen/} but it generates only formulas in proposition logic. There are none generators for first order logic.
 % \begin{itemize}
   % \item element name is not important
   % \item types of child elements is important
