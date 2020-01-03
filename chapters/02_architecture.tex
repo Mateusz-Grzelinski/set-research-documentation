@@ -15,12 +15,14 @@ Although a lot of ready to use benchmarks can be found, there are not a lot of g
 
 A random first order formula would be useful in this sense, that it would allow creating new datasets with precisely controlled elements. A parameters for such generator shall be described next.
 
-\section{CNF Generator parameters}
+\newpage
 
-User defines generator in 2 steps.
+\section{Defining CNF Generator}
+
+User defines generator in 2 steps:
 
 \begin{enumerate}
-  \item \textbf{General setting for generated formula}
+  \item General setting for generated formula
 
     In this step user defines set of allowed \gls{FOL} elements:
     \begin{itemize}
@@ -35,36 +37,23 @@ User defines generator in 2 steps.
       \item amount of literals to be negated
     \end{itemize}
 
-  \item \textbf{How many instances of elements are allowed}
+  \item How many instances of elements are allowed
 
     In this step user defines what properties formula should have:
     \begin{itemize}
       \item formula contains from $c_{min}$ to $c_{max}$ clauses
       \item formula contains from $l_{min}$ to $l_{max}$ literals
     \end{itemize}
-
 \end{enumerate}
 
-\section{Intermediate representation}
-
-Abstract syntax tree of \gls{FOL} is implemented in the same way as mathematical definition, see picture \ref{pic:fol_elements_class_diagram}. All classes have base class $FolElement$so that they can be easily identified as element of first order logic and introduce visitor pattern. Visitor pattern is used for exporting formula from intermediate representation to the format of choice (like \gls{TPTP}) as well as counting statistics about generated formula. See for example listing \ref{lis:TPTPExample} - it is convention from TPTP to store some statistics about file at the beginning of file as comment.
-
-Variable and functor are terms, that is why the inherit from term class. Functor is recursive structure it can contain variable or another term, that is why it is connected with aggregation with term class. Predicate can contain only terms, atom can contain term or predicate, literal can contain only one atom but adds sign to it, clause is one or more literal, CNF formula is one or more clause.
-
-\begin{figure}[h]
-\begin{centering}
-  \includegraphics[width=\textwidth]{logic-formula-generator/fol/cnf_fol_elements.png}
-  \caption{Class diagram for internal representation of first order logic elements}
-  \label{pic:fol_elements_class_diagram}
-\end{centering}
-\end{figure}
-\section{Basic algorithm}
+Basic algorithm of generating formula consists of following steps:
 
 \begin{enumerate}
   \item Resolve user constraints \ref{sec:ResolveUserConstrains}
   \item Generate possible formula based on generators \ref{sec:Generators}
   \item Export formula to file
 \end{enumerate}
+
 
 \section{Resolve user constraints}
 \label{sec:ResolveUserConstrains}
@@ -112,7 +101,21 @@ So in the end:
 
 Solution of above equation are pairs of numbers: clause length and how many clauses with this length should be used in generated clause.
 
-\section{Generators}
+\section{Intermediate representation}
+
+Abstract syntax tree of \gls{FOL} is implemented in the same way as mathematical definition, see picture \ref{pic:fol_elements_class_diagram}. All classes have base class $FolElement$so that they can be easily identified as element of first order logic and introduce visitor pattern. Visitor pattern is used for exporting formula from intermediate representation to the format of choice (like \gls{TPTP}) as well as counting statistics about generated formula. See for example listing \ref{lis:TPTPExample} - it is convention from TPTP to store some statistics about file at the beginning of file as comment.
+
+Variable and functor are terms, that is why the inherit from term class. Functor is recursive structure it can contain variable or another term, that is why it is connected with aggregation with term class. Predicate can contain only terms, atom can contain term or predicate, literal can contain only one atom but adds sign to it, clause is one or more literal, CNF formula is one or more clause.
+
+\begin{figure}[h]
+\begin{centering}
+  \includegraphics[width=\textwidth]{logic-formula-generator/fol/cnf_fol_elements.png}
+  \caption{Class diagram for internal representation of first order logic elements}
+  \label{pic:fol_elements_class_diagram}
+\end{centering}
+\end{figure}
+
+\section{Intermediate representation generators}
 \label{sec:Generators}
 
 Generators are implemented as cascade (picture \ref{pic:fol_signature_generator_class_diagram}), that is formula generator provides formulas, but requires clause generator, clause generator provides clauses, but requires literal generator and so on.
