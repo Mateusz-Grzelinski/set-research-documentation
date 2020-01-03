@@ -6,9 +6,8 @@
 \begin{figure}[h]
 \begin{centering}
   \includegraphics[width=0.7\textwidth]{images/smt_lib_logics.png}
-  \caption{Overview of logic by SMT-LIB \url{http://smtlib.cs.uiowa.edu/logics.shtml}
-    \tiny{
-    QF - quantifier free formulas,
+  \caption{Overview of logic by SMT-LIB \url{http://smtlib.cs.uiowa.edu/logics.shtml} 
+    \tiny{QF - quantifier free formulas,
     A - or AX theory ArraysEx,
     BV - FixedSizeBitVectors,
     FP - (forthcoming) FloatingPoint theory,
@@ -51,6 +50,23 @@ The majority of formulas are probably going to be represented in propositional c
 
 The main element of propositional calculus is variable. First order logic (also known as predicates logic, first-order predicate calculus) extends propositional logic by adding predicates, functors and quantifiers and non-logical objects. Definitions of FOL elements are contained below.
 
+% http://mathworld.wolfram.com/First-OrderLogic.html
+\textbf{Variable}
+unlike propositional logic, variables in \gls{FOL} can stand for a relation (between terms) but which has not been specifically assigned any particular relation.
+Usually starts with capital letter. If variables is used in quantifier it is called bound variable, otherwise it is called free variable.
+
+\textbf{Singleton variable}
+is used only once in clause.
+
+\textbf{Functor}
+is logical operator, that returns term. Functor has constant arity. Usually noted as $functor\_name/arity$, eg. $f/1$. Name of functor  is usually lowercase $f, g, h$.
+
+\textbf{Constant functor}
+is functor with arity 0.
+
+\textbf{Predicates}
+is logical operator, which return true or false. predicates operates on specific number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate\_name/arity$, eg. $p/1$. Name of predicate is usually lowercase $p, q, r $
+
 \textbf{Term}
 is variable, constant or result of functor.
 
@@ -60,31 +76,14 @@ is logical statement, that can not be further divided. Atom consists of predicat
 \textbf{Literal}
 is atom or its negation.
 
-% http://mathworld.wolfram.com/First-OrderLogic.html
-\textbf{Variable}
-unlike propositional logic, variables in \gls{FOL} can stand for a relation (between terms) but which has not been specifically assigned any particular relation.
-Usually starts with capital letter. If variables is used in quantifier it is called bound variable, otherwise it is called free variable.
-
-\textbf{Singleton variable}
-is used only once in clause
-
 \textbf{Clause}
-is disjunction of literals
+is disjunction of literals.
 
 \textbf{Unit clause}
-is clause with only one literal
+is clause with only one literal.
 
 \textbf{Horn clause}
-is clause, which contains at least one positive literal
-
-\textbf{Predicates}
-is logical operator, which return true or false. predicates operates on specific number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate\_name/arity$, eg. $p/1$. Name of predicate is usually lowercase $p, q, r $
-
-\textbf{Functor}
-is logical operator, that returns term. Functor has constant arity. Usually noted as $functor\_name/arity$, eg. $f/1$. Name of functor  is usually lowercase $f, g, h$
-
-\textbf{Constant functor}
-is functor with arity 0.
+is clause, which contains at least one positive literal.
 
 % https://en.wikipedia.org/wiki/Quantifier_(logic)
 \textbf{Quantifier}
@@ -112,7 +111,7 @@ There are many formats that allow representing logic, for example:
 \begin{itemize}
   \item DIMACS - one of more popular formats for propositional logic 
   \item \gls{LADR} - input format for Prover9 \footnote{Prover9 is an automated theorem prover for first-order and equational logic \url{https://www.cs.unm.edu/~mccune/mace4/}}
-  \item SMT-LIB - standard for encoding SMT problems, used for example by Z3 solver
+  \item SMT-LIB \cite{BarFT-RR-17} - standard for encoding SMT problems, used for example by Z3 solver
   \item \gls{TPTP} 
 \end{itemize}
 
@@ -150,6 +149,7 @@ Full description (technical document) for TPTP syntax can be found at \url{http:
   \item The universal quantifier is \mintinline{text}{!}, the existential quantifier is \mintinline{text}{?}, and the lambda binder is \mintinline{text}{^}. Quantified formulae are written in the form \mintinline{text}{Quantifier [Variables] :  Formula}
 
   \item The binary connectives are infix \mintinline{text}{|} for disjunction, infix \mintinline{text}{&} for conjunction, infix \mintinline{text}{<=>} for equivalence, infix \mintinline{text}{=>} for implication, infix \mintinline{text}{<=} for reverse implication, infix \mintinline{text}{<~>} for non-equivalence (XOR), infix \mintinline{text}{~|} for negated disjunction (NOR), infix	\mintinline{text}{~&} for negated conjunction (NAND), infix \mintinline{text}{@} for application. The only unary connective is prefix \mintinline{text}{~} for negation
+\end{itemize}
 
 \subsubsection{Additional tools in TPTP library}
 \label{sub:AdditionalToolsInTPTPLibrary}

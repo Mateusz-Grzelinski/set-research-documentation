@@ -1,6 +1,6 @@
 \chapter{Conclusion}
 
-In this thesis a base for random first order logic formula generator has been presented. The generator can be easily extended for user specific needs. For example user can add arbitrary rule that elements must follow during generation, more output formats can be added.
+In this thesis a base for random first order logic formula generator has been presented. The generator can be easily extended for user specific needs. For example user can add arbitrary rule (by inheriting one of generators) that elements must follow during generation, more output formats can be added.
 Presented solution can be extended to follow constraints related to any other \gls{FOL} element like limited number of variables, functors and so on.
 The biggest challenge in described solution is randomizing solutions from constraint solver. Solving user constrains is problem of integer programming (NP problem) that is why enumerating them all is not an option. Instead random number of solutions is skipped to preserve at least pseudo-randomness.
 

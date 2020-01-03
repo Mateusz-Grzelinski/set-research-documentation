@@ -8,24 +8,28 @@ skinparam class {
 
 
 /' AstElement <|-- FolElement '/
-FolElement <-- CNFFormula
-FolElement <-- CNFClause
-FolElement <-- Literal
-FolElement <-- Atom
-FolElement <-- Predicate
+FolElement <|-- CNFFormula
+FolElement <|-- CNFClause
+FolElement <|-- Literal
+FolElement <|-- Atom
+FolElement <|-- Predicate
 FolElement <|-- Term
-Term <-- Functor
+Term <|-- Functor
 Term o-- Functor
-Term o-- Variable
+Term <|-- Variable
 
 
 CNFFormula o- CNFClause
 CNFClause o- Literal
 Literal o- Atom
 Atom o- Predicate
-Atom -o Variable
-Atom -o Functor
-Predicate -o Term
+Atom o- Term
+Predicate o-- Term
+
+abstract class FolElement {
+  + accept(visitor)
+  ..
+}
 
 class CNFFormula {
 	cnf/1
