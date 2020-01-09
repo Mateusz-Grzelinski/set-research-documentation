@@ -1,0 +1,23 @@
+@startuml
+skinparam dpi 300
+
+skinparam class {
+  backgroundColor Ivory
+  borderColor DarkRed
+}
+
+CNFConstraintSolver <|-- Z3CNFConstraintSolver
+
+abstract class CNFConstraintSolver {
+  allowed_clause_lengths: List
+  number_of_literals: tuple[int, int]
+  number_of_clauses: tuple[int, int]
+  + solve()
+}
+
+class Z3CNFConstraintSolver {
+  - _solve()
+  + solve()
+}
+
+@enduml

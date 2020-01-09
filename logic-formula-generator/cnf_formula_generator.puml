@@ -13,9 +13,7 @@ package Generators {
 
 Generators -* CNFFormulaGenerator
 CNFFormulaGenerator *-- ConstraintSolver
-CNFFormulaGenerator -> CNFFormula
-CNFFormula <- Exporter
-Exporter <|-- TPTPExporter
+CNFFormulaGenerator - CNFFormula
 
 class CNFFormulaGenerator {
   variable_names 
@@ -25,17 +23,16 @@ class CNFFormulaGenerator {
   predicate_names
   predicate_arities
   atom_connectives
-  clause_lengths 
+  **clause_lengths **
   **number_of_literals**
   **number_of_clauses**
 }
 
 class ConstraintSolver {
+  allowed_clause_lengths
   number_of_literals
   number_of_clauses
-}
-
-abstract class Exporter {
+  + solve()
 }
 
 @enduml

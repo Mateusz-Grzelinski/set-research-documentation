@@ -1,0 +1,52 @@
+@startuml
+skinparam dpi 300
+
+skinparam class {
+  backgroundColor Ivory
+  borderColor DarkRed
+}
+
+Exporter <|-- TPTPExporter
+TPTPExporter *-- TPTPHeader
+Exporter - CNFFormula
+CNFFormula o-- CNFFormulaInfo
+
+CNFFormulaVisitor -* MathSense
+CNFFormula -* CNFFormulaVisitor
+
+class MathSense {
+  + hash_variable(scope: Optional[CNFClause], variable: Variable) -> int:
+  + hash_functor(functor: Functor) -> int:
+  + hash_predicate(predicate: Predicate) -> int:
+  + hash_atom(scope: Optional[CNFClause], atom: Atom) -> int:
+  + hash_literal(scope: Optional[CNFClause], literal: Literal) -> int:
+  + hash_clause(clause: CNFClause) -> int:
+}
+
+class CNFFormula {
+  + get_formula_info()
+}
+
+class CNFFormulaVisitor {
+}
+
+class CNFFormulaInfo {
+  number_of
+  number_of_instances
+  clause_lengths
+  number_of_horn_clauses_instances
+  predicate_arities
+}
+
+abstract class Exporter {
++ export(expression: CNFFormula, filename_suffix: str) 
+}
+
+class TPTPExporter {
+}
+
+class TPTPHeader {
+  cnf_formula_info
+}
+
+@enduml

@@ -7,7 +7,7 @@ skinparam class {
 }
 
 package Generators {
-  Predicategenerator <-- SafetyLivenessPredicateGenerator
+  Predicategenerator <-- SafetyLivenessPredicateGenerator1In10
 }
 
 Generators -* CNFSafetyLivenessGenerator
@@ -33,9 +33,9 @@ class ConstraintSolver {
   number_of_clauses
 }
 
-class SafetyLivenessPredicateGenerator {
-	p, p(f), p(f, f), p(V, V)
-	..
+class SafetyLivenessPredicateGenerator1In10 {
+..every 10 predicates yield predicate with arity 1..
+  p, p(f), p(f, f), p(V, V)
 }
 
 class Predicategenerator {
