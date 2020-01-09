@@ -208,7 +208,7 @@ Generators are implemented as cascade (picture~\ref{pic:fol_signature_generator_
 \end{centering}
 \end{figure}
 
-Manual creation of generators is required only in advanced case. To automate this process $CNFFormulaGnerator$ (picture~\ref{pic:cnf_generator_class_diagram}) has been created. This is interface for user to create random CNF formulas that will automatically resolve user constraints and yield random formula. After creating formula from signature generators formula will be post processed - given random names and optionally negation sign. Generated formula can be then exported to file along with statistics about formula.
+Manual creation of generators is required only in advanced case. To automate this process $CNFFormulaGenerator$ (picture~\ref{pic:cnf_generator_class_diagram}) has been created. This is interface for user to create random CNF formulas that will automatically resolve user constraints and yield random formula. After creating formula from signature generators formula will be post processed - given random names and optionally negation sign. Generated formula can be then exported to file along with statistics about formula.
 
 \begin{figure}[h]
 \begin{centering}
@@ -218,15 +218,15 @@ Manual creation of generators is required only in advanced case. To automate thi
 \end{centering}
 \end{figure}
 
-\section{Generate statistics about formula}
+\section{Export and generate statistics about formula}
 \label{sec:GenerateStatisticsAboutFormula}
 
-TODO
+After generating formula it would be usefull to gather some information about it. 
 
 \begin{figure}[h]
 \begin{centering}
   \includegraphics[width=\textwidth]{logic-formula-generator/fol/cnf_formula_statistics.png}
   \caption{Classes for which take part in generating statistics and exporting FOL CNF formula}
-  \label{pic:}
+  \label{pic:CNFFormulaInfo}
 \end{centering}
 \end{figure}

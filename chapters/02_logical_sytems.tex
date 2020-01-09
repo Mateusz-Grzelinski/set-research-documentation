@@ -1,16 +1,3 @@
-\chapter{Introduction}
-\label{cha:Introduction}
-
-\gls{SAT} is the problem of determining if there exists an interpretation that satisfies a given boolean formula. For solving such problem dedicated programs are created, called SAT solvers. Recently there has been substantial development in this area. Modern approach to SAT solving will likely use conflict-driven clause learning \cite{series/faia/SilvaLM09}, various heuristics and make use of better and better hardware. This rapid development in theory of solving SAT problems is followed by number of implementations. Picking best (fastest) implementation of SAT solver for given input problem is not trivial as solving algorithms are based on similar algorithm. Moreover SAT problem has NP complexity what encourages optimizing solvers to specific cases - that is if input formula has frequent pattern, it would be beneficial to optimize solver around that pattern.
-
-SAT problem can be represented in many logical systems and can contain various theories. To name a few possibilities, problem can be expressed with first order logic or propositional logic, additionally integer or floating point arithmetic may be used if needed. The use of appropriate theories must be carefully chosen by engineer when encoding a problem into logical formula as it will affect available range of SAT solver. Having that done, engineer must choose best solver for presented problem. This can be done by benchmarking chosen solver against set of formulas. Pre-generated input formulas can be often obtained from projects like \gls{TPTP} but sometimes custom set of formulas would be handy (see chapter~\ref{chap:Generator} for more detail on available datasets).
-
-This thesis focuses on creating a tool that will assist generating custom set of formulas. The basic function of this tool is generating random set of formulas which can be used to test performance of solvers. 
-The goal is to create extendable, easy to use \gls{FOL} formula generator.
-Generator has this advantage over pre-generated dataset that it can precisely map encountered real-life problem into measurable, repeatable custom dataset. It is important for the ease of use to keep inner representation of first order logic the same as mathematical definitions of elements of first order logic. Any arbitrary rule can be injected into generation to fulfill user specific needs. Those rules are meant to represent fragment or reality that engineer wants to represent in \gls{FOL}. Formulas generated in this way can be used as testing tool as randomness of formulas can be finely controlled. 
-First order logic has been chosen deliberately. First order logic can be considered well balanced then it comes to expressiveness, complexity and adaptation among solvers. Less expressive and simpler logic would be propositional logic, whereas more complex logic is for example higher order logic. 
-
-
 \chapter{Logical systems}
 % https://en.wikipedia.org/wiki/Mathematical_logic#Formal_logical_systems
 % https://en.wikipedia.org/wiki/Formal_system#Logical_system
