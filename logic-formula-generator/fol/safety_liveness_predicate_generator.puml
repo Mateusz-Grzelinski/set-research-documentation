@@ -6,13 +6,15 @@ skinparam class {
   borderColor DarkRed
 }
 
-package Generators {
+package SubGenerators {
   Predicategenerator <-- SafetyLivenessPredicateGenerator
 }
-
-Generators -* CNFSafetyLivenessGenerator
-CNFSafetyLivenessGenerator *-- ConstraintSolver
-CNFSafetyLivenessGenerator - CNFFormula
+package GeneratorPresets {
+  Generators -* CNFSafetyLivenessGenerator
+  CNFSafetyLivenessGenerator *-- ConstraintSolver
+}
+SubGenerators -- GeneratorPresets
+CNFSafetyLivenessGenerator -() CNFFormula
 
 class CNFSafetyLivenessGenerator {
   variable_names 

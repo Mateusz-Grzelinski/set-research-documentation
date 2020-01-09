@@ -1,0 +1,21 @@
+@startuml
+skinparam dpi 300
+
+skinparam class {
+  backgroundColor Ivory
+  borderColor DarkRed
+}
+
+package ExportUtils{
+  class Exporter
+}
+
+
+FFFFFormula ()- Exporter
+note right on link: Formula in memory
+Exporter -() EncodedFormula
+note right on link: Formula ready to be saved on hard drive
+Exporter -() FormulaStatistics
+
+
+@enduml

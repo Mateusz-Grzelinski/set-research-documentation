@@ -6,17 +6,16 @@ skinparam class {
   borderColor DarkRed
 }
 
-package Generators {
-
-CNFFormulaGenerator o-- CNFClauseGenerator
-CNFClauseGenerator o-- Literalgnerator
-Literalgnerator o-- AtomGenerator
-AtomGenerator o-- Predicategenerator
-AtomGenerator o-- VariableGenerator
-AtomGenerator o-- FunctorGenerator
-Predicategenerator o-- VariableGenerator
-Predicategenerator o-- FunctorGenerator
-VariableGenerator -o FunctorGenerator 
+package SubGenerators {
+  CNFFormulaGenerator o-- CNFClauseGenerator
+  CNFClauseGenerator o-- LiteralGenerator
+  LiteralGenerator o-- AtomGenerator
+  AtomGenerator o-- Predicategenerator
+  AtomGenerator o-- VariableGenerator
+  AtomGenerator o-- FunctorGenerator
+  Predicategenerator o-- VariableGenerator
+  Predicategenerator o-- FunctorGenerator
+  VariableGenerator -o FunctorGenerator 
 }
 
 class CNFFormulaGenerator {
@@ -30,7 +29,7 @@ class CNFClauseGenerator {
 	..
 }
 
-class Literalgnerator {
+class LiteralGenerator {
 	atom, ~atom
 	..
 }

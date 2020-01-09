@@ -1,0 +1,49 @@
+
+@startuml
+skinparam dpi 300
+
+skinparam class {
+  backgroundColor Ivory
+  borderColor DarkRed
+}
+
+package Generator {
+  package GeneratorPresets {
+    note "Combines SubGenerators into one" as N1
+    class RandomFormulaGenerator {
+    }
+  }
+  package SubGenerators {
+    note "SubGenerators provides elements of SyntaxTree in required form" as N2
+    /' note "SubGenerators are classes that generate\nspecyfic element of syntax tree" as N '/
+    /' CNFClauseGenerator o-- LiteralGenerator '/
+    /' LiteralGenerator o-- AtomGenerator '/
+    /' AtomGenerator o-- Predicategenerator '/
+    /' AtomGenerator o-- VariableGenerator '/
+    /' AtomGenerator o-- FunctorGenerator '/
+    /' Predicategenerator o-- VariableGenerator '/
+    /' Predicategenerator o-- FunctorGenerator '/
+    /' VariableGenerator -o FunctorGenerator  '/
+  }
+  package SyntaxTree {
+    note "CNFFormula, CNFClause, Literal, Atom, Predicate, Functor and Variable" as N3
+    /' CNFFormula o-- CNFClause '/
+    /' CNFClause o-- Literal '/
+    /' Literal o-- Atom '/
+    /' Atom o-- Predicate '/
+    /' Atom o-- Variable '/
+    /' Predicate o-- Variable '/
+    /' Predicate o-- Functor '/
+    /' Functor --o Atom '/
+    /' Functor o-- Variable '/
+  }
+  GeneratorPresets -- SubGenerators
+  SubGenerators -- SyntaxTree
+}
+
+InputParams ()-- RandomFormulaGenerator
+note right on link: User defined paramenters for generator
+RandomFormulaGenerator -() Formula
+note right on link: Formula in memory
+
+@enduml

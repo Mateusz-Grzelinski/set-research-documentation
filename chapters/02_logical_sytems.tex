@@ -15,11 +15,11 @@ Formulas must be presented in some kind of formal system. A formal system consis
   \item temporal logic 
 \end{itemize}
 
-The majority of formulas are probably going to be represented in propositional calculus because of simplicity of such notation. Propositional logic deals with variables which are connected with logical connectives. Variable can be true or false. Formula in propositional logic is easy to parse but may lack clarity and may be quite long when compared to different formal logical systems. For more complex problem it may be easier to encode problem in more expressive language and the next natural step would be first order logic. \gls{FOL} has tools for expressing relation and still is easy enough to implement and reason in automated way. 
+The majority of formulas are probably going to be represented in propositional calculus because of simplicity of such notation. Propositional logic deals with variables which are connected with logical connectives. Variable can be true or false. Formula in propositional logic is easy to parse but may become quite long when compared to different formal logical systems. For more complex problem it may be easier to encode problem in more expressive system and the next natural step would be first order logic as it is not redefinition but extension of propositional logic.
 
 \section{First Order Logic}
 
-The main element of propositional calculus is variable. First order logic (also known as predicates logic, first-order predicate calculus) extends propositional logic by adding predicates, functors and quantifiers and non-logical objects. Definitions of FOL elements are contained below.
+First order logic (also known as predicates logic, first-order predicate calculus) extends propositional logic by adding predicates, functors and quantifiers and non-logical objects. Definitions of FOL elements are contained below.
 
 % http://mathworld.wolfram.com/First-OrderLogic.html
 \textbf{Variable}
@@ -36,7 +36,7 @@ is logical operator, that returns term. Functor has constant arity. Usually note
 is functor with arity 0.
 
 \textbf{Predicates}
-is logical operator, which return true or false. Predicates operates on specific number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate\_name/arity$, for example $p/1$. Name of predicate is usually lowercase $p, q, r$
+is logical operator which returns true or false. Predicates operates on specific number of terms. This number is constant and called predicate \textbf{arity}. Usually noted as $predicate\_name/arity$, for example $p/1$. Name of predicate is usually lowercase $p, q, r$. Predicate describes relation between objects.
 
 \textbf{Term}
 is variable, constant or result of functor.
@@ -68,24 +68,62 @@ is equivalent to a logical conjunction of propositions, this is, all proposition
 
 The following \gls{FOL} example contains 1 existential quantifier, 2 variables $W$, $Z$, 1 predicate $p/2$, 2 constant functors $a/0$, $b/0$.
 \begin{equation} \label{eg:FOL_1}
-  \exists_{W,Z} p(W,Z) | p(a, b)
+  \exists_{W,Z} p(W,Z) \lor p(a, b)
 \end{equation}
 
 \section{Normal forms}
 
 Representing logic formula in one of normal forms sometimes can enable new or shorter reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form (CNF)}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other example of normal form is \gls{DNF} where formula is disjunction of conjunctions.
 
+The focus of this thesis is conjunctive normal form as it is one of the most basic forms that represent logical formulas and any statement in \gls{FOL} can be converted to CNF.
+
 \section{Formats used for representing formulas}
 
-There are many formats that allow representing logic, for example:
+There are many formats that allow representing logic, a few of them are described in this section. Many provers implement its own language for representing logic formulas like prover9\footnote{Prover9 is an automated theorem prover for first-order and equational logic \cite{prover9-mace4}} what creates technical problems of comparability between solvers. In this thesis a standard called \gls{TPTP} will be used to represent first order logic formulas.
+
+\subsection{DIMACS}
+
+DIMACS\footnote{\url{https://www.domagoj-babic.com/uploads/ResearchProjects/Spear/dimacs-cnf.pdf}} is also the name of one of popular formats for encoding propositional logic. Although variations of DIMACS can be found, it is mainly used to encode CNF what will be presented next. At the beginning there is always problem line:
+\mintinline{text}{p cnf VARIABLES CLAUSES},
+where VARIABLES is number of variables in formula and CLAUSES is number of clauses in formula. $c$ means line is a comment. Variables are noted with integers, negation is minus sign. Clause delimiter is 
+\mintinline{text}{0}. 
+
+\begin{listing}[H]
+\begin{minted}{text}
+p cnf 3 2
+1 -3 0
+2 3 -1 0
+\end{minted}
+  \caption{DIMACS formula example, formula consists of 2 clauses, 3 variables ($1$, $2$, $3$) and 5 literals)}
+  \label{lis:DIMACSExample}
+\end{listing}
+
+\subsection{SMT-LIB}
+
+SMT-LIB \cite{BarFT-RR-17} is an international initiative aimed at facilitating research and development in \gls{SMT}. Its 2 major projects handled by SMT-LIB are defining standard for encoding logical problems and creating benchmarks (more about benchmarks in section \ref{sec:SMTLIBBenchmarks}). Mentioned standard covers:
 
 \begin{itemize}
-  \item DIMACS - one of more popular formats for propositional logic 
-  \item \gls{LADR} - input format for Prover9\footnote{Prover9 is an automated theorem prover for first-order and equational logic \cite{prover9-mace4}}
-  \item SMT-LIB \cite{BarFT-RR-17} - standard for encoding \gls{SMT} problems, used for example by Z3 solver
+  \item a language for writing terms and formulas in a version of first order logic - it means that using SMT-LIB any subset of first order logic can be presented, including propositional logic
+  \item a language for specifying background theories and defining a standard vocabulary of symbols for them - it means that theories like integers, floating points, real number etc. can be used. New theories can be easily defined.
+  \item a language for specifying logics - it means that new (different than first order logic) logic systems can be created. For example first logic system can allow quantified formulas, second can be quantifier free.
+  \item a command language for interacting with SMT solvers - it means in there are syntax elements which allow asserting and retracting formulas, querying about their satisfiability or their unsatisfiability proofs, and so on.
 \end{itemize}
 
-Many provers implement its own language for representing logic formulas like prover9 what creates technical problems of compability between solvers. In this thesis a standard called \gls{TPTP} will be used to represent first order logic formulas.
+Compared to DIMACS, SMT-LIB is much more sophisticated, what can be advantage or disadvantage depending on use case. 
+
+\begin{listing}[H]
+  \caption{Example of quantifier free boolean formula with free (uninterpreted) sort and function symbols - QF\_UF}
+  \label{lis:SMTLIBExample}
+  \begin{minted}{text}
+; Basic Boolean example
+(set-option :print-success false)
+(set-logic QF_UF)
+(declare-const p Bool)
+(assert (and p (not p))) 
+(check-sat) ; returns 'unsat'
+(exit)
+  \end{minted}
+\end{listing}
 
 \subsection{Thousands of Problems for Theorem Provers}
 \label{sub:TPTP}
@@ -96,31 +134,29 @@ TPTP defines syntax for several logic systems: \gls{TPI}, \gls{THF}, \gls{TFF}, 
 
 \subsubsection{First order logic in Thousands of Problems for Theorem Provers syntax}
 
-The following description is a description of \gls{FOL} syntax elements used in \gls{TPTP}. Full description (technical document) for TPTP syntax can be found at \url{http://www.tptp.org/TPTP/TR/TPTPTR.shtml}
+The following description is a description of \gls{FOL} syntax elements used in \gls{TPTP} \footnote{Full technical document for TPTP syntax can be found at \url{http://www.tptp.org/TPTP/TR/TPTPTR.shtml}}.
+
+Variables start with upper case letters, atoms and terms are written in prefix notation, uninterpreted predicates and functors either start with lower case and contain alphanumerics and underscore, or are in 'single quotes'.
+
+Each logical formula is wrapped in an annotated formula structure of the form \mintinline{text}{fof(name,role,formula,source,[useful_info])} or \mintinline{text}{cnf(name,role,formula,source,[useful_info])}
 
 \begin{itemize}
-  \item Variables start with upper case letters, atoms and terms are written in prefix notation, uninterpreted predicates and functors either start with lower case and contain alphanumerics and underscore, or are in 'single quotes'.
-
-  \item Each logical formula is wrapped in an annotated formula structure of the form \mintinline{text}{fof(name,role,formula,source,[useful_info])} or \mintinline{text}{cnf(name,role,formula,source,[useful_info])}
-
-    \begin{itemize}
-      \item \mintinline{text}{name} is only for documenting purposes
-      \item \mintinline{text}{role} gives the user semantics of the formula, in context of SAT problem it will be usually \mintinline{text}{axiom}, but can also for example \mintinline{text}{hypothesis} or \mintinline{text}{definition}. They are accepted, without proof, as a basis for proving conjectures. In CNF problems the axiom-like formulae are accepted as part of the set whose satisfiability has to be established. A problem is solved only when all formulas with role \mintinline{text}{conjecture} are proven. TPTP problems never contain more than one conjecture. \mintinline{text}{negated_conjectures} are formed from negation of a \mintinline{text}{conjecture}, typically in FOF to CNF conversion.
-      \item \mintinline{text}{formula} is logical formula
-      \item the \mintinline{text}{source} field is used to record where the annotated formula came from, and is most commonly a file record or an inference record
-      \item the \mintinline{text}{useful_info} field of an annotated formula is optional, and if it is not used then the \mintinline{text}{source} field becomes optional
-    \end{itemize}
-
-  \item The language also supports interpreted predicates and functors. These come in two varieties: 
-    \begin{itemize}
-      \item defined predicates and functors, whose interpretation is specified by the TPTP language like \mintinline{text}{$true} and \mintinline{text}{$false}, \mintinline{text}{=} and \mintinline{text}{!=} and arithmetic predicates
-      \item system predicates and functors, whose interpretation is \gls{ATP} system specific, like \mintinline{text}{$o} - the Boolean type, \mintinline{text}{$i} - the type of individuals, \mintinline{text}{$real} - the type of reals, \mintinline{text}{$rat} - the type of rational, and \mintinline{text}{$int} - the type of integers.
-    \end{itemize}
-
-  \item The universal quantifier is \mintinline{text}{!}, the existential quantifier is \mintinline{text}{?}, and the lambda binder is \mintinline{text}{^}. Quantified formulae are written in the form \mintinline{text}{Quantifier [Variables] :  Formula}
-
-  \item The binary connectives are infix \mintinline{text}{|} for disjunction, infix \mintinline{text}{&} for conjunction, infix \mintinline{text}{<=>} for equivalence, infix \mintinline{text}{=>} for implication, infix \mintinline{text}{<=} for reverse implication, infix \mintinline{text}{<~>} for non-equivalence (XOR), infix \mintinline{text}{~|} for negated disjunction (NOR), infix	\mintinline{text}{~&} for negated conjunction (NAND), infix \mintinline{text}{@} for application. The only unary connective is prefix \mintinline{text}{~} for negation
+  \item \mintinline{text}{name} is only for documenting purposes
+  \item \mintinline{text}{role} gives the user semantics of the formula, in context of SAT problem it will be usually \mintinline{text}{axiom}, but can also for example \mintinline{text}{hypothesis} or \mintinline{text}{definition}. They are accepted, without proof, as a basis for proving conjectures. In CNF problems the axiom-like formulae are accepted as part of the set whose satisfiability has to be established. A problem is solved only when all formulas with role \mintinline{text}{conjecture} are proven. TPTP problems never contain more than one conjecture. \mintinline{text}{negated_conjectures} are formed from negation of a \mintinline{text}{conjecture}, typically in FOF to CNF conversion.
+  \item \mintinline{text}{formula} is logical formula
+  \item the \mintinline{text}{source} field is used to record where the annotated formula came from, and is most commonly a file record or an inference record
+  \item the \mintinline{text}{useful_info} field of an annotated formula is optional, and if it is not used then the \mintinline{text}{source} field becomes optional
 \end{itemize}
+
+The language also supports interpreted predicates and functors. These come in two varieties: 
+\begin{itemize}
+  \item defined predicates and functors, whose interpretation is specified by the TPTP language like \mintinline{text}{$true} and \mintinline{text}{$false}, \mintinline{text}{=} and \mintinline{text}{!=} and arithmetic predicates
+  \item system predicates and functors, whose interpretation is \gls{ATP} system specific, like \mintinline{text}{$o} - the Boolean type, \mintinline{text}{$i} - the type of individuals, \mintinline{text}{$real} - the type of reals, \mintinline{text}{$rat} - the type of rational, and \mintinline{text}{$int} - the type of integers.
+\end{itemize}
+
+The universal quantifier is \mintinline{text}{!}, the existential quantifier is \mintinline{text}{?}, and the lambda binder is \mintinline{text}{^}. Quantified formulae are written in the form \mintinline{text}{Quantifier [Variables] :  Formula}
+
+The binary connectives are infix \mintinline{text}{|} for disjunction, infix \mintinline{text}{&} for conjunction, infix \mintinline{text}{<=>} for equivalence, infix \mintinline{text}{=>} for implication, infix \mintinline{text}{<=} for reverse implication, infix \mintinline{text}{<~>} for non-equivalence (XOR), infix \mintinline{text}{~|} for negated disjunction (NOR), infix	\mintinline{text}{~&} for negated conjunction (NAND), infix \mintinline{text}{@} for application. The only unary connective is prefix \mintinline{text}{~} for negation
 
 \subsubsection{Additional tools in TPTP library}
 \label{sub:AdditionalToolsInTPTPLibrary}

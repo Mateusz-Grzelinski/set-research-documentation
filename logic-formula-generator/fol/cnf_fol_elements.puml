@@ -6,18 +6,18 @@ skinparam class {
   borderColor DarkRed
 }
 
-
-/' AstElement <|-- FolElement '/
-FolElement <|-- CNFFormula
-FolElement <|-- CNFClause
-FolElement <|-- Literal
-FolElement <|-- Atom
-FolElement <|-- Predicate
-FolElement <|-- Term
-Term <|-- Functor
-Term o-- Functor
-Term <|-- Variable
-
+package SyntaxTree {
+  /' AstElement <|-- FolElement '/
+  FolElement <|-- CNFFormula
+  FolElement <|-- CNFClause
+  FolElement <|-- Literal
+  FolElement <|-- Atom
+  FolElement <|-- Predicate
+  FolElement <|-- Term
+  Term <|-- Functor
+  Term o-- Functor
+  Term <|-- Variable
+}
 
 CNFFormula o- CNFClause
 CNFClause o- Literal

@@ -1,24 +1,67 @@
-\chapter{Generator}
-\label{chap:Generator}
+\chapter{Overview of existing benchmark solutions}
 
 There are number solutions that provide formulas in a way of generators or benchmarks:
 
-\begin{itemize}
-  \item SMT-LIB \cite{BarFT-RR-17} -- is project aimed at facilitating research and development in \gls{SMT} . One part of their activity is defining syntax for representing formulas in with various theories and hosting considerable benchmark library
-  \item SATLIB \cite{Hol00} -- is collection of benchmarks of propositional logic (DIMACS CNF format)
-  \item Tough SAT \cite{ToughSAT} -- is a platform that will generate boolean CNF formulas that encode "difficult" problems. Problems are represented in propositional logic (DIMACS CNF format). Although Tough SAT is in fact generator it supports only several predefined problems like Factoring, Subset Sum, Random k-SAT, Cocktail.
+\section{SMT-LIB}
+\label{sec:SMTLIBBenchmarks}
+
+SMTLIB \cite{BarFT-RR-17} -- is project aimed at facilitating research and development in \gls{SMT} . One part of their activity is defining syntax for representing formulas in with various theories and hosting considerable benchmark library
+
+\section{SATLIB}
+
+SATLIB \cite{Hol00} -- is collection of benchmarks of propositional logic (DIMACS CNF format)
+
+\section{Tough SAT}
+
+Tough SAT \cite{ToughSAT} -- is a platform that will generate boolean CNF formulas that encode "difficult" problems. Problems are represented in propositional logic (DIMACS CNF format). Although Tough SAT is in fact generator it supports only several predefined problems like Factoring, Subset Sum, Random k-SAT, Cocktail.
 % \item PySAT\footnote{\url{https://pysathq.github.io/}} -- is a toolkit, which aims at providing a simple and unified interface to a number of SAT solvers as well as to a variety pseudo-Boolean encodings. Rather than generating benchmarks this tool is useful when there is a need to access several solvers with unified interface.
-  \item CNFgen \cite{CNFGen} -- produces combinatorial benchmarks in DIMACS format. These benchmarks come mostly from research in Proof Complexity (pigeonhole principle, ordering principle, k-clique and more). Many of these formulas encode structured combinatorial problems well known to be challenging for certain SAT solvers.
-  \item \gls{TSTP} (Thousands of Solutions from Theorem Provers) a side project of \gls{TPTP} \cite{Sut17} -- it is a library of problems and solutions encoded in TPTP format
-\end{itemize}
+
+\section{CNFgen}
+
+\cite{CNFGen} -- produces combinatorial benchmarks in DIMACS format. These benchmarks come mostly from research in Proof Complexity (pigeonhole principle, ordering principle, k-clique and more). Many of these formulas encode structured combinatorial problems well known to be challenging for certain SAT solvers.
+
+\section{Thousands of Solutions from Theorem Provers}
+
+\gls{TSTP} (Thousands of Solutions from Theorem Provers) a side project of \gls{TPTP} \cite{Sut17} -- it is a library of problems and solutions encoded in TPTP format
+
+\section{Conclusion}
 
 Although a lot of ready to use benchmarks can be found, there are not a lot of generators. Tough SAT and CNFgen are generators that generate predefined problem with given size, SMT-LIB, SATLIB, TSTP are mainly repositories of benchmarks, not generators itself. Out of mentioned solutions only SMT-LIB and TSTP support first order logic. None of mentioned solutions can generate first order logic formulas. 
 
 A random first order formula would be useful in this sense, that it would allow creating new datasets with precisely controlled elements. A parameters for such generator shall be described next.
 
-\newpage
+\chapter{Random formula generator - architecture}
+\label{chap:Generator}
 
-\section{Defining CNF Generator}
+There are 2 parts that together create generator as shown in picture \ref{pic:ExportAndGeneratorOverview}. The main part is $Generator$ (picture \ref{pic:GeneratorOverview}) which is responsible for creating random formula itself and $ExportUtils$ (picture \ref{pic:ExportOverview}) is complementary package responsible encoding formula to \gls{TPTP} format and counting statistics. The bas
+
+\begin{enumerate}
+  \item Resolve user constraints~\ref{sec:RandomizeFormula}
+  \item Generate possible formula based on generators~\ref{sec:Generators}
+  \item Generate statistics and export formula to file~\ref{sec:GenerateStatisticsAboutFormula}
+\end{enumerate}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.8\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{logic-formula-generator/fol/cnf_generator_overview.png}
+    \caption{Overview of formula generation process}
+    \label{pic:GeneratorOverview}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.7\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{logic-formula-generator/fol/export_overview.png}
+    \caption{Overview of formula exporting prosess}
+    \label{pic:ExportOverview}
+  \end{subfigure}
+  \caption{Overview of generator architecture}
+  \label{pic:ExportAndGeneratorOverview}
+\end{figure}
+
+
+\section{Generator input parameters}
 
 User defines generator in 2 steps:
 
@@ -47,17 +90,36 @@ User defines generator in 2 steps:
     \end{itemize}
 \end{enumerate}
 
-Basic algorithm of generating formula consists of following steps:
+\section{Implementation of syntax tree of first order logic}
+\label{sec:SyntaxTree}
 
-\begin{enumerate}
-  \item Resolve user constraints~\ref{sec:ResolveUserConstrains}
-  \item Generate possible formula based on generators~\ref{sec:Generators}
-  \item Generate statistics and export formula to file~\ref{sec:GenerateStatisticsAboutFormula}
-\end{enumerate}
+Abstract syntax tree of \gls{FOL} is implemented in the same way as mathematical definition, see picture~\ref{pic:fol_elements_class_diagram}. All classes have base class $FolElement$ so that they can be easily identified as element of first order logic and introduce visitor pattern. Visitor pattern is used for exporting formula from intermediate representation to the format of choice (like \gls{TPTP}) as well as counting statistics about generated formula. See for example listing~\ref{lis:TPTPExample} - it is convention from TPTP to store some statistics about file at the beginning of file as comment.
 
+Variable and functor are terms, that is why the inherit from term class. Functor is recursive structure it can contain variable or another term, that is why it is connected with aggregation with term class. Predicate can contain only terms, atom can contain term or predicate, literal can contain only one atom but adds sign to it, clause is one or more literal, CNF formula is one or more clause.
 
-\section{Resolve user constraints}
-\label{sec:ResolveUserConstrains}
+\begin{figure}[h]
+\begin{centering}
+  \includegraphics[width=\textwidth]{logic-formula-generator/fol/cnf_fol_elements.png}
+  \caption{Class diagram for internal representation of first order logic elements}
+  \label{pic:fol_elements_class_diagram}
+\end{centering}
+\end{figure}
+
+\section{Implementation of SubGenerators}
+\label{sec:Generators}
+
+Generators are implemented as cascade (picture~\ref{pic:fol_signature_generator_class_diagram}), that is formula generator provides formulas, but requires clause generator, clause generator provides clauses, but requires literal generator and so on.
+
+\begin{figure}[h]
+\begin{centering}
+  \includegraphics[width=0.7\textwidth]{logic-formula-generator/fol/cnf_signature_generators.png}
+  \caption{Class diagram of generators in CNF formula generator}
+  \label{pic:fol_signature_generator_class_diagram}
+\end{centering}
+\end{figure}
+
+\section{Randomizing formula}
+\label{sec:RandomizeFormula}
 
 User constrains are defined in input parameters as $AllowedClausesLengths$, $NumberOfClauses$, $NumberOfLiterals$. To generate random formula withing these constrains, number of clauses with appropriate clause length must be computed.
 
@@ -104,18 +166,10 @@ Solution of above equation are pairs of numbers: clause length and how many clau
 
 \subsection{Using Z3 to resolve user constraints}
 
-Z3 \cite{Z3Solver} is a \gls{SMT} prover from Microsoft Research. It uses SMT-LIB as input format, but also has bindings to multiple languages. It can be used to solve user constraints presented in~\ref{sec:ResolveUserConstrains}. Z3 supports arithmetic what is essential for solving user constraints.
+Z3 \cite{Z3Solver} is a \gls{SMT} prover from Microsoft Research. It uses SMT-LIB as input format, but also has bindings to multiple languages. It can be used to solve user constraints presented in~\ref{sec:RandomizeFormula}. Z3 supports arithmetic what is essential for solving user constraints.
 
 Solving equation is implemented as class $CNFConstraintSolver$ (picture~\ref{pic:ConstraintSolverZ3ClassDiagram}). Parameter $allowed\_clause\_lengths$ corresponds to $c_i$ in equation~\ref{eq:UserConstraintsLx}, parameter $number\_of\_literals$ corresponds range of allowed values of literals - tuple of minimal and maximum range - ($l(x)$ in equation~\ref{eq:UserConstraintsLx}), parameter $number\_of\_clauses$ corresponds number of allowed values of clause - tuple of minimal and maximum range - ($x$ in equation~\ref{eq:UserConstraintsX}). The set of variables $x_i$ will be returned from method $solve()$ as dictionary, where key is $i$ (clause length) and value is how many clauses are needed.
 
-
-\begin{figure}[h]
-\begin{centering}
-  \includegraphics[width=0.3\textwidth]{logic-formula-generator/fol/resolve_constraints.png}
-  \caption{Subclassed constraint solver}
-  \label{pic:ConstraintSolverZ3ClassDiagram}
-\end{centering}
-\end{figure}
 
 Function \mintinline{text}{_solve()} in listing \ref{lis:DeterministicSolve} solves user constraints using Z3 solver bindings in Python. Line 
 \mintinline{python}{X = [z3.Int() ...]}
@@ -181,32 +235,7 @@ Fundamental problem of using SAT (or SMT) solver in this scenario when any, rand
 \end{minted}
 \end{listing}
 
-\section{Intermediate representation}
-
-Abstract syntax tree of \gls{FOL} is implemented in the same way as mathematical definition, see picture~\ref{pic:fol_elements_class_diagram}. All classes have base class $FolElement$ so that they can be easily identified as element of first order logic and introduce visitor pattern. Visitor pattern is used for exporting formula from intermediate representation to the format of choice (like \gls{TPTP}) as well as counting statistics about generated formula. See for example listing~\ref{lis:TPTPExample} - it is convention from TPTP to store some statistics about file at the beginning of file as comment.
-
-Variable and functor are terms, that is why the inherit from term class. Functor is recursive structure it can contain variable or another term, that is why it is connected with aggregation with term class. Predicate can contain only terms, atom can contain term or predicate, literal can contain only one atom but adds sign to it, clause is one or more literal, CNF formula is one or more clause.
-
-\begin{figure}[h]
-\begin{centering}
-  \includegraphics[width=\textwidth]{logic-formula-generator/fol/cnf_fol_elements.png}
-  \caption{Class diagram for internal representation of first order logic elements}
-  \label{pic:fol_elements_class_diagram}
-\end{centering}
-\end{figure}
-
-\section{Intermediate representation generators}
-\label{sec:Generators}
-
-Generators are implemented as cascade (picture~\ref{pic:fol_signature_generator_class_diagram}), that is formula generator provides formulas, but requires clause generator, clause generator provides clauses, but requires literal generator and so on.
-
-\begin{figure}[h]
-\begin{centering}
-  \includegraphics[width=0.7\textwidth]{logic-formula-generator/fol/cnf_signature_generators.png}
-  \caption{Class diagram of generators in CNF formula generator}
-  \label{pic:fol_signature_generator_class_diagram}
-\end{centering}
-\end{figure}
+\section{Generator presets}
 
 Manual creation of generators is required only in advanced case. To automate this process $CNFFormulaGenerator$ (picture~\ref{pic:cnf_generator_class_diagram}) has been created. This is interface for user to create random CNF formulas that will automatically resolve user constraints and yield random formula. After creating formula from signature generators formula will be post processed - given random names and optionally negation sign. Generated formula can be then exported to file along with statistics about formula.
 
@@ -217,6 +246,7 @@ Manual creation of generators is required only in advanced case. To automate thi
   \label{pic:cnf_generator_class_diagram}
 \end{centering}
 \end{figure}
+
 
 \section{Export and generate statistics about formula}
 \label{sec:GenerateStatisticsAboutFormula}

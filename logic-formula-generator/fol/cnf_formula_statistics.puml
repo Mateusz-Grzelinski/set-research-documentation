@@ -6,13 +6,15 @@ skinparam class {
   borderColor DarkRed
 }
 
-Exporter <|-- TPTPExporter
-TPTPExporter *-- TPTPHeader
-Exporter - CNFFormula
-CNFFormula o-- CNFFormulaInfo
+package ExportUtils {
+  Exporter <|-- TPTPExporter
+  Exporter - CNFFormulaVisitor
+  TPTPExporter *-- TPTPHeader
+  CNFFormulaVisitor -* MathSense
+  CNFFormulaVisitor --* CNFFormulaInfo
+}
 
-CNFFormulaVisitor -* MathSense
-CNFFormula -* CNFFormulaVisitor
+CNFFormula ()-- Exporter
 
 class MathSense {
   + hash_variable(scope: Optional[CNFClause], variable: Variable) -> int:
@@ -23,11 +25,14 @@ class MathSense {
   + hash_clause(clause: CNFClause) -> int:
 }
 
-class CNFFormula {
-  + get_formula_info()
-}
-
 class CNFFormulaVisitor {
+  + visit_variable(variable):
+  + visit_functor(functor):
+  + visit_predicate(predicate):
+  + visit_atom(atom):
+  + visit_literal(literal):
+  + visit_cnf_clause(CNFClause):
+  + visit_cnf_formula(CNFFormula):
 }
 
 class CNFFormulaInfo {
@@ -39,7 +44,7 @@ class CNFFormulaInfo {
 }
 
 abstract class Exporter {
-+ export(expression: CNFFormula, filename_suffix: str) 
++ export(expression: CNFFormula, filename: str) 
 }
 
 class TPTPExporter {

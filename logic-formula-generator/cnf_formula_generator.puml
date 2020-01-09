@@ -1,4 +1,3 @@
-
 @startuml
 skinparam dpi 300
 
@@ -7,15 +6,20 @@ skinparam class {
   borderColor DarkRed
 }
 
-package Generators {
-  note "Every generator \ncan be used by CNFFormulaGenerator" as N
- }
+package Generator {
+  package GeneratorPresets {
+    RandomCNFFormulaGenerator *-- CNFConstraintSolver
+    CNFConstraintSolver <|-- Z3CNFConstraintSolver
+  }
+  package SubGenerators {
+    note "Every sub-generator \ncan be used by RandomCNFFormulaGenerator" as N
+  }
+  GeneratorPresets -- SubGenerators 
+}
+RandomCNFFormulaGenerator -() CNFFormula
+InputParams ()-- RandomCNFFormulaGenerator
 
-Generators -* CNFFormulaGenerator
-CNFFormulaGenerator *-- ConstraintSolver
-CNFFormulaGenerator - CNFFormula
-
-class CNFFormulaGenerator {
+class RandomCNFFormulaGenerator {
   variable_names 
   functor_names 
   functor_arity 
@@ -28,11 +32,15 @@ class CNFFormulaGenerator {
   **number_of_clauses**
 }
 
-class ConstraintSolver {
+class CNFConstraintSolver {
   allowed_clause_lengths
   number_of_literals
   number_of_clauses
   + solve()
 }
 
+class Z3CNFConstraintSolver {
+  - _solve()
+  + solve()
+}
 @enduml
