@@ -73,7 +73,7 @@ The following \gls{FOL} example contains 1 existential quantifier, 2 variables $
 
 \section{Normal forms}
 
-Representing logic formula in one of normal forms sometimes can enable new or shorter reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form (CNF)}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other example of normal form is \gls{DNF} where formula is disjunction of conjunctions.
+Representing logic formula in one of normal forms sometimes can enable new or shorter reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form (CNF)}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other example of normal form is \gls{DNF} where formula is disjunction of conjunctions. Skolem normal form is often used in provers as it is a quantifier-free formula in conjunctive normal form known.
 
 The focus of this thesis is conjunctive normal form as it is one of the most basic forms that represent logical formulas and any statement in \gls{FOL} can be converted to CNF.
 
@@ -82,6 +82,7 @@ The focus of this thesis is conjunctive normal form as it is one of the most bas
 There are many formats that allow representing logic, a few of them are described in this section. Many provers implement its own language for representing logic formulas like prover9\footnote{Prover9 is an automated theorem prover for first-order and equational logic \cite{prover9-mace4}} what creates technical problems of comparability between solvers. In this thesis a standard called \gls{TPTP} will be used to represent first order logic formulas.
 
 \subsection{DIMACS}
+\label{sec:DIMACS}
 
 DIMACS\footnote{\url{https://www.domagoj-babic.com/uploads/ResearchProjects/Spear/dimacs-cnf.pdf}} is also the name of one of popular formats for encoding propositional logic. Although variations of DIMACS can be found, it is mainly used to encode CNF what will be presented next. At the beginning there is always problem line:
 \mintinline{text}{p cnf VARIABLES CLAUSES},
@@ -99,6 +100,7 @@ p cnf 3 2
 \end{listing}
 
 \subsection{SMT-LIB}
+\label{sec:SMTLIB}
 
 SMT-LIB \cite{BarFT-RR-17} is an international initiative aimed at facilitating research and development in \gls{SMT}. Its 2 major projects handled by SMT-LIB are defining standard for encoding logical problems and creating benchmarks (more about benchmarks in section \ref{sec:SMTLIBBenchmarks}). Mentioned standard covers:
 
@@ -109,7 +111,7 @@ SMT-LIB \cite{BarFT-RR-17} is an international initiative aimed at facilitating 
   \item a command language for interacting with SMT solvers - it means in there are syntax elements which allow asserting and retracting formulas, querying about their satisfiability or their unsatisfiability proofs, and so on.
 \end{itemize}
 
-Compared to DIMACS, SMT-LIB is much more sophisticated, what can be advantage or disadvantage depending on use case. 
+Compared to DIMACS, SMT-LIB is much more sophisticated, what can be advantage or disadvantage depending on use case. SMT-LIB standard is much more than simply format for encoding formulas.
 
 \begin{listing}[H]
   \caption{Example of quantifier free boolean formula with free (uninterpreted) sort and function symbols - QF\_UF}
@@ -126,11 +128,12 @@ Compared to DIMACS, SMT-LIB is much more sophisticated, what can be advantage or
 \end{listing}
 
 \subsection{Thousands of Problems for Theorem Provers}
-\label{sub:TPTP}
+\label{sec:TPTP}
 
-TPTP \cite{Sut17} - Thousands of Problems for Theorem Provers - is both problem library used for testing \gls{ATP} systems and standard describing syntax for those tests. Next to TPTP library there is \gls{TSTP} - library of solutions produced by various solvers. Problems are classified into different domains: LCL - Logic Calculi, COL - Combinatory Logic and more.
-
+TPTP \cite{Sut17} - Thousands of Problems for Theorem Provers - is both problem library used for testing \gls{ATP} systems and standard describing syntax for those tests. 
 TPTP defines syntax for several logic systems: \gls{TPI}, \gls{THF}, \gls{TFF}, \gls{FOF}, \gls{CNF} but in this thesis only \gls{FOF} and \gls{CNF} will be used.
+
+Compared to DIMACS and SMT-LIB, TPTP is middle ground when it comes to complexity. Unlike DIMACS it supports multiple languages, but unlike SMT-LIB, new logics can not be defined and it has no language for interacting with SMT solvers. On the other hand it has set of tools that allow for manipulation of formulas described in section \ref{sub:AdditionalToolsInTPTPLibrary}. 
 
 \subsubsection{First order logic in Thousands of Problems for Theorem Provers syntax}
 
@@ -154,8 +157,27 @@ The language also supports interpreted predicates and functors. These come in tw
   \item system predicates and functors, whose interpretation is \gls{ATP} system specific, like \mintinline{text}{$o} - the Boolean type, \mintinline{text}{$i} - the type of individuals, \mintinline{text}{$real} - the type of reals, \mintinline{text}{$rat} - the type of rational, and \mintinline{text}{$int} - the type of integers.
 \end{itemize}
 
-The universal quantifier is \mintinline{text}{!}, the existential quantifier is \mintinline{text}{?}, and the lambda binder is \mintinline{text}{^}. Quantified formulae are written in the form \mintinline{text}{Quantifier [Variables] :  Formula}
+The universal quantifier is \mintinline{text}{!} (example of usage is shown in listing \ref{lis:TPTPUniversalQuantifier}), the existential quantifier is \mintinline{text}{?} (example shown in listing \ref{lis:TPTPExistenstialQuantifier}), and the lambda binder is \mintinline{text}{^}. Quantified formulae are written in the form \mintinline{text}{Quantifier [Variables] :  Formula}
 
+\begin{listing}[H]
+  \caption{TPTP FOL formula with existential quantifier}
+  \label{lis:TPTPExistenstialQuantifier}
+\begin{tptpcode}
+fof(simple_exists, axiom,
+ ? [W,Z] : p(W, Z) | p(a, b)
+  ).
+\end{tptpcode}
+\end{listing}
+
+\begin{listing}[H]
+  \caption{TPTP FOL formula with universal quantifier}
+  \label{lis:TPTPUniversalQuantifier}
+\begin{tptpcode}
+fof(simple_for_all, axiom,
+ ! [W,Z] : p(W, Z) | p(a, b)
+  ).
+\end{tptpcode}
+\end{listing}
 The binary connectives are infix \mintinline{text}{|} for disjunction, infix \mintinline{text}{&} for conjunction, infix \mintinline{text}{<=>} for equivalence, infix \mintinline{text}{=>} for implication, infix \mintinline{text}{<=} for reverse implication, infix \mintinline{text}{<~>} for non-equivalence (XOR), infix \mintinline{text}{~|} for negated disjunction (NOR), infix	\mintinline{text}{~&} for negated conjunction (NAND), infix \mintinline{text}{@} for application. The only unary connective is prefix \mintinline{text}{~} for negation
 
 \subsubsection{Additional tools in TPTP library}
@@ -164,42 +186,15 @@ The binary connectives are infix \mintinline{text}{|} for disjunction, infix \mi
 TPTP ships with \gls{TPTP4X} (written in c), \gls{TPTP2X} (written in prolog) utilities, which are used for reformatting, transforming, and generating TPTP problem files. Example of functionalities:
 
 \begin{itemize}
-  \item converting \gls{FOF} to \gls{CNF} (for example with otter \cite{McC-Otter-URL}, bundy \cite{Bun83} algorithm, details in \cite{SM96})
+  \item converting \gls{FOF} to \gls{CNF} (for example with otter \cite{McC-Otter-URL}, bundy \cite{Bun83} algorithm, details in \cite{SM96}) as presented in \ref{lis:TPTPTranslationExample}
   \item converting TPTP to syntax required by prover9, dimacs, otter, dfg and more
   \item optimization \gls{FOF}, \gls{CNF} with different algorithms
   \item change order of \gls{CNF}
 \end{itemize}
 
-\subsubsection{Examples of FOL and CNF in TPTP syntax}
-
-For comparison examples of \gls{FOL} formulas are also shown in CNF. 
-
-\begin{listing}[H]
-  \caption{TPTP FOL formula with existential quantifier, translated to CNF}
-\begin{tptpcode}
-fof(simple_exists, axiom,
- ? [W,Z] : p(W, Z) | p(a, b)
-  ).
-% equivalent in CNF, converted with TPTP2X, otter algorithm
-cnf(simple_exists_1,axiom,
-    ( p(sk1,sk2) | p(a,b) )).
-\end{tptpcode}
-\end{listing}
-
-\begin{listing}[H]
-  \caption{TPTP FOL formula with universal quantifier, translated to CNF}
-\begin{tptpcode}
-fof(simple_for_all, axiom,
- ! [W,Z] : p(W, Z) | p(a, b)
-  ).
-% equivalent in CNF, converted with TPTP2X, otter algorithm
-cnf(simple_for_all_1,axiom,
-    ( p(A,B) | p(a,b) )).
-\end{tptpcode}
-\end{listing}
-
 \begin{listing}[H]
   \caption{TPTP FOL formula, translated to CNF}
+  \label{lis:TPTPTranslationExample}
 \begin{tptpcode}
 % for every X, Y operation lesseq is the same as less or equal
 fof(this_is_obvious, axiom,

@@ -1,4 +1,4 @@
-\chapter{Case study - generating random system properties}
+\chapter{Generating random system properties}
 
 One of the uses of random \gls{FOL} can be to generate random formula that represent system properties. That formula can be used as input for benchmark.
 
@@ -12,25 +12,38 @@ Liveness formula guarantees that there is at least one case, where formula evalu
 \textbf{Safety} \cite{Klimek99} is system property, that states, that something bad will never happens.
 Safety formula must always be satisfied.
 
-\subsection{Safety and liveness representation in logic systems}
+An informal example of system with liveness and safety properties could be an elevator. Statement: "Elevator will eventually stop" is liveness property of elevator as may be running now but eventually will hit the ceiling or floor. Statement: "Elevator must never run when the door is open" is safety property - the statement is always true.
 
-In \gls{FOL} liveness and safety can be expressed as quantifiers, safety as universal quantifier and liveness as existential quantifier. Every \gls{FOL} can be converted to \gls{CNF}, so system properties can be also represented in \gls{CNF}, if needed. It can be done for example with otter algorithm \cite{McC-Otter-URL} or skolemisation.
+\section{Properties of computer systems in first order logic}
 
-In \gls{FOL} system properties could look like (first is example with quantifiers, followed by CNF equivalent)\footnote{removing quantiviers from first order logic can be automated with TPTP utility using TPTP2X utility, option \mintinline{text}{-t clausify:quaife}~\ref{sub:AdditionalToolsInTPTPLibrary} }:
+In \gls{FOL} liveness and safety can be expressed as quantifiers, safety as universal quantifier and liveness as existential quantifier. 
+If we were to use previously mentioned elevator example, the statements can be written as follows:
+
 \begin{itemize}
-  \item Safety formula: $\forall_X p(X) \equiv p(A)$
-  \item Safety formula: $\forall_X p(X, X) \equiv p(A, B)$
-  \item Liveness formula: $\exists_X p(X) \equiv p1(f1)$
-  \item Liveness formula: $\exists_X p(X, X) \equiv p(f1, f2)$
+  \item "Elevator will eventually stop" can be converted to logic formula: $\exists_t e(t)$ where predicate $e$ means "elevator is still", assuming $t<\infty$. The formula reads: there exists moment $t$ that the elevator is not moving
+  \item "Elevator must never run when the door is open" can be converted to logic formula: $\forall_t \neg e(t) \land d(t)$ where predicate $e$ means "elevator is still" and $d$ means "doors are open". The formula reads: for every moment $t$ elevator is running and the doors are shut (at the same time).
 \end{itemize}
 
-The combinations of quantifiers (that correspond to combinations of liveness and safety properties) are not discussed in this thesis. For example (first is example with quantifiers, followed by CNF equivalent):
+\subsection{Properties of computer systems in first order logic in quantifier free}
+
+Every \gls{FOL} can be converted to \gls{CNF}, so system properties can be also represented in \gls{CNF} but quantifiers must be also converted to CNF. The process of removing all the existential quantifiers from a formula is known as skolemization. The result is a formula in skolem normal form that is equivalent in computational complexity to the original. Skolemization follows several rules:
+
+
 \begin{itemize}
-\item $\exists_Y \forall_X p(X, Y) \equiv p(f1, A)$
-\item $\forall_X \exists_Y p(X, Y) \equiv p(A,f1(A)) $
+  \item Variables bound by existential quantifiers which are not inside the scope of universal quantifiers can simply be replaced by constants - $\exists_t e(t)$ can be replaced by $e(f)$ where $f$ is new constant (functor)
+  \item When the existential quantifier is inside a universal quantifier, the bound variable must be replaced by a Skolem function of the variables bound by universal quantifiers - $\forall_x  e(x) \land \exists_y e(t)$ can be replaced as $\forall_x e(x) \land e(f(x))$ 
 \end{itemize}
 
-\section{Basic dataset}
+
+Elevator example converted to quantifier free form looks as follows\footnote{removing quantifiers from first order logic can be automated with TPTP utility using TPTP2X utility, option \mintinline{text}{-t clausify:quaife}~\ref{sub:AdditionalToolsInTPTPLibrary} }::
+\begin{itemize}
+  \item "Elevator will eventually stop" $\exists_t e(t)$ in quantifier free form: $e(f)$ - new constant functor $f$ replaced variable $t$
+  \item "Elevator must never run when the door is open" $\forall_t \neg e(t) \land d(t)$ in quantifier free form: $\neg e(X) \land d(Y)$ - 2 new variables $X$ and $Y$ replaced variable $t$ bounded to universal quantifier
+\end{itemize}
+
+In conclusion safety and liveness can be represented in CNF as 2 form of predicates: liveness as predicate, where arguments are only constant functors, safety as predicate where arguments are variables.
+
+\section{Dataset with system properties}
 
 The goal is to generate liveness and safety clauses, but do not mix them. In order to achieve that, class $PredicateGenerator$ needs to be modified to yield either formulas with all variables (safety) or formulas with 0-arity functor (liveness). To achieve that $PredicateGenerator$ was subclassed and used to create alternative version of $CNFFormulaGenerator$.
 
@@ -125,22 +138,22 @@ cnf(name,axiom,p2(V7, V9)|p4(f19)|p2(f8, f5)|p10(f7, f8, f8)|p12|p6(V2, V6)|p14(
   \label{pic:SPASSProverMemory}
 \end{figure}
 
-\section{Modified dataset}
-
-TODO
-
-\begin{figure}[H]
-\begin{centering}
-  \includegraphics[width=\textwidth]{"logic-formula-generator/fol/safety_liveness_predicate_generator_1_in_10".png}
-  \caption{Subclassed PredicateGenerator mimics safety and liveness formulas}
-\end{centering}
-\end{figure}
-
-\subsection{Results}
-
-TODO
-
-Charts are only placeholders:
+% \section{Modified dataset}
+%
+% TODO
+%
+% \begin{figure}[H]
+% \begin{centering}
+%   \includegraphics[width=\textwidth]{"logic-formula-generator/fol/safety_liveness_predicate_generator_1_in_10".png}
+%   \caption{Subclassed PredicateGenerator mimics safety and liveness formulas}
+% \end{centering}
+% \end{figure}
+%
+% \subsection{Results}
+%
+% TODO
+%
+% Charts are only placeholders:
 
 % \newpage
 %

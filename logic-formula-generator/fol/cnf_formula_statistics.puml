@@ -10,37 +10,25 @@ package ExportUtils {
   Exporter <|-- TPTPExporter
   Exporter - CNFFormulaVisitor
   TPTPExporter *-- TPTPHeader
-  CNFFormulaVisitor -* MathSense
-  CNFFormulaVisitor --* CNFFormulaInfo
+  CNFFormulaVisitor --o CNFFormulaInfo
 }
 
 CNFFormula ()-- Exporter
 
-class MathSense {
-  + hash_variable(scope: Optional[CNFClause], variable: Variable) -> int:
-  + hash_functor(functor: Functor) -> int:
-  + hash_predicate(predicate: Predicate) -> int:
-  + hash_atom(scope: Optional[CNFClause], atom: Atom) -> int:
-  + hash_literal(scope: Optional[CNFClause], literal: Literal) -> int:
-  + hash_clause(clause: CNFClause) -> int:
-}
-
 class CNFFormulaVisitor {
-  + visit_variable(variable):
-  + visit_functor(functor):
-  + visit_predicate(predicate):
-  + visit_atom(atom):
-  + visit_literal(literal):
-  + visit_cnf_clause(CNFClause):
-  + visit_cnf_formula(CNFFormula):
+  + visit_variable(variable)
+  + visit_functor(functor)
+  + visit_predicate(predicate)
+  + visit_atom(atom)
+  + visit_literal(literal)
+  + visit_cnf_clause(CNFClause)
+  + visit_cnf_formula(CNFFormula)
 }
 
 class CNFFormulaInfo {
-  number_of
-  number_of_instances
-  clause_lengths
+  number_of_{variables,functors,predicates,...}
   number_of_horn_clauses_instances
-  predicate_arities
+  number_of_constant_functors
 }
 
 abstract class Exporter {

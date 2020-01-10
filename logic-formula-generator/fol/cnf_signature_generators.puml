@@ -10,47 +10,58 @@ package SubGenerators {
   CNFFormulaGenerator o-- CNFClauseGenerator
   CNFClauseGenerator o-- LiteralGenerator
   LiteralGenerator o-- AtomGenerator
-  AtomGenerator o-- Predicategenerator
+  AtomGenerator o-- PredicateGenerator
   AtomGenerator o-- VariableGenerator
   AtomGenerator o-- FunctorGenerator
-  Predicategenerator o-- VariableGenerator
-  Predicategenerator o-- FunctorGenerator
-  VariableGenerator -o FunctorGenerator 
+  PredicateGenerator o-- VariableGenerator
+  PredicateGenerator o-- FunctorGenerator
+  VariableGenerator -o FunctorGenerator
 }
+
+note "Provides random\nPredicates: p, p(f), p(V, f)" as N
+PredicateGenerator - N
 
 class CNFFormulaGenerator {
-	cnf/1
-	cnf/2
-	..
+	+ generate() 
 }
+note right of CNFFormulaGenerator: Provides random\nCNFFormula: cnf/1, cnf/2
 
 class CNFClauseGenerator {
-	cnf(literal | literal).
-	..
+  clause_lengths
+	+ generate() 
 }
+note right of CNFClauseGenerator: Provides random\nCNFClause: cnf(literal | literal).
 
 class LiteralGenerator {
-	atom, ~atom
-	..
+  negation_change
+	+ generate() 
 }
+note right of LiteralGenerator: Provides random\nLiteral: atom, ~atom
 
 class AtomGenerator {
-	p, V = V, f != V
-	..
+  connectives
+	+ generate() 
 }
+note right of AtomGenerator: Provides random\nAtom: p, V = V, f != V
 
-class Predicategenerator {
-	p, p(f), p(V, f)
-	..
+class PredicateGenerator {
+	arities
+  predicate_names
+	+ generate() 
 }
 
 class FunctorGenerator {
-	f, f(f), f(V), f(f(f))
-	..
+  max_recursion_depth
+  arities
+  functor_names
+	+ generate() 
 }
+note bottom of FunctorGenerator: Provides random\nFunctors: f, f(f), f(V), f(f(f))
 
 class VariableGenerator {
-	V1, V2
-	..
+  variable_names
+	+ generate() 
 }
+note bottom of VariableGenerator: Provides random\nVariables: V1, V2
+
 @enduml
