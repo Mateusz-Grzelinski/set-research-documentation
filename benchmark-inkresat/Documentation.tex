@@ -96,7 +96,7 @@
 
 Celem projektu jest zbadanie wydajności automatyczych metod dowodzenia twierdzeń InKreSAT w kontekście formuł żywotnościowych i bezpieczeństwa, przedstawionych jako problem \gls{SAT}, a dokładniej \gls{TL}. Na początku zostaje wygenerowna formuła \gls{SAT}, która zostaje rozwiązana przez badany prover. Badany jest czas wykonania, rezultat (czy \gls{SAT} jest spełnialny), użycie pamięci RAM.  Generowana formuła \gls{SAT} jest modyfikowana ze względu na między innymi długość formuły, ilość zmiennych.
 
-Prover traktowany jest jako czarna skrzynka (blackbox), jego parametry są modyfikowane z poziomu linii komend[???].
+Prover traktowany jest jako czarna skrzynka (blackbox), jego parametry są modyfikowane z poziomu linii komend.
 
 \subsection{Żywotność i bezpieczeństwo formuł}
 
@@ -104,59 +104,59 @@ Prover traktowany jest jako czarna skrzynka (blackbox), jego parametry są modyf
 
 \textbf{Bezpieczeństwo} systemu to cecha, która zapewnia, że nic złego nigdy się nie stanie. Formuła bezpieczeństwa gwarantuje, że dla każdego wydarzenia, formuła bezpieczeństwa nigdy nie zostanie pogwałcona.
 
-Żywotność oraz bezpieczeństwo mogą zostać wyrażone na przykład w postaci formuły logicznej pierwszego rzędu, czyli problemu SAT.
-W formacie TPTP formuły żywotnościowe i bezpieczeństwa można przedstawić jako:
+Żywotność oraz bezpieczeństwo mogą zostać wyrażone na przykład w postaci formuły logicznej logiki temporalnej, czyli problemu SAT. Logika temporalna umożliwiająca rozważanie zależności czasowych bez wprowadzania czasu explicite. Operatory czasu logiki temporalnej to:
 \begin{itemize}
-  \item kwantyfikatory (\gls{FOF}) - w tptp kwantyfikator uniwersalny to \mintinline{text}{!}, a kwantyfikator egzystencjalny \mintinline{text}{?}
-  \item kaluzule \gls{CNF} - powstaje po przekonwertowaniu formuły z kwantyfikatorem w klazulę
-\end{itemize}
+  \item \mintinline{text}{[]p} - p jest spełnione we wszystkich stanach (zawsze)
+  \item \mintinline{text}{<>p} - p jest spełnione przynajmniej w jednym stanie (kiedyś)
+  \item \mintinline{text}{()p} - p jest spełnione w stanie następnym po stanie odniesienia (następny)
+  \item \mintinline{text}{pUq} - p jest spełnione dopóki nie jest spełnione q (dopóki)
 
-\begin{tptpcode}
-fof(simple_exists, axiom,
- ? [W,Z] :  p(W, Z) | p(a, b)
-  ).
-
-% converted with TPTP2X, otter algorithm
-cnf(simple_exists_1,axiom,
-    ( p(sk1,sk2) | p(a,b) )).
-\end{tptpcode}
-
-\begin{tptpcode}
-fof(simple_for_all, axiom,
- ! [W,Z] :  p(W, Z) | p(a, b)
-  ).
-
-% converted with TPTP2X, otter algorithm
-cnf(simple_for_all_1,axiom,
-    ( p(A,B) | p(a,b) )).
-\end{tptpcode}
-
-\begin{tptpcode}
-% dla każdego X, Y operacja lesseq, to to samo co less lub równość
-fof(this_is_obvious, axiom,
-  ! [X,Y] : ( $lesseq(X,Y) <=> ( $less(X,Y) | X = Y ) )
-  ).
-
-% converted with TPTP2X, otter algorithm
-cnf(this_is_obvious_1,axiom,
-    ( ~ $lesseq(A,B) | $less(A,B) | A = B )).
-
-cnf(this_is_obvious_2,axiom,
-    ( ~ $less(A,B) | $lesseq(A,B) )).
-
-cnf(this_is_obvious_3,axiom,
-    ( A != B | $lesseq(A,B) )).
-\end{tptpcode}
-
-\begin{tptpcode}
-fof(combined, axiom,
- ? [W,Z] : ( ! [X, Y] : p(W, Z, X)  | d(Y) )
-  ).
-
-% converted with TPTP2X, otter algorithm
-cnf(combined_1,axiom,
-    ( p(sk1,sk2,A) | d(B) )).
-\end{tptpcode}
+%\begin{tptpcode}
+%fof(simple_exists, axiom,
+% ? [W,Z] :  p(W, Z) | p(a, b)
+%  ).
+%
+%% converted with TPTP2X, otter algorithm
+%cnf(simple_exists_1,axiom,
+%    ( p(sk1,sk2) | p(a,b) )).
+%\end{tptpcode}
+%
+%\begin{tptpcode}
+%fof(simple_for_all, axiom,
+% ! [W,Z] :  p(W, Z) | p(a, b)
+%  ).
+%
+%% converted with TPTP2X, otter algorithm
+%cnf(simple_for_all_1,axiom,
+%    ( p(A,B) | p(a,b) )).
+%\end{tptpcode}
+%
+%\begin{tptpcode}
+%% dla każdego X, Y operacja lesseq, to to samo co less lub równość
+%fof(this_is_obvious, axiom,
+%  ! [X,Y] : ( $lesseq(X,Y) <=> ( $less(X,Y) | X = Y ) )
+%  ).
+%
+%% converted with TPTP2X, otter algorithm
+%cnf(this_is_obvious_1,axiom,
+%    ( ~ $lesseq(A,B) | $less(A,B) | A = B )).
+%
+%cnf(this_is_obvious_2,axiom,
+%    ( ~ $less(A,B) | $lesseq(A,B) )).
+%
+%cnf(this_is_obvious_3,axiom,
+%    ( A != B | $lesseq(A,B) )).
+%\end{tptpcode}
+%
+%\begin{tptpcode}
+%fof(combined, axiom,
+% ? [W,Z] : ( ! [X, Y] : p(W, Z, X)  | d(Y) )
+%  ).
+%
+%% converted with TPTP2X, otter algorithm
+%cnf(combined_1,axiom,
+%    ( p(sk1,sk2,A) | d(B) )).
+%\end{tptpcode}
 
 \subsubsection{Przykład: zdawanie egzaminu}
 
@@ -202,88 +202,69 @@ Zbadane zostaną statystyki proverów ze względu na następujące właściwośc
 \begin{itemize}
   \item SAT type (CNF, FOF)
   \item number of clauses (CNF) - w składni TPTP jest to liczba użytych słów \mintinline{text}{cnf}
-  \item number of atoms - ilość literałów połączonych operatorem \textit{lub}
   \item maximal clause size
-  \item number of predicates - predykat ustanawia n-argumentową relację między argumentami
-  \item number of functors
-  \item number of variables - ilość atomów, które zaczynają się dużą literą. Jeśli zmienna \textit{X} wystąpi w dwóch różnych klauzulach, traktowana jest jako 2 różne zmienne
-  \item maximal term depth
+  \item number of variables
 \end{itemize}
 
-Example in tptp syntax:
 
-\begin{tptpcode}
-% total in this example: 2 clauses, 6 atoms, 4 predicates, 1 functor, 2 variables
-
-% clause: 4 atoms, 4 predicates, 0 functors, 1 variable
-cnf(predicates_examples, axiom,
-  ( 'p 1' % arity 0
-  | p2
-  | 'p 3'(X) % arity 1, variable X
-  | p4(y) % arity 1, fact y
-  )).
-
-% clause: 2 atoms, 1 predicate, 1 functor, 1 variable
-cnf(clause2, negated_conjecture,
-    ( p4(X)
-    | p4(f(X)) % f(X) is a functor
-    )).
-
-\end{tptpcode}
 
 %\begin{figure}[H]
 %  \centering
 %  \includegraphics[scale=0.5]{benchmark/components.png}
 %  \caption{Diagram komponentów systemu benchmarka}
 %\end{figure}
-
+\newpage
 \subsection{InKreSAT}
 
-InKreSAT to zautomatyzowane narzędzie udowadniające dla logiki temporalnej stworzone przez Marka Kaminskiego oraz Tobiasa Tebbi.
+InKreSAT to zautomatyzowane narzędzie udowadniające dla logiki temporalnej stworzone przez Marka Kaminskiego oraz Tobiasa Tebbi. Redukuje podany modalny problem SAT do postaci Booleanowego problemu SAT, który następnie rozwiązuje solverem SAT. InKreSAT optymalizuje wcześniejsze metody wykonując kolejne kroki inkrementacyjnie, czyli co każdy krok pobiera dane z używanego solvera SAT i używa ich do optymalizacji następnego kroku.
 
-InKreSAT dostępny jest jako plik wykonywalny, przyjmuje pliki w formacie \gls{LADR}. Dla uniwersalności zostanie zastosowany konwerter TPTP do LADR dostępny wraz z InKreSAT jako osobny plik wykonywalny. Ilość opcji dostępnych z lini komend jest minimanlna, jedyną ważną opcją z punktu widzenia benchmarka jest \mintinline{text}{-x - set(auto2).  (enhanced auto mode)}
+InKreSAT dostępny jest jako plik wykonywalny, jako argumenty przyjmuje pliki o rozszerzeniu fml. Ilość opcji dostępnych z lini komend jest minimanlna, jedyną ważną opcją z punktu widzenia benchmarka jest \mintinline{text}{-v n  set verbosity level to n (min: 0, default: 1, max: 3)}
 
 \noindent
 Oficjalna strona internetowa \url{https://www.ps.uni-saarland.de/~kaminski/inkresat/}
 
 
-[TO DO]
+
 %\begin{longlisting}
-%  \caption{Przykład pliku wejściowego w składni LADR}
+%  \caption{Przykład pliku wejściowego .fml}
 %  \ladrfile{listings/prover9_example.in}
 %\end{longlisting}
 %
 %\begin{longlisting}
-%  \caption{Przykład wyjścia Provera9}
+%  \caption{Przykład wyjścia InKreSAT}
 %  \inputminted{text}{listings/prover9_example.out}
 %\end{longlisting}
-[/TO DO]
 
+\begin{longlisting}
+  \begin{minted}{text}
+begin
+[](~[]<>p | ~[](~p | []q))
+end
+  \end{minted}
+   \caption{Przykład pliku wejściowego .fml}
+\end{longlisting}
+
+\begin{longlisting}
+
+  \begin{minted}{text}
+variables added: 1
+clauses added: 1
+SAT cycles: 1
+pattern store hits: 0
+pattern store misses: 0
+time: 6.29425048828e-05
+SATISFIABLE
+  \end{minted}
+   \caption{Przykład wyjścia InKreSAT}
+\end{longlisting}
+
+\newpage
 \subsection{Parser} \label{parser}
 
-Zadaniem parsera jest wydobycie dodatkowych informacji statystycznych o przebiegu działana proverów, na podstawie ich wyjścia.
-\newline
-Każdy prover podaje inne dane na wyjściu, dostępne statystyki podane są w tabeli poniżej.
-\newline
-Statystyki zostaną podane w formacie json.
+Zadaniem parsera jest wydobycie dodatkowych informacji statystycznych o przebiegu działana proverów, na podstawie ich wyjścia. Statystyki zostaną podane w formacie json.
 
-\begin{table}[ht]
-  \centering
-  \caption{Dostępne statystyki dla różnych proverów}
-  \begin{tabular}{ |c|c|c| }
-    \hline
-    Prover & SPASS & Prover9 \\
-    \hline
-    SAT spełnialny & dostępny & dostępny \\
-    \hline
-    TODO & & \\
-    \hline
-  \end{tabular}
-\end{table}
 
 \subsection{Użycie i konfiguracja} \label{benchmarkUsage}
-
-Ze względu na mnogośc opcji, większość opcji zawarta jest w pliku konfiguracyjnym \ref{configFile} w formacie \textit{toml}.
 
 Najpierw definiowana jest lista wejść (\tomlcodeinline{testInput}). Wejście to zbiór plików, które można jednoznacznie zidentyfikować za pomocą nazwy (\tomlcodeinline{name}).
 Następnie definiowana jest lista zestawów testowych (\tomlcodeinline{testSuite}). Zestaw testowy definiuje parametry wspólne dla kilku przypadków testowych (\tomlcodeinline{testCase}) np. ścieżka do pliku wykonywalnego. Każdy zestaw testowy posiada listę przypadków testowych. Każdy przypadek testowy definiuje w jakim formacie oczekuje wejście. Jeśli formaty są różne, konflikt jest rozwiązywany przy pomocy dostępnych translatorów. Opcje do testowania są definiowane jako lista. Plik wejściowy może zosać podany przez standardowe wejście, przez opcję lini komend lub jako ostatni argument w komendzie.
@@ -293,7 +274,6 @@ testSuite.executable testSuite.options testSuite.testCase.options [input_after_o
 \end{minted}
 
 \subsubsection{Wspierane funkconalności}
-[TO VERIFY]
 \begin{itemize}
   \item ścieżka do pliku wykonywalnego może być podana w pliku konfiguracyjnym, lub może być zawarta w zmiennyj środowiskowej \mintinline{text}{PATH} (ścieżka w pliku ma pierwszeństwo)
   \item definiowanie opcji linii komend do testowania pliku wykonywalnego
@@ -312,42 +292,6 @@ testSuite.executable testSuite.options testSuite.testCase.options [input_after_o
     \end{itemize}
   \item TODO: wyniki zapisywane są jako plik \textit{json} do katalogu wyściowego zdefiniowanego w pliku konfiguracyjnym.
 \end{itemize}
-
-\subsubsection{Ograniczenia}
-
-\begin{itemize}
-  \item podanie kilku plików wejściowych naraz dla jednej testownej komendy nie jest możliwe, np. \mintinline{text}{-o file1.p -o file2.p}
-\end{itemize}
-
-\begin{longlisting}
-  \caption{Przykład pliku konfiguracyjnego benchmarka}
-  \label{configFile}
-  \tomlfile{benchmark/example_config.toml}
-\end{longlisting}
-
-
-\begin{longlisting}
-  \caption{Przykładowe komendy testowe}
-  \begin{tomlcode}
-# ...
-[[testSuites]]
-executable="ls"
-options=["-1"]
-# ...
-
-[[testSuites.testCases]]
-options=[""]
-# test cases:
-# ls -1
-
-[[testSuites.testCases]]
-options=["", "-r -l"]
-# test cases:
-# ls -1
-# ls -1 -r -l
-  \end{tomlcode}
-\end{longlisting}
-[/TO VERIFY]
 
 \subsection{Diagramy}
 %
@@ -381,6 +325,7 @@ options=["", "-r -l"]
 %  \caption{Diagram aktywnośći}
 %\end{figure}
 
+
 \section{Generator formuł logicznych} \label{LFG}
 
 Losowy generator formuł SAT. Generator może generować formuły \gls{CNF} oraz \gls{k-SAT}. Generator może generować formuły w formacie DIMACS oraz TPTP.
@@ -397,193 +342,21 @@ Losowy generator formuł SAT. Generator może generować formuły \gls{CNF} oraz
 %  \caption{Diagram klas generatora CNF}
 %\end{figure}
 
-\noindent
-Założenia ogólne:
-\begin{itemize}
-  \item na jedną formułę, składa się $w$ niezależnych grup kauzul ($w$ z przedziału $[1, \infty]$). Wygenerowanie jednej grupy klauzul polega na ponownym uruchomieniu generatora z innymi parametrami. Przy czym:
-    \begin{itemize}
-      \item grupa klauzul nie współdzieli zbioru zmiennych
-      \item grupa może posiadać całkowicie inne parametry sterujące
-    \end{itemize}
-  \item po wygenerowaniu, grupa klazul może być wymieszana z inną grupą klauzul. Mieszanie polega na:
-    \begin{itemize}
-      \item utworzeniu nowych klauzul bazując na zmiennych występujących w obu grupach - wprowadza to nowe zależności między istniejącymi już zmiennymi
-    \end{itemize}
-\end{itemize}
-
-\noindent
-Szczegóły implementacyjne:
-\begin{itemize}
-  \item logika generatora (backend) używa ogranieczeń sztywnych. Na przykład, generator zmiennych musi wygenerować \textbf{dokładnie} $n$ zmiennych, generator klauzul musi wygenerować \textbf{dokładnie} $m$ klauzul itp.
-  \item ograniecznia miękkie, tzn. wygeneruj formułę z \textbf{około} $n$ zmiennych i \textbf{około} $m$ klauzul, uzyskiwane są przez wygenerowanie dokładnych warości na frontendzie i uruchomienie generatora z dokładnymi wartościami
-  \item generatory są obiektami tylko do odczytu
-\end{itemize}
-
-\subsection{Generator zmiennych (\textit{VariableGenerator})}
-
-Generator zmiennych ma za zadanie podanie dokładnie $n$ zmiennych, w tym $m$ różnych.
-
-\noindent
-Parametry sterujące:
-
-\begin{itemize}
-  \item nazwa zmiennej
-  \item $m$ - ilość różnych zmiennych
-  \item $n$ - ilość zmiennych do wygenerowania, ilość różnych zmiennych jest mniejsza lub równa ilości zmiennych
-  \item prawdopodobieństwo zanegowania zmiennej
-\end{itemize}
-
-\noindent
-Ograniczenia:
-\begin{enumerate}
-  \item prawdopodobieństwo zanegowania jest z zakresu $[0,1]$
-  \item ilość zmiennych jest większa lub równa niż ilość różnych zmiennych $n>=m$
-\end{enumerate}
-
-\subsection{Generator klauzul (\textit{ClauseGenerator})} \label{ClauseGenerator}
-
-Bazując na zmiennych podanych przez generator zmiennych, generuje dokładnie $k$ klauzul. Generator zmiennych musi zostać całkowicie wyczerpany. Klauzule które pochodzą z jednego generatora, nazywane są grupą klauzul.
-
-\noindent
-Parametry sterujące:
-\begin{itemize}
-  \item generator zmiennych
-  \item ilość klauzuj do wygenerowania
-  \item maksymalny rozmiar klauzuli
-\end{itemize}
-
-\noindent
-Ograniczenia:
-\begin{enumerate}
-  \item na klauzulę przypada co najmniej jedna zmienna
-  \item ilość zmiennych wymaganych przez generator klauzul musi być większa niż ilość zmiennych dostaczanych przez generator zmiennych (cały generator zmiennych musi zostać skonsumowany)
-  \item każdy literał w pojedyńczej kaluzuli jest różny - nie może wystąpić: $(p1 \lor p1) \land (p1 \lor p2)$
-  \item każda klauzula jest różna - nie może wystąpić: $(p1 \lor p2) \land (p1 \lor p2)$
-\end{enumerate}
-
-\subsection{Formuła (\textit{Formula})}
-
-Formuła powstaje w wyniku kilkukrotnego uruchomiania generatora klauzul \ref{ClauseGenerator}. Zbiera ona wszystkie grupy klauzul i umożliwia mieszanie ich.
 
 [TO DO]
-\section{Logika pierwszego rzędu - nazewnictwo w kontekście TPTP}
-
-\textbf{Term}
-to zmienna, stała lub wynik działania funktorów na zmiennych i stałych
-
-\textbf{Atom}
-to wyrażenie logiczne, które nie może zostać rozbite na składowe
-
-% \textbf{Equolity atom}
-
-\textbf{Literał}
-to atom lub jego zaprzeczenie
-
-\textbf{Zmienna}
-to atom, który zaczyna się z dużej litery. Zmienna ma zasięg klauzulu. Tzn. jeśli zmienna $A$ pojawi się w jednej klazuli kilkukrotnie jest to dalej jedna zmienna.
-
-\textbf{Zmienna singletonowa}
-to zmienna użyta tylko raz w klauzuli
-
-\textbf{Unit clause}
-to klauzula, która posiada tylko jeden atom
-
-\textbf{Horn clause}
-to klaulula, która posiada co najmniej jeden pozytywny literał
-
-\textbf{RR clause} - ??
-
-\textbf{Predykat}
-jest to operator logiczny, który zwraca prawdę lub fałsz. Predykat operuje na określonej liczbie termów. Liczba ta jest stała i nazywana argumentowością predykatu (\textit{arity}).
-
-\textbf{Funktor}
-oprator logiczny, który zwraca term. Funktor posiada określoną argumentowość.
-
-\textbf{Constant functor}
-to funktor o argumentowości 0
-
-\textbf{Klauzula}
-jest to zbiór termów połączonych dysjunkcją ($\lor$)
-
-% \textbf{Kwantyfikator} not in scope
-
-\begin{tptpcode}
-% TPTP CNF formula example 1
-cnf(simple_clause_1, axiom,
-    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
- 
-% powyższa formuła składa się z:
-% 1 klauzuli: w tym 0 jednostkowa, 1 Horn
-% 4 literały: [p(f,f), ~p(a,b), p(X, V), pp(X)]
-% 4 atomy: [p(f,f), p(a,b), p(X, V), pp(X)]
-% 2 predykatów: [p, pp] o argumentowości 1: [pp] i 2: [p]
-% 3 funktorów: [f, a, b] o argumentowości 0 - funktory stałe
-% 2 zmiennych: [X, V] w tym 1 zmienna singletonowo
-\end{tptpcode}
-
-\begin{tptpcode}
-% TPTP CNF formula example 2
-cnf(simple_clause_1, axiom,
-    ( p(f,f) | ~p(a,b) | p(X, V) | pp(X) )).
-
-cnf(simple_clause_2, axiom,
-    ( pp(f) | pp(X) )).
-
-cnf(simple_clause_3, axiom,
-    ( ppp )).
-
-% powyższa formuła składa się z:
-% 3 klauzuli, w tym 1 klauzula jednostkowa, 3 Horn
-% 4 literały: [p(f,f), ~p(a,b), p(X, V), pp(X)]
-% 4 atomy: [p(f,f), p(a,b), p(X, V), pp(X)]
-% 3 predykatów: [p, pp, ppp] o argumentowości 0: [ppp], 1: [pp] i 2: [p]
-% 3 funktorów: [f, a, b] o argumentowości 0 - funktory stałe
-% 3 zmiennych: [X, V] w tym 2 zmienne singletonowe
-\end{tptpcode}
-
-\begin{tptpcode}
-% TPTP CNF formula example 3
-cnf(simple_clause_1, axiom,
-    ( p(f,f) | ~p(f,f) )).
-
-% powyższa formuła składa się z:
-% 1 klauzuli, w tym 0 jednowtkowa, 1 Horn
-% 2 literały: [p(f,f), ~p(f,f)]
-% 1 atomy: [p(f,f)]
-% 1 predykatu: [p] o argumentowości 2
-% 1 funktorów: [f] o argumentowości 0 - funktor stały
-% 0 zmiennych
-\end{tptpcode}
-
-\begin{tptpcode}
-% TPTP CNF formula example 4
-cnf(simple_clause_1, axiom,
-    ( p(f,f) | ~p(f,f) )).
-
-cnf(simple_clause_2, axiom,
-    ( ~p(f,f) )).
-
-% powyższa formuła składa się z:
-% 2 klauzuli, w tym 1 jednostkowa, 1 Horn
-% 2 literały: [p(f,f), ~p(f,f)]
-% 1 atomy: [p(f,f)]
-% 1 predykatu: [p] o argumentowości 2
-% 1 funktorów: [f] o argumentowości 0 - funktor stały
-% 0 zmiennych
-\end{tptpcode}
 [/TO DO]
 \newpage
 \section{Zestaw testowy}
 
 
 \noindent
-\textbf{Problem:} Jak ilość atomów wpływa na czas wykonania?
+\textbf{Problem:} Jak ilość zmiennych wpływa na czas wykonania?
 
 Zestaw to formuły CNF różnej długości
 \begin{itemize}
   \item liczba klauzul to 100, 200, 500, 1000, 2500, 5000
-  \item stosunek atomów do klauzul wynosi 2, 3, 4, 5, 10 (2 oznacza, że jeśli liczba klauzul to 100, wtedy liczba atomów to 200)
-  \item maksymalna długość klauzuli to ilość wszystkich zmiennych / ilość klauzul
+  \item stosunek liczby zmiennych do klauzul wynosi 2, 3, 4, 5, 10 (2 oznacza, że jeśli liczba klauzul to 100, wtedy liczba zmiennych to 200)
+%  \item maksymalna długość klauzuli to ilość wszystkich zmiennych / ilość klauzul
 \end{itemize}
 
 \noindent
@@ -599,12 +372,12 @@ Zestaw to formuły CNF różnej długości
 \noindent
 \textbf{Problem:} Jak udział k-SAT i zmiennych wpływa na czas wykonania?
 \newline
-\textbf{Hipoteza:}
-\begin{enumerate}
-  \item obecność co najmniej jednej klauzul k-SAT, gdzie k dąży do 1, sprzyja szybkiemu rozwiązaniu problemu
-  \item obecność co najmniej jednej klauzul k-SAT, gdzie k dąży do $\infty$, znacząco spowalnia rozwiązanie problemu
-  \item im większa obecność klazul z dużym k, tym większy czas wykonywania
-\end{enumerate}
+%\textbf{Hipoteza:}
+%\begin{enumerate}
+%  \item obecność co najmniej jednej klauzul k-SAT, gdzie k dąży do 1, sprzyja szybkiemu rozwiązaniu problemu
+%  \item obecność co najmniej jednej klauzul k-SAT, gdzie k dąży do $\infty$, znacząco spowalnia rozwiązanie problemu
+%  \item im większa obecność klazul z dużym k, tym większy czas wykonywania
+%\end{enumerate}
 
 Zestaw skupia się na k-SAT:
 \begin{itemize}
