@@ -135,17 +135,17 @@ Supervisor: & {\itshape \@supervisor}\\
 
 \clearpage \titlepage
 
-\vspace*{15cm} \vfill
-\begin{flushright} 
-\begin{minipage}[!h]{10cm}
-{\Large\itshape todo acknowledgements}
-\end{minipage}
-\end{flushright}
+% \vspace*{15cm} \vfill
+% \begin{flushright}
+% \begin{minipage}[!h]{10cm}
+% {\Large\itshape todo acknowledgements}
+% \end{minipage}
+% \end{flushright}
 
-\clearpage
-\thispagestyle{empty}
-\vspace*{15cm} \vfill
-\newpage
+% \clearpage
+% \thispagestyle{empty}
+% \vspace*{15cm} \vfill
+% \newpage
 
 \setcounter{page}{4}
 
