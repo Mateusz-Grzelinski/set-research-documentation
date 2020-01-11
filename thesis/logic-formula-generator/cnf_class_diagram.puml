@@ -1,0 +1,67 @@
+@startuml
+
+package "Logic formula generator" {
+ClauseGenerator <|-- VariableLengthClauseGenerator
+ClauseGenerator <|-- KSATClauseGenerator
+VariableGenerator *- ClauseGenerator
+Clause -- ClauseGenerator
+Clause o- Formula
+Formula --* ClauseGenerator
+Variable o- Clause
+Variable -- VariableGenerator
+}
+
+class VariableGenerator {
+		+ name: str
+		+ negate_probability: float = 0.5
+		+ get_total_literals(self): int
+		+ get_unique_literals(self): int
+		+ get_generated_literals(self): int
+		+ get_generated_unique_literals(self): int
+		+ get_literals_left(self): int
+		+ get_unique_literals_left(self): int
+		+ get_random_literal(self): Optional[Literal]
+		+ get_used_literal(self): Optional[Literal]
+		+ get_new_literal(self): Optional[Literal]
+}
+
+abstract class ClauseGenerator {
+		+ variable_gen: VariableGenerator
+		+ get_required_literals(): int
+		+ get_max_clause_size(): int
+		+ get_total_clauses(): int
+		+ get_generated_clauses(): int
+		+ get_clauses_left() : int
+		+ get_new_clause() : Clause
+}
+
+class VariableLengthClauseGenerator {
+	internal logic
+}
+
+class KSATClauseGenerator {
+	internal logic
+}
+
+class Formula {
+	+ clause_groups: Clause[][]
+	+ clause_generators: ClauseGenerator[]
+	+ shuffle(group_indexes: int[],
+	number_of_clauses_to_create: int): void
+}
+
+class Variable {
+		+ name: str
+		+ number: int = 0
+		+ negated: bool = False
+		+ to_dimacs() : string
+		+ to_tptp() : string
+}
+
+class Clause {
+		+ variables: [Variable]
+		+ to_dimacs() : string
+		+ to_tptp() : string
+}
+
+@enduml

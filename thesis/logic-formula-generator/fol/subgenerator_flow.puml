@@ -1,0 +1,56 @@
+@startuml
+skinparam dpi 300
+
+skinparam class {
+  backgroundColor Ivory
+  borderColor DarkRed
+}
+
+package SubGenerators {
+  CNFFormulaGenerator o-- CNFClauseGenerator
+  CNFClauseGenerator o-- LiteralGenerator
+  LiteralGenerator o-- AtomGenerator
+  AtomGenerator o-- Predicategenerator
+  AtomGenerator o-- VariableGenerator
+  AtomGenerator o-- FunctorGenerator
+  Predicategenerator o-- VariableGenerator
+  Predicategenerator o-- FunctorGenerator
+  VariableGenerator -o FunctorGenerator 
+}
+
+class CNFFormulaGenerator {
+	cnf/1
+	cnf/2
+	..
+}
+
+class CNFClauseGenerator {
+	cnf(literal | literal).
+	..
+}
+
+class LiteralGenerator {
+	atom, ~atom
+	..
+}
+
+class AtomGenerator {
+	p, V = V, f != V
+	..
+}
+
+class Predicategenerator {
+	p, p(f), p(V, f)
+	..
+}
+
+class FunctorGenerator {
+	f, f(f), f(V), f(f(f))
+	..
+}
+
+class VariableGenerator {
+	V1, V2
+	..
+}
+@enduml

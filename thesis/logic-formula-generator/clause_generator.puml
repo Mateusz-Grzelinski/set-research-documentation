@@ -1,0 +1,39 @@
+@startuml
+
+floating note: generating single clause
+
+start
+
+:clauses_left = 100
+max_clause_size = 10
+variable_gen = VariableGenerator()
+variable_gen.variables_left = 100;
+note: example values
+
+
+if (clauses_left == 1) then (yes)
+	:next_clause_size = variable_gen.variables_left;
+	note: help generator end
+else (no)
+	:next_clause_size = random.randint(1, max_clause_size);
+
+	:next_clause_size = min(next_clause_size, variable_gen.variables_left - clauses_left + 1);
+	note: there must be at least one variable per clause
+
+	:max_variables_consumed_by_remaining_clauses = (clauses_left - 1) * max_clause_size;
+	if (variable_gen.variables_left - next_clause_size > max_variables_consumed_by_remaining_clauses) then (yes)
+		:next_clause_size = variable_gen.variables_left - max_variables_consumed_by_remaining_clauses;
+		note: there are too many variables left for remaining clauses
+	endif
+endif
+
+:clause = [];
+while (next_clause_size != 0)
+	:clause.append(variable_gen.random_varaible);
+	:next_clause_size--;
+endwhile
+:return clause;
+
+stop
+
+@enduml

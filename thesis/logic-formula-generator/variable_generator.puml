@@ -1,0 +1,27 @@
+@startuml
+
+floating note: generating random_variable
+
+start
+
+if (generated_variables == 0) then (yes)
+	:return get_new_variable();
+	note: there are no variables generated yet
+elseif (unique_variables_left == variables_left) then (yes)
+	:return get_new_variable();
+	note: force generating new variables to meet requirement,\nthat generator generated **n** unique variables
+elseif (unique_variables_left != 0) then (yes)
+	if (random_bool()) then (true)
+		:return get_used_variable();
+	else
+		:return get_new_variable();
+	endif
+elseif (variables_left != 0) then (yes)
+	:return get_used_variable();
+else
+	:return None;
+endif
+
+stop
+
+@enduml
