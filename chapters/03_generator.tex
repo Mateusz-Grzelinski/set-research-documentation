@@ -153,7 +153,7 @@ After passing arguments to appropriate subgenerators, there are still 2 left: nu
 \end{figure}
 
 \subsection{Randomizing formula within limits}
-\label{sec:RandomizeFormula}
+\label{sec:RandomizeFormulaWithinLimits}
 
 In order to compute number of clauses with appropriate clause length, CNF formula must be formalized to create relationship between $NumberOfClauses$ and $NumberOfLiterals$.
 First, define CNF formula $F_{cnf}$ as set of unordered clauses $c_1, c_2, \dots, c_n$. Computing number of clauses with this definition is trivial, but computing number of literals is not.
@@ -184,7 +184,7 @@ The unknown variables are $|c^m|$ - the number of clauses with length $m$. After
 
 \subsection{Using Z3 to resolve user constraints}
 
-Z3 \cite{Z3Solver} is a \gls{SMT} prover from Microsoft Research. It uses SMT-LIB as input format, but also has bindings to multiple languages. It can be used to solve user constraints presented in~\ref{sec:RandomizeFormula}. Z3 supports integer arithmetic what is essential for solving user constraints.
+Z3 \cite{Z3Solver} is a \gls{SMT} prover from Microsoft Research. It uses SMT-LIB as input format, but also has bindings to multiple languages. It can be used to solve user constraints presented in~\ref{sec:RandomizeFormulaWithinLimits}. Z3 supports integer arithmetic what is essential for solving user constraints.
 
 Solving equation is implemented as class $CNFConstraintSolver$ (picture~\ref{pic:cnf_generator_class_diagram}). Parameter $ClauseLengths$ corresponds to equation~\ref{eq:UserConstraintsLx}, parameter $NumberOfLiterals$ corresponds to range of allowed values of literals - tuple of minimal and maximum range - (equation~\ref{eq:UserConstraintsRangeL}), parameter $NumberOfClauses$ corresponds number of allowed values of clause - tuple of minimal and maximum range - (equation~\ref{eq:UserConstraintsRangeC}). The set of variables $x_i$ will be returned from method $solve()$ as dictionary, where key is $m$ (clause length) and value is how many clauses are needed.
 
@@ -258,6 +258,27 @@ Fundamental problem of using SAT (or SMT) solver in this scenario when any, rand
 \label{sec:GenerateStatisticsAboutFormula}
 
 After generating formula it needs to be encoded and optionally statistics can be generate. Those two things are done with visitor pattern. As input $Exporter$ receives only $CNFFormula$, as shown in picture \ref{pic:FormulaExportUtils}. First statistics are generated - $CNFFormula$ is passed to $CNFFormulaVisitor$ the result is provided as $CNFFormulaInfo$. Then $CNFFormula$ and $CNFFormulaInfo$ is handled by $TPTPExporter$ where again it is used with visitor pattern to encode formula in TPTP format. Additionally $CNFFormulaInfo$ is used to create unique to TPTP header (see for example listing \ref{lis:TPTPExample}).
+
+\begin{listing}[h]
+  \caption{Example of generated formula (limited)}
+\begin{tptpcode}
+% ----------------------------------------------------------------------------
+% File      : 0.p 
+% Syntax    : Number of clauses     :   95 ( 95 non-Horn;   0 unit;   - RR)
+%             Number of atoms       :  950 (  0 equality)
+%             Maximal clause size   :   10 ( 10 average)
+%             Number of predicates  :   20 (206 propositional; 0-4 arity)
+%             Number of functors    :   20 (940 constant;   0 arity)
+%             Number of variables   :  943 (327 singleton)
+%             Maximal term depth    :    0 (  - average)
+% 
+% ----------------------------------------------------------------------------
+cnf(name,axiom,p4(V6)|p10(V1, V4, V9)|~p7|p17|p1(V4, V3, V9)|p7|p17|p1(f11, f11, f5)|p7|~p0(f2)).
+cnf(name,axiom,p2(V7, V9)|p4(f19)|p2(f8, f5)|p10(f7, f8, f8)|p12|p6(V2, V6)|p14(f8, f16, f9, f16)|p3(f14, f3, f14, f18)|p11(V3, V9)|p12).
+...
+\end{tptpcode}
+  \label{lis:TPTPExample}
+\end{listing}
 
 \begin{figure}[h]
 \begin{centering}

@@ -10,7 +10,6 @@ package SubGenerators {
   Predicategenerator <-- SafetyLivenessPredicateGenerator
 }
 package GeneratorPresets {
-  Generators -* CNFSafetyLivenessGenerator
   CNFSafetyLivenessGenerator *-- ConstraintSolver
 }
 SubGenerators -- GeneratorPresets

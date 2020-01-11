@@ -35,7 +35,7 @@ Every \gls{FOL} can be converted to \gls{CNF}, so system properties can be also 
 \end{itemize}
 
 
-Elevator example converted to quantifier free form looks as follows\footnote{removing quantifiers from first order logic can be automated with TPTP utility using TPTP2X utility, option \mintinline{text}{-t clausify:quaife}~\ref{sub:AdditionalToolsInTPTPLibrary} }::
+Elevator example converted to quantifier free form looks as follows\footnote{removing quantifiers from first order logic can be automated with TPTP utility using TPTP2X utility, option \mintinline{text}{-t clausify}~\ref{sub:AdditionalToolsInTPTPLibrary} }::
 \begin{itemize}
   \item "Elevator will eventually stop" $\exists_t e(t)$ in quantifier free form: $e(f)$ - new constant functor $f$ replaced variable $t$
   \item "Elevator must never run when the door is open" $\forall_t \neg e(t) \land d(t)$ in quantifier free form: $\neg e(X) \land d(Y)$ - 2 new variables $X$ and $Y$ replaced variable $t$ bounded to universal quantifier
@@ -45,25 +45,18 @@ In conclusion safety and liveness can be represented in CNF as 2 form of predica
 
 \section{Dataset with system properties}
 
-The goal is to generate liveness and safety clauses, but do not mix them. In order to achieve that, class $PredicateGenerator$ needs to be modified to yield either formulas with all variables (safety) or formulas with 0-arity functor (liveness). To achieve that $PredicateGenerator$ was subclassed and used to create alternative version of $CNFFormulaGenerator$.
+The goal is to generate liveness and safety clauses, but do not mix them. In order to achieve that, class $PredicateGenerator$ needs to be modified to yield either formulas with all variables (safety) or formulas with 0-arity functor (liveness). To achieve that $PredicateGenerator$ was subclassed (see picture \ref{pic:SafetyLivenessGeneratorPreset}) and used to create alternative version of $CNFFormulaGenerator$. To control functors parameter $functor_arity$ needs to be set to allow only 0-arity functors, $FunctorGenerator$ subgenerator doe not need to be modified. Using newly defined $SafetyLivenessPredicateGenerator$ new preset is defined: $CNFSafetyLivenessGenerator$.
 
-\begin{figure}[H]
+\begin{figure}[h]
 \begin{centering}
   \includegraphics[width=\textwidth]{logic-formula-generator/fol/safety_liveness_predicate_generator.png}
   \caption{Subclassed PredicateGenerator mimics safety and liveness formulas}
+  \label{pic:SafetyLivenessGeneratorPreset}
 \end{centering}
 \end{figure}
 
 In this study the impact of ratio of number of atoms to number of clauses will be presented.
 Formulas with 1000 atoms and 100, 200, 300, 400, 500 clauses were generated, 50 for each combination, 250 in total. 50 formulas is rather small sample to reason about, but it was chosen because of time and hardware limitations. Number of atoms and number of clauses can vary within 5\%, although solver tends to yield small numbers first in general. The rest of parameters for formulas is shown in listing~\ref{lis:CNFSafetyLivenesSnippet}.
-
-\subsection{Results}
-
-Formulas were generated and were benchmarked against solvers Prover9 and SPASS. Results are shown in picture~\ref{pic:SPASSProverNumberOfClauses} and~\ref{pic:SPASSProverMemory}. Maximum execution time of single formula was trimmed at 300 seconds. 
-
-First thing worth noting is SPASS solver is capable of solving much more formulas than Prover9. SPASS uses somewhat constant memory whereas Prover9 requires more memory the longer it runs.
-
-It can be said that formulas with ratio atoms to clauses below 4 can be considered easy, as all of them were solved by both solvers.
 
 \begin{listing}[ht]
   \caption{Snippet for generating dataset of safety and liveness formulas}
@@ -83,109 +76,56 @@ gen = CNFSafetyLivenessGenerator(
 \end{minted}
 \end{listing}
 
-\begin{listing}[H]
-  \caption{Example of generated formula (limited)}
-\begin{tptpcode}
-% ----------------------------------------------------------------------------
-% File      : 0.p 
-% Syntax    : Number of clauses     :   95 ( 95 non-Horn;   0 unit;   - RR)
-%             Number of atoms       :  950 (  0 equality)
-%             Maximal clause size   :   10 ( 10 average)
-%             Number of predicates  :   20 (206 propositional; 0-4 arity)
-%             Number of functors    :   20 (940 constant;   0 arity)
-%             Number of variables   :  943 (327 singleton)
-%             Maximal term depth    :    0 (  - average)
-% 
-% ----------------------------------------------------------------------------
-cnf(name,axiom,p4(V6)|p10(V1, V4, V9)|~p7|p17|p1(V4, V3, V9)|p7|p17|p1(f11, f11, f5)|p7|~p0(f2)).
-cnf(name,axiom,p2(V7, V9)|p4(f19)|p2(f8, f5)|p10(f7, f8, f8)|p12|p6(V2, V6)|p14(f8, f16, f9, f16)|p3(f14, f3, f14, f18)|p11(V3, V9)|p12).
-...
-\end{tptpcode}
-  \label{lis:TPTPExample}
-\end{listing}
+\section{Results}
 
-\newpage
+Formulas were generated and were benchmarked against solvers Prover9 and SPASS. Following charts present results in similar manner: on each chart there are 2 graphs: orange bar graph represents atom to clause ratio (2 means there are 2 atom for each clause) and blue scatter chart represents measured value: either time of execution (in seconds) or peak memory usage during execution. Maximum execution time of single formula was trimmed at 300 seconds (it remains unknown if formula is satisfiable or unsatisfiable). If execution time of formula is less than 300 seconds, it means it that solver concluded if formula is satisfiable or unsatisfiable, it is not relevant which one.
 
-\begin{figure}[H]
-\centering
-  \begin{subfigure}{0.8\textwidth}
-\centering
-  \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/01 Prover9 number of clauses vs time".jpg}
-  \label{pic:benchmark_results}
-  \end{subfigure}
+First thing worth noticing based on picture \ref{pic:Prover9NumberOfClausesVsTime} and \ref{pic:SPASSNumberOfClausesVsTime} is SPASS solver is capable of solving much more formulas than Prover9. SPASS returned only 5 timeouts which compared to Prover9 56 timeouts out of 250 test cases works to the advantage of SPASS over Prover9 in tested area. This difference is beyond measurement error even though generated formulas are random. 
 
-  \begin{subfigure}{\textwidth}
-\centering
-  \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/11 SPASS number of clauses vs time".jpg}
-  \end{subfigure}
-  \caption{On left axis time of execution is presented (300s is max), marked with blue. On right axis ratio clauses to atoms is presented. Ratio 2 means there are 2 atoms for each clause}
-  \label{pic:SPASSProverNumberOfClauses}
+SPASS to a certain extent uses constant memory (picture \ref{pic:SPASSNumberOfClausesVsMemory}) whereas Prover9 (picture \ref{pic:Prover9NumberOfClausesVsMemory}) requires notably more memory the longer it runs. Memory range used by SPASS varies between 56 Mb and 83 Mb, whereas Prover9 uses much wider range of memory - between 2 Mb up to 555 Mb.
+
+The most important observation based on picture \ref{pic:Prover9NumberOfClausesVsTime} and \ref{pic:SPASSNumberOfClausesVsTime} is the higher the atoms/clauses ratio the longer the time of execution is thus timeouts are more frequent. The turning point of this observation seems to occur around atoms/clauses ratio equal to 5, at least for Prover9, as at this point more and more timeouts happen. This observation for SPASS might not so viable as this there are only 5 timeouts and the rest of formulas were computed in similar time (243 formulas in less than 1 second) therefore result can be considered a coincidence as dataset is random. We can get more hints of the same conclusion for SPASS as we have for Prover9 from memory charts in picture \ref{pic:SPASSNumberOfClausesVsMemory} where visibly for higher atoms/clauses ratio more than average of 60 Mb of memory is used, and for the lower ratio memory usage drops slightly below the average.
+
+The range of number of atoms was specified in input parameters for generator and is presented in picture \ref{pic:Prover9NumberOfAtomsVsTime} and \ref{pic:Prover9NumberOfAtomsVsTimeSortedByAtoms}. The influence of number of atoms threshold of 5\% is insignificant to the influence of atoms/clauses ratio.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/01 Prover9 number of clauses vs time".jpg}
+  \caption{Prover9 number of clauses vs time, formulas are sorted by number of clauses}
+  \label{pic:Prover9NumberOfClausesVsTime}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-  \begin{subfigure}{0.8\textwidth}
-\centering
-  \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/02 Prover9 number of clauses vs peak memory".jpg}
-  \label{pic:benchmark_results}
-  \end{subfigure}
-
-  \begin{subfigure}{\textwidth}
-\centering
-\includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/12 SPASS number of clauses vs peak memory".jpg}
-  \end{subfigure}
-  \caption{On left axis peak RAM memory is presented, marked with blue. On right axis ratio clauses to atoms is presented. Ratio 2 means there are 2 atoms for each clause}
-  \label{pic:SPASSProverMemory}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/11 SPASS number of clauses vs time".jpg}
+  \caption{SPASS number of clauses vs time, formulas are sorted by number of clauses}
+  \label{pic:SPASSNumberOfClausesVsTime}
 \end{figure}
 
-% \section{Modified dataset}
-%
-% TODO
-%
-% \begin{figure}[H]
-% \begin{centering}
-%   \includegraphics[width=\textwidth]{"logic-formula-generator/fol/safety_liveness_predicate_generator_1_in_10".png}
-%   \caption{Subclassed PredicateGenerator mimics safety and liveness formulas}
-% \end{centering}
-% \end{figure}
-%
-% \subsection{Results}
-%
-% TODO
-%
-% Charts are only placeholders:
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/02 Prover9 number of clauses vs peak memory".jpg}
+  \caption{Prover9 number of clauses vs peak memory, formulas are sorted by number of clauses}
+  \label{pic:Prover9NumberOfClausesVsMemory}
+\end{figure}
 
-% \newpage
-%
-% \begin{figure}[H]
-% \centering
-%   \begin{subfigure}{0.8\textwidth}
-% \centering
-%   \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/01 Prover9 number of clauses vs time".jpg}
-%   % \label{pic:}
-%   \end{subfigure}
-%
-%   \begin{subfigure}{\textwidth}
-% \centering
-%   \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/11 SPASS number of clauses vs time".jpg}
-%   \end{subfigure}
-%   \caption{On left axis time of execution is presented (300s is max), marked with blue. On right axis ratio clauses to atoms is presented. Ratio 2 means there are 2 atoms for each clause}
-%   % \label{pic:}
-% \end{figure}
-%
-% \begin{figure}[H]
-% \centering
-%   \begin{subfigure}{0.8\textwidth}
-% \centering
-%   \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/02 Prover9 number of clauses vs peak memory".jpg}
-%   % \label{pic:}
-%   \end{subfigure}
-%
-%   \begin{subfigure}{\textwidth}
-% \centering
-% \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/12 SPASS number of clauses vs peak memory".jpg}
-%   \end{subfigure}
-%   \caption{On left axis peak RAM memory is presented, marked with blue. On right axis ratio clauses to atoms is presented. Ratio 2 means there are 2 atoms for each clause}
-%   % \label{pic:}
-% \end{figure}
-%
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/12 SPASS number of clauses vs peak memory".jpg}
+  \caption{SPASS number of clauses vs peak memory, formulas are sorted by number of clauses}
+  \label{pic:SPASSNumberOfClausesVsMemory}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/03 Prover9 number of atoms vs time".jpg}
+  \caption{Prover9 number of atoms vs time of execution, formulas are sorted by number of clauses}
+  \label{pic:Prover9NumberOfAtomsVsTime}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/03 Prover9 number of atoms vs time sorted by atoms".jpg}
+  \caption{Prover9 number of atoms vs time of execution, formulas are sorted by number of atoms}
+  \label{pic:Prover9NumberOfAtomsVsTimeSortedByAtoms}
+\end{figure}
