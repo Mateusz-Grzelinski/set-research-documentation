@@ -73,13 +73,34 @@ The following \gls{FOL} example contains 1 existential quantifier, 2 variables $
 
 \section{Normal forms}
 
-Representing logic formula in one of normal forms sometimes can enable new or shorter reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form (CNF)}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other example of normal form is \gls{DNF} where formula is disjunction of conjunctions. Skolem normal form is often used in provers as it is a quantifier-free formula in conjunctive normal form known.
+Representing logic formula in one of normal forms sometimes can enable new or shorter reasoning not available otherwise. One of normal forms mentioned in this thesis is \textbf{conjunctive normal form (CNF)}. It is a conjunction of one or more clauses, where a clause is a disjunction of literals. Other example of normal form is \gls{DNF} where formula is disjunction of conjunctions. Skolem normal form is often used in provers as it is a quantifier-free formula in conjunctive normal form.
 
-The focus of this thesis is conjunctive normal form as it is one of the most basic forms that represent logical formulas and any statement in \gls{FOL} can be converted to CNF.
+The focus of this thesis is conjunctive normal form as it is one of the most basic forms that represent logical formulas and any statement in \gls{FOL} can be converted to CNF. CNF is also a very comfortable tool for expressing system requirements and system properties. 
+Statements connected with "and" statements are natural form of expressing requirements in natural laguage.
 
 \section{Formats used for representing formulas}
 
-There are many formats that allow representing logic, a few of them are described in this section. Many provers implement its own language for representing logic formulas like prover9\footnote{Prover9 is an automated theorem prover for first-order and equational logic \cite{prover9-mace4}} what creates technical problems of comparability between solvers. In this thesis a standard called \gls{TPTP} will be used to represent first order logic formulas.
+There are many formats that allow representing logic, a few of them are described in this section. Many provers implement its own language for representing logic formulas like Prover9 what creates technical problems of comparability between solvers. In this thesis a standard called \gls{TPTP} will be used to represent first order logic formulas. 
+
+To give a context just how complex issue of compatible formats can be, lets examine mentioned provers: Z3, Prover9 and SPASS (see table \ref{tab:FormulaSyntaxVsProver}). Z3 has the best support for format called SMT-LIB. Tutorials on official Z3 website show examples in this syntax. Z3 also provides built in support for TPTP as input format, but can also display proof in DIMACS format in some situations (even thought DIMACS is used for propositional logic). Prover9 operates only on format provided by library called LADR - it is developed specifically for Prover9. SPASS has native supports for formats TPTP and a custom one, which based on yet another syntax. 
+
+Because of this complexity, many translators has been created. TPTP2X utility can convert TPTP syntax to 14 different and library LADR also has some tools dedicated to translation.
+
+\begin{table}[]
+  \begin{tabularx}{\textwidth}{|X|X|X|X|}
+    \hline
+    \diagbox[width=9em]{Formula\\syntax}{Prover}
+                           & \thead{Z3}                & \thead{Prover9} & \thead{SPASS (prover)}  \\ \hline
+    \thead{SMT-LIB}        & supported as input format & not supported & not supported              \\ \hline
+    \thead{TPTP}           & supported as input format & not supported & supported as input format \\ \hline
+    \thead{DIMACS}         & proof can be \newline displayed in DIMACS & not supported & not supported              \\ \hline
+    \thead{LADR}           & not supported  & supported as input format & not supported              \\ \hline
+    \thead{SPASS (syntax)} & not supported  & not supported               & supported as input format              \\ \hline
+  \end{tabularx}
+  \caption{Correlations between formula syntax and solver. Comparison includes only native support for syntax, without use of any translators.}
+  \label{tab:FormulaSyntaxVsProver}
+\end{table}
+
 
 \subsection{DIMACS}
 \label{sec:DIMACS}

@@ -1,4 +1,5 @@
 \chapter{Overview of existing benchmark solutions}
+\label{chap:ExistingBenchmarkSolutions}
 
 There are number projects that provide input formulas for solvers, in order to test their performance. The majority of them provide pregereneted files grouped in categories, some of them hosts websites with problem (and optionally solutions) database and very few of them generate input formulas on demand. A selection of different benchmark solutions is described in this chapter.
 
@@ -61,7 +62,7 @@ None of mentioned existing solutions are able to produce random first order logi
 
 
 
-\chapter{Random first order logic formula generator - architecture}
+\chapter{Architecture of FOL formula generator}
 \label{chap:GeneratorArchitecture}
 
 There are 2 parts that together create generator. The main part is $Generator$ (picture \ref{pic:GeneratorOverview}) which is responsible for creating random formula itself and $ExportUtils$ (picture \ref{pic:ExportOverview}) is complementary package responsible encoding formula to \gls{TPTP} format and counting statistics.
@@ -183,6 +184,7 @@ The unknown variables are $|c^m|$ - the number of clauses with length $m$. After
 \end{align}
 
 \subsection{Using Z3 to resolve user constraints}
+\label{sec:Z3}
 
 Z3 \cite{Z3Solver} is a \gls{SMT} prover from Microsoft Research. It uses SMT-LIB as input format, but also has bindings to multiple languages. It can be used to solve user constraints presented in~\ref{sec:RandomizeFormulaWithinLimits}. Z3 supports integer arithmetic what is essential for solving user constraints.
 

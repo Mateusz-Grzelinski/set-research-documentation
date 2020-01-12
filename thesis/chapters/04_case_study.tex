@@ -1,4 +1,5 @@
-\chapter{Generating random system properties}
+\chapter{Generating system properties}
+\label{chap:GeneratingSystemProperties}
 
 One of the uses of random \gls{FOL} can be to generate random formula that represent system properties. That formula can be used as input for benchmark.
 
@@ -76,56 +77,74 @@ gen = CNFSafetyLivenessGenerator(
 \end{minted}
 \end{listing}
 
-\section{Results}
+\section{Used solvers and results}
+\label{sec:SolversAndResults}
 
-Formulas were generated and were benchmarked against solvers Prover9 and SPASS. Following charts present results in similar manner: on each chart there are 2 graphs: orange bar graph represents atom to clause ratio (2 means there are 2 atom for each clause) and blue scatter chart represents measured value: either time of execution (in seconds) or peak memory usage during execution. Maximum execution time of single formula was trimmed at 300 seconds (it remains unknown if formula is satisfiable or unsatisfiable). If execution time of formula is less than 300 seconds, it means it that solver concluded if formula is satisfiable or unsatisfiable, it is not relevant which one.
+Formulas were generated and were benchmarked against solvers Prover9 and SPASS.
+
+\subsection{Prover9}
+\label{sec:Prover9}
+
+Prover9 \cite{prover9-mace4} is an automated theorem prover for first-order and equational logic. Prover9 ships with library called LADR which also defines its formula input syntax. Prover9 has a fully automatic mode in which the user simply gives it formulas representing the problem, but it also has command line options to modify reasoning process. Along Prover9 there is program called Mace4 which looks for finite models and counterexamples. Finding counterexample helps avoid wasting time searching for a proof.
+
+\subsection{SPASS}
+\label{sec:SPASS}
+
+SPASS is an automated theorem prover for full sorted first order logic with equality. SPASS accepts formulas in TPTP format or a custom one. SPASS has a number of command line options which affect reasoning process.
+There are also number project based on SPASS: TSPASS -- SPASS prover which operates in temporal logic, SPASS-SATT -- solver for ground linear arithmetic, SPASS-IQ -- linear arithmetic solver.
+
+\subsection{Results}
+\label{sec:Results}
+
+Following charts present results in similar manner: on each chart there are 2 graphs: orange bar graph represents atom to clause ratio (2 means there are 2 atom for each clause) and blue scatter chart represents measured value: either time of execution (in seconds) or peak memory usage during execution. Maximum execution time of single formula was trimmed at 300 seconds (it remains unknown if formula is satisfiable or unsatisfiable). If execution time of formula is less than 300 seconds, it means it that solver concluded if formula is satisfiable or unsatisfiable, it is not relevant which one.
 
 First thing worth noticing based on picture \ref{pic:Prover9NumberOfClausesVsTime} and \ref{pic:SPASSNumberOfClausesVsTime} is SPASS solver is capable of solving much more formulas than Prover9. SPASS returned only 5 timeouts which compared to Prover9 56 timeouts out of 250 test cases works to the advantage of SPASS over Prover9 in tested area. This difference is beyond measurement error even though generated formulas are random. 
 
 SPASS to a certain extent uses constant memory (picture \ref{pic:SPASSNumberOfClausesVsMemory}) whereas Prover9 (picture \ref{pic:Prover9NumberOfClausesVsMemory}) requires notably more memory the longer it runs. Memory range used by SPASS varies between 56 Mb and 83 Mb, whereas Prover9 uses much wider range of memory - between 2 Mb up to 555 Mb.
 
 The most important observation based on picture \ref{pic:Prover9NumberOfClausesVsTime} and \ref{pic:SPASSNumberOfClausesVsTime} is the higher the atoms/clauses ratio the longer the time of execution is thus timeouts are more frequent. The turning point of this observation seems to occur around atoms/clauses ratio equal to 5, at least for Prover9, as at this point more and more timeouts happen. This observation for SPASS might not so viable as this there are only 5 timeouts and the rest of formulas were computed in similar time (243 formulas in less than 1 second) therefore result can be considered a coincidence as dataset is random. We can get more hints of the same conclusion for SPASS as we have for Prover9 from memory charts in picture \ref{pic:SPASSNumberOfClausesVsMemory} where visibly for higher atoms/clauses ratio more than average of 60 Mb of memory is used, and for the lower ratio memory usage drops slightly below the average.
+In other words it can be said, that for the constaint number of atoms, formulas with more clauses are solved quicker.
 
 The range of number of atoms was specified in input parameters for generator and is presented in picture \ref{pic:Prover9NumberOfAtomsVsTime} and \ref{pic:Prover9NumberOfAtomsVsTimeSortedByAtoms}. The influence of number of atoms threshold of 5\% is insignificant to the influence of atoms/clauses ratio.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/01 Prover9 number of clauses vs time".jpg}
-  \caption{Prover9 number of clauses vs time, formulas are sorted by number of clauses}
+  \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/01 Prover9 number of clauses vs time".jpg}
+  \caption{Prover9 number of clauses vs time, formulas are sorted by number of clauses. Orange bar graph represents atom to clause ratio (2 means there are 2 atom for each clause) and blue scatter chart represents time of execution. After 300 seconds computations were terimated, without result.}
   \label{pic:Prover9NumberOfClausesVsTime}
 \end{figure}
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/11 SPASS number of clauses vs time".jpg}
-  \caption{SPASS number of clauses vs time, formulas are sorted by number of clauses}
+  \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/11 SPASS number of clauses vs time".jpg}
+  \caption{SPASS number of clauses vs time, formulas are sorted by number of clauses. Orange bar graph represents atom to clause ratio (2 means there are 2 atom for each clause) and blue scatter chart represents time of execution. After 300 seconds computations were terimated, without result.}
   \label{pic:SPASSNumberOfClausesVsTime}
 \end{figure}
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.7\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/02 Prover9 number of clauses vs peak memory".jpg}
-  \caption{Prover9 number of clauses vs peak memory, formulas are sorted by number of clauses}
+  \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/02 Prover9 number of clauses vs peak memory".jpg}
+  \caption{Prover9 number of clauses vs peak memory, formulas are sorted by number of clauses. Orange bar graph represents atom to clause ratio (2 means there are 2 atom for each clause) and blue scatter chart represents peak mmeory usage.}
   \label{pic:Prover9NumberOfClausesVsMemory}
 \end{figure}
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.7\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/12 SPASS number of clauses vs peak memory".jpg}
-  \caption{SPASS number of clauses vs peak memory, formulas are sorted by number of clauses}
+  \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/12 SPASS number of clauses vs peak memory".jpg}
+  \caption{SPASS number of clauses vs peak memory, formulas are sorted by number of clauses. Orange bar graph represents atom to clause ratio (2 means there are 2 atom for each clause) and blue scatter chart represents peak mmeory usage.}
   \label{pic:SPASSNumberOfClausesVsMemory}
 \end{figure}
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.7\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/03 Prover9 number of atoms vs time".jpg}
-  \caption{Prover9 number of atoms vs time of execution, formulas are sorted by number of clauses}
+  \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/03 Prover9 number of atoms vs time".jpg}
+  \caption{Prover9 number of atoms vs time of execution, formulas are sorted by number of clauses. Orange bar graph represents atom to clause ratio (2 means there are 2 atom for each clause) and blue scatter chart represents time of execution. After 300 seconds computations were terimated, without result.}
   \label{pic:Prover9NumberOfAtomsVsTime}
 \end{figure}
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.7\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/03 Prover9 number of atoms vs time sorted by atoms".jpg}
-  \caption{Prover9 number of atoms vs time of execution, formulas are sorted by number of atoms}
+  \includegraphics[width=\textwidth]{"logic-formula-generator/dataset_analysis/cnf charts/03 Prover9 number of atoms vs time sorted by atoms".jpg}
+  \caption{Prover9 number of atoms vs time of execution, formulas are sorted by number of atoms. Orange bar graph represents atom to clause ratio (2 means there are 2 atom for each clause) and blue scatter chart represents time of execution. After 300 seconds computations were terimated, without result.}
   \label{pic:Prover9NumberOfAtomsVsTimeSortedByAtoms}
 \end{figure}
