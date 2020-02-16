@@ -98,88 +98,15 @@ Celem projektu jest zbadanie wydajności automatyczych metod dowodzenia twierdze
 
 Prover traktowany jest jako czarna skrzynka (blackbox), jego parametry są modyfikowane z poziomu linii komend.
 
+\subsection{Logika temporalna}
+
 \subsection{Żywotność i bezpieczeństwo formuł}
 
 \textbf{Żywotność} systemu to cecha, która zapewnia, że coś dobrego na pewno w końcu się wydarzy. Formuła żywotnościowa gwarantuje, że istnieje co najmniej jedno wydarzenie, dla którego formuła będzie spełniona.
 
 \textbf{Bezpieczeństwo} systemu to cecha, która zapewnia, że nic złego nigdy się nie stanie. Formuła bezpieczeństwa gwarantuje, że dla każdego wydarzenia, formuła bezpieczeństwa nigdy nie zostanie pogwałcona.
 
-Żywotność oraz bezpieczeństwo mogą zostać wyrażone na przykład w postaci formuły logicznej logiki temporalnej, czyli problemu SAT. Logika temporalna umożliwiająca rozważanie zależności czasowych bez wprowadzania czasu explicite. Operatory czasu logiki temporalnej to:
-\begin{itemize}
-  \item \mintinline{text}{[]p} - p jest spełnione we wszystkich stanach (zawsze)
-  \item \mintinline{text}{<>p} - p jest spełnione przynajmniej w jednym stanie (kiedyś)
-  \item \mintinline{text}{()p} - p jest spełnione w stanie następnym po stanie odniesienia (następny)
-  \item \mintinline{text}{pUq} - p jest spełnione dopóki nie jest spełnione q (dopóki)
-
-%\begin{tptpcode}
-%fof(simple_exists, axiom,
-% ? [W,Z] :  p(W, Z) | p(a, b)
-%  ).
-%
-%% converted with TPTP2X, otter algorithm
-%cnf(simple_exists_1,axiom,
-%    ( p(sk1,sk2) | p(a,b) )).
-%\end{tptpcode}
-%
-%\begin{tptpcode}
-%fof(simple_for_all, axiom,
-% ! [W,Z] :  p(W, Z) | p(a, b)
-%  ).
-%
-%% converted with TPTP2X, otter algorithm
-%cnf(simple_for_all_1,axiom,
-%    ( p(A,B) | p(a,b) )).
-%\end{tptpcode}
-%
-%\begin{tptpcode}
-%% dla każdego X, Y operacja lesseq, to to samo co less lub równość
-%fof(this_is_obvious, axiom,
-%  ! [X,Y] : ( $lesseq(X,Y) <=> ( $less(X,Y) | X = Y ) )
-%  ).
-%
-%% converted with TPTP2X, otter algorithm
-%cnf(this_is_obvious_1,axiom,
-%    ( ~ $lesseq(A,B) | $less(A,B) | A = B )).
-%
-%cnf(this_is_obvious_2,axiom,
-%    ( ~ $less(A,B) | $lesseq(A,B) )).
-%
-%cnf(this_is_obvious_3,axiom,
-%    ( A != B | $lesseq(A,B) )).
-%\end{tptpcode}
-%
-%\begin{tptpcode}
-%fof(combined, axiom,
-% ? [W,Z] : ( ! [X, Y] : p(W, Z, X)  | d(Y) )
-%  ).
-%
-%% converted with TPTP2X, otter algorithm
-%cnf(combined_1,axiom,
-%    ( p(sk1,sk2,A) | d(B) )).
-%\end{tptpcode}
-
-\subsubsection{Przykład: zdawanie egzaminu}
-
-\noindent
-Problem: zalicz egzamin, aby zdać kurs
-
-\noindent
-Warunek bezpieczeństwa: jeżeli podejmujesz się egzaminu, zalicz go
-
-\noindent
-Warunek żywotnościowy: kiedyś musisz podejść do egzaminu
-
-\subsubsection{Przykład: światła na skrzyżowaniu}
-
-\noindent
-Problem: samochody chcą przejechać przez skrzyżowanie
-
-\noindent
-Warunek bezpieczeństwa: tylko jedno światło powinno być zielone
-
-\noindent
-Warunek żywotnościowy: każde światło powinno kiedyć zmienić się na zielone
-
+Żywotność oraz bezpieczeństwo mogą zostać wyrażone na przykład w postaci formuły logicznej logiki temporalnej. Logika temporalna umożliwiająca rozważanie zależności czasowych bez wprowadzania czasu explicite.
 
 \section{Benchmark}
 
@@ -207,7 +134,6 @@ Zbadane zostaną statystyki proverów ze względu na następujące właściwośc
 \end{itemize}
 
 
-
 %\begin{figure}[H]
 %  \centering
 %  \includegraphics[scale=0.5]{benchmark/components.png}
@@ -216,20 +142,19 @@ Zbadane zostaną statystyki proverów ze względu na następujące właściwośc
 \newpage
 \subsection{InKreSAT}
 
-InKreSAT to zautomatyzowane narzędzie udowadniające dla logiki temporalnej stworzone przez Marka Kaminskiego oraz Tobiasa Tebbi. Redukuje podany modalny problem SAT do postaci Booleanowego problemu SAT, który następnie rozwiązuje solverem SAT. InKreSAT optymalizuje wcześniejsze metody wykonując kolejne kroki inkrementacyjnie, czyli co każdy krok pobiera dane z używanego solvera SAT i używa ich do optymalizacji następnego kroku.
+InKreSAT to zautomatyzowane narzędzie udowadniające dla logiki temporalnej stworzone przez Marka Kaminskiego oraz Tobiasa Tebbi. Redukuje podany modalny problem SAT do postaci Booleanowego problemu SAT, który następnie rozwiązuje solverem SAT. InKreSAT optymalizuje wcześniejsze metody wykonując kolejne kroki inkrementacyjnie, czyli co każdy krok pobiera dane z używanego solvera SAT i używa ich do optymalizacji następnego kroku. W badanym przypadku InKreSAT używa solvera  minisat \footnote{minisat wersja 2.2.0}.
 
 InKreSAT dostępny jest jako plik wykonywalny, jako argumenty przyjmuje pliki o rozszerzeniu fml. Ilość opcji dostępnych z lini komend jest minimanlna, jedyną ważną opcją z punktu widzenia benchmarka jest \mintinline{text}{-v n  set verbosity level to n (min: 0, default: 1, max: 3)}
+
+InKreSAT wspiera następująte operatory logiki pierwszego rzędu:
+\begin{itemize}
+  \item \mintinline{text}{[]p} - p jest spełnione we wszystkich stanach (zawsze)
+  \item \mintinline{text}{<>p} - p jest spełnione przynajmniej w jednym stanie (kiedyś)
+\end{itemize}
 
 \noindent
 Oficjalna strona internetowa \url{https://www.ps.uni-saarland.de/~kaminski/inkresat/}
 
-
-
-%\begin{longlisting}
-%  \caption{Przykład pliku wejściowego .fml}
-%  \ladrfile{listings/prover9_example.in}
-%\end{longlisting}
-%
 %\begin{longlisting}
 %  \caption{Przykład wyjścia InKreSAT}
 %  \inputminted{text}{listings/prover9_example.out}
@@ -290,11 +215,11 @@ testSuite.executable testSuite.options testSuite.testCase.options [input_after_o
       \item podaj plik jako ostatni argument \tomlcodeinline{input_as_last_argument}
       \item podaj plik jako argument po opcji \tomlcodeinline{input_after_option}
     \end{itemize}
-  \item TODO: wyniki zapisywane są jako plik \textit{json} do katalogu wyściowego zdefiniowanego w pliku konfiguracyjnym.
+  \item wyniki zapisywane są jako plik \textit{json} do katalogu wyściowego zdefiniowanego w pliku konfiguracyjnym.
 \end{itemize}
 
 \subsection{Diagramy}
-%
+
 %\begin{figure}[H]
 %  \centering
 %  \includegraphics[width=0.9\textwidth]{benchmark/class_diagram.png}
@@ -328,7 +253,6 @@ testSuite.executable testSuite.options testSuite.testCase.options [input_after_o
 
 \section{Generator formuł logicznych} \label{LFG}
 
-Losowy generator formuł SAT. Generator może generować formuły \gls{CNF} oraz \gls{k-SAT}. Generator może generować formuły w formacie DIMACS oraz TPTP.
 
 %\begin{figure}[H]
 %  \centering
@@ -344,7 +268,6 @@ Losowy generator formuł SAT. Generator może generować formuły \gls{CNF} oraz
 
 \newpage
 \section{Zestaw testowy}
-
 
 \noindent
 \textbf{Problem:} Jak ilość zmiennych wpływa na czas wykonania?
