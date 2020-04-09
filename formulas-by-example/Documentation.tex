@@ -1,0 +1,194 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsmath,amssymb,stmaryrd}
+%\usepackage{polish}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{plain}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage[space]{grffile}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{datetime}
+\usepackage[outputdir=build]{minted}
+\usepackage{xcolor}
+\usepackage[colorlinks=true]{hyperref}
+% \usepackage[automake, acronyms, toc, nopostdot, nonumberlist, nomain]{glossaries}
+\usepackage{indentfirst}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  filecolor=magenta,
+  urlcolor=blue,
+}
+\urlstyle{same}
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{2.5cm}{2.5cm}{2.5cm}{2.5cm}
+\setlength{\parindent}{4em}
+\setlength{\parskip}{1em}
+\renewcommand{\baselinestretch}{2.0}
+
+% listings with page breaking
+\newenvironment{longlisting}{\captionsetup{type=listing}}{}
+
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+\setminted{
+  fontfamily=txtt,
+  fontsize=\footnotesize,
+  samepage=false,
+  style=xcode,
+  breaklines,
+  bgcolor=bg
+}
+
+% custom lexer for toml
+\newminted[tomlcode]{../lexers/toml.py:TomlLexer -x}{}
+\newmintinline[tomlcodeinline]{../lexers/toml.py:TomlLexer -x}{}
+\newmintedfile[tomlfile]{../lexers/toml.py:TomlLexer -x}{}
+
+% custom lexer for ladr
+\newminted[ladrcode]{../lexers/ladr.py:LadrLexer -x}{}
+\newmintinline[ladrcodeinline]{../lexers/ladr.py:LadrLexer -x}{}
+\newmintedfile[ladrfile]{../lexers/ladr.py:LadrLexer -x}{}
+
+% custom lexer for spass
+\newminted[spasscode]{../lexers/spass.py:SpassLexer -x}{}
+\newmintinline[spasscodeinline]{../lexers/Spass.py:SpassLexer -x}{}
+\newmintedfile[spassfile]{../lexers/spass.py:SpassLexer -x}{}
+
+% custom lexer for tptpt
+\newminted[tptpcode]{../lexers/tptp.py:TptpLexer -x}{}
+\newmintinline[tptpcodeinline]{../lexers/tptp.py:TptpLexer -x}{}
+\newmintedfile[tptpfile]{../lexers/tptp.py:TptpLexer -x}{}
+
+% \loadglsentries{glossaries}
+% \makeglossaries
+% \glsaddall
+
+\begin{document}
+\onehalfspacing
+\begin{figure}[!htb]
+  \centerline{\includegraphics[scale=0.8]{../images/agh_logo.jpg}}
+\end{figure}
+
+\begin{center}
+  \Huge{System properties by example\\}
+  \Large{Safety and liveness in first order logic and temporal logic\\ \large \textit \today \\}
+  \vspace{3cm}
+  % \Large{	Autorzy:\\
+    % Mateusz Grzeliński\\
+    % Przemysław Michałek\\
+  % }
+  % \large{Wydział Elektrotechniki, Automatyki, Informatyki i Elektroniki}
+
+  \newpage
+\end{center}
+
+% \tableofcontents
+% \newpage
+
+\section{General problems}
+
+\textit{How to define system properties in each formal systems (PL, FOL, TL)? What about defining properties using theories (like integers)? What about using constraint programming?}
+
+There are formal definitions of system properties, but I do not know them, they are quite complex. Informally, you just need to find a way of saying: 'bad thing will never happen' -- safety, 'something good will eventually occur' -- liveness. At least this is how I understand it. In FOL and TL there are good tools for doing such: FOL -- quantifiers $\forall$ for all, $\exists$ exists, TL -- operators $\square$ always and $\lozenge$ eventually.
+
+Right now I am assuming user is defining constrains directly in logical system, that is user is using input format similar to TPTP. This requires extensive FOL knowledge and I would say is not a likely  business scenario. Business would be in favour of using constraint programing to express properties in tools like MiniZinc or format like SMT-LIB. Unfortunatelly generating random formulas in mentioned languages can easily lead to semantic gap (small change in model, causes huge change in model). Semantic gap would make results of benchamring even more random and unpredictable.
+
+\textit{How to define equivalent property in dfferent language and compare performance? Are there converters which preserve equivalence?}
+
+More research needed.
+
+\textit{How do peple in real world scenarios encode system properties?}
+
+It is always some kind of formal system, for example logical systems or formalism provided by standard Minizinc, SMT-LIB, TPTP or input syntax for prover.
+
+\newpage
+\section{Representing safety and liveness in FOL and TL}
+
+I aim to represent sytem properties in following format, independent from logical system used:
+
+\begin{equation}
+  safetyClause \land livenessClause \land \dots
+\end{equation}
+
+\noindent
+where clause is formula with atoms connected with logical or. In FOL safety will be represented with $\forall$, liveness with $\exists$ (in implementation formulas will be encoded in skolem normal form - quantifier free formulas):
+
+\begin{equation}
+  \forall(atom1 \lor atom2 \lor \dots) \land \exists(atom3 \lor atom4 \lor \dots) \land \dots
+\end{equation}
+
+\noindent
+In TL safety will be represented as operator always $\square$ and liveless as operator eventually $\lozenge$:
+
+\begin{equation}
+  \square(variable1 \lor variable2 \lor \dots) \land \lozenge(variable3 \lor variable4 \lor \dots) \land \dots
+\end{equation}
+
+
+% \begin{table}
+  % \caption{Rules that follows every dataset. Red - examples of not allowed formulas}
+  % \label{tab:examples}
+    % \centering
+  % \begin{tabularx}{\textwidth}{|X|c|c|}
+    % \hline
+    % Desription & FOL example & TL example \\
+    % \hline
+    % \multirow{8}{\hsize}{clause is either safety or liveness - mixing safety and liveness is not allowed} & $\forall_X p(X)$ & $\square X$ \\
+                                                                                                       % & $\exists_X p(X)$ & $\lozenge X$ \\
+                                                                                                       % & $\exists_{X,Y} (p(X) \lor p(Y))$ & $\lozenge (X \lor Y)$ \\
+                                                                                                       % & $\exists_X p(X) \lor \forall_X p(X)$ & $\lozenge X \lor \square X$ \\
+                                                                                                       % & $\exists_X p(X) \land \forall_X p(X)$ & $\lozenge X \land \square Y$ \\
+                                                                                                       % & $\exists_X (p(X) \lor \neg p(X)) \land \forall_X (p(X) \lor \neg p(X))$ & $\lozenge (X \lor \neg X) \land \square (Y \lor \neg Y)$ \\
+                                                                                                       % & $\exists_X (p(X) \lor \neg p(X)) \land \forall_X p(X)$ & $\lozenge (X \lor \neg X) \land \square Y$ \\
+                                                                                                       % & $\exists_X (p(X) \lor \dots ) \land \forall_X (p(X) \lor \dots ) \land \dots $ & $\lozenge (X \lor \dots) \land \square (Y \lor \dots) \land \dots$ \\
+                                                                                                       % & \color{red} $\exists_X (p(X) \lor \neg p(X)) \lor \forall_X p(X)$ & \color{red} $\lozenge (X \lor \neg X) \lor \square Y$ \\
+                                                                                                       % & \color{red} $\exists_X \forall_Y p(X, Y)$ & \color{red} $\lozenge \square X$ \\
+                                                                                                       % & \color{red} $ \exists_X \forall_Y (p(X) \lor p(Y)) $ & \color{red} $ \lozenge \square (X \lor Y) $ \\
+                                                                                                       % \hline
+    % \multirow{4}{\hsize}{negation is pushed inwards formula} & $\forall_X \neg p(X)$ & $\square \neg X$ \\
+                                                                                    % & $\exists_X \neg p(X)$ & $\lozenge \neg X$ \\
+                                                                                    % & \color{red} $\exists_X \neg (p(X) \lor p(X))$ & \color{red} $\lozenge \neg(X \lor X)$ \\
+                                                                                    % & \color{red} $\neg \exists_X \neg p(X)$ & \color{red} \neg $\lozenge \neg X$ \\
+                                                                                    % & \color{red} $\neg \forall_X  p(X)$ & \color{red} \neg $\square X$ \\
+                                                                                    % \hline
+  % \end{tabularx}
+% \end{table}
+%
+% \begin{table}
+  % \caption{Quantifier free examples from table \ref{tab:examples} using skolemization}
+  % \centering
+  % \begin{tabularx}{\textwidth}{|X|c|c|}
+    % \hline
+    % & FOL example & FOL qunatifier free example \\
+    % \hline
+    % \multirow{8}{\hsize}{clause is either safety or liveness - mixing safety and liveness is not allowed} & $\forall_X p(X)$ & $p(X)$ \\
+                     % & $\exists_X p(X)$ & $p(f)$ \\
+                     % & $\exists_{X,Y} (p(X) \lor p(Y))$ & $p(f) \lor p(g)$ \\
+                     % & $\exists_X p(X) \lor \forall_X p(X)$ & $p(f) \lor p(X)$ \\
+                     % & $\exists_X p(X) \land \forall_X p(X)$ & $p(f) \lor p(X)$ \\
+                     % & $\exists_X (p(X) \lor \neg p(X)) \land \forall_X (p(X) \lor \neg p(X))$ & $(p(f) \lor \neg p(g)) \land (p(X) \lor \neg p(X))$ \\
+                     % & $\exists_X (p(X) \lor \neg p(X)) \land \forall_X p(X)$ & $(p(f) \lor \neg p(g)) \land p(X)$ \\
+                     % & $\exists_X (p(X) \lor \dots ) \land \forall_X (p(X) \lor \dots ) \land \dots $ & $(p(f) \lor \dots) \land (p(X) \lor \dots) \land \dots$ \\
+                     % & \color{red} $\exists_X (p(X) \lor \neg p(X)) \lor \forall_X p(X)$ & \color{red} $(p(f) \lor \neg p(f) todo check) \lor p(X)$ \\
+                     % & \color{red} $\exists_X \forall_Y p(X, Y)$ & \color{red} $p(f, X)$ \\
+                     % & \color{red} $\exists_X \forall_Y (p(X) \lor p(Y))$ & \color{red} $p(f) \lor \p(X)$ \\
+    % \hline
+    % \multirow{4}{\hsize}{negation is pushed inwards formula} & $\forall_X \neg p(X)$ & $\neg p(X)$ \\
+                     % & $\exists_X \neg p(X)$ & $\neg p(f)$ \\
+                     % & \color{red} $\exists_X \neg (p(X) \lor p(X))$ & \color{red} $\neg (p(f) \lor p(f))$ \\
+                     % & \color{red} $\neg \exists_X \neg p(X)$ & \color{red}  $p(X))$ \\
+                     % & \color{red} $\neg \forall_X  p(X)$ & \color{red}  $\neg p(f)$ \\
+    % \hline
+  % \end{tabularx}
+% \end{table}
+%
+% \printglossary
+
+\end{document}
