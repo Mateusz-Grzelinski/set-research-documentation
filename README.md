@@ -32,7 +32,5 @@ Build dir is optional, clean with `latexmk -C`, or `rm -r build`
 
 ## Connected repos
 
-- https://github.com/Mateusz-Grzelinski/logit-formula-generator - SAT generator
-- https://github.com/Mateusz-Grzelinski/sat-prover-benchmark
-- http://www.spass-prover.org/
-- https://www.cs.unm.edu/~mccune/mace4/ - prover9
+- more tools: https://github.com/Mateusz-Grzelinski/sat-research
+
